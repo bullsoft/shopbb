@@ -2,6 +2,8 @@
 echo "Build start..."
 PIPE_DIR=`pwd`
 
+echo $PIPE_DIR
+
 BUILD_DIR=$HOME/tmp/buildhome
 echo "Buiding Dir... ->"$BUILD_DIR;
 PRJ_DIR=$BUILD_DIR/$GO_PIPELINE_NAME
@@ -11,15 +13,17 @@ echo "ReleaseId: "$DEPLOY_VER
 APP_DIR=$PRJ_DIR/$DEPLOY_VER
 mkdir -p $APP_DIR
 cp -R . $APP_DIR/
-cd $APP_DIR
 
-echo "Entering App Deploying Dir.. ->"$APP_DIR
 
 echo "-------------------------"
 echo "Detecting PHP version..."
 echo "-------------------------"
 
-php -v  > $PIPE_DIR/my-artifact.html | tee cat
+php -v  > my-artifact.html | tee cat
+
+cd $APP_DIR
+
+echo "Entering App Deploying Dir.. ->"$APP_DIR
 
 if [ -f ${APP_DIR}/composer.json ]; then
     echo "-------------------------"
