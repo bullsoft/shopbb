@@ -17,7 +17,8 @@ echo "Entering App Deploying Dir.. ->"$APP_DIR
 echo "-------------------------"
 echo "Detecting PHP version..."
 echo "-------------------------"
-php -v
+
+php -v  > my-artifact.html | tee cat
 
 if [ -f ${APP_DIR}/composer.json ]; then
     echo "-------------------------"
