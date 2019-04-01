@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+date_default_timezone_set('Asia/Shanghai');
+ini_set("memory_limit", "4G");
+require_once(dirname(dirname(__DIR__)) . "/vendor/autoload.php");
+
+$bootstrap = new \PhalconPlus\Bootstrap(dirname(__DIR__));
+$di = new \Phalcon\DI\FactoryDefault\CLI();
+
+$di->setShared('cli', function(){
+    return new \League\CLImate\CLImate();
+});
+
+$phpOS = strtolower(PHP_OS);
+
+if(substr($phpOS, 0, 3) == "win") {
+    $this->cli->backgroundRed("对不起，Phalcon+命令行工具暂不支持Windows操作系统，请谅解！");
+    exit(111);
+}
+
+$arguments = array();
+foreach($argv as $k => $arg) {
+    if($k == 1) {
+        $arguments['task'] = $arg;
+    } elseif($k == 2) {
+        $arguments['action'] = $arg;
+    } elseif($k >= 3) {
+        $arguments['params'][] = $arg;
+    }
+}
+
+$bootstrap->execTask($arguments, $di);
