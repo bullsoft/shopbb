@@ -3,7 +3,7 @@ echo "Build start..."
 
 BUILD_DIR=$HOME/tmp/buildhome
 echo "Buiding Dir... ->"$BUILD_DIR;
-PRJ_DIR=$BUILD_DIR/firstPipeline
+PRJ_DIR=$BUILD_DIR/$GO_PIPELINE_NAME
 DEPLOY_VER=`date +%Y%m%d%H%M%S`
 echo "ReleaseId: "$DEPLOY_VER
 
