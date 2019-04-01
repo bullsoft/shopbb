@@ -1,5 +1,6 @@
 #!/bin/bash
 echo "Build start..."
+PIPE_DIR=`pwd`
 
 BUILD_DIR=$HOME/tmp/buildhome
 echo "Buiding Dir... ->"$BUILD_DIR;
@@ -18,7 +19,7 @@ echo "-------------------------"
 echo "Detecting PHP version..."
 echo "-------------------------"
 
-php -v  > my-artifact.html | tee cat
+php -v  > $PIPE_DIR/my-artifact.html | tee cat
 
 if [ -f ${APP_DIR}/composer.json ]; then
     echo "-------------------------"
