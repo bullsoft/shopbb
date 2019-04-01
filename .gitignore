@@ -1,5 +1,5 @@
-vendor/
 composer.lock
 */access.log
 */server.pid
+/vendor
 composer.json.dev
