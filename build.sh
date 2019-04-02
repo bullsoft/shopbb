@@ -7,7 +7,9 @@ echo $PIPE_DIR
 BUILD_DIR=$HOME/tmp/buildhome
 echo "Buiding Dir... ->"$BUILD_DIR;
 PRJ_DIR=$BUILD_DIR/$GO_PIPELINE_NAME
-DEPLOY_VER=`date +%Y%m%d%H%M%S`
+#DEPLOY_VER=`date +%Y%m%d%H%M%S`
+
+DEPLOY_VER=$GO_PIPELINE_LABEL
 echo "ReleaseId: "$DEPLOY_VER
 
 APP_DIR=$PRJ_DIR/$DEPLOY_VER
@@ -19,7 +21,7 @@ echo "-------------------------"
 echo "Detecting PHP version..."
 echo "-------------------------"
 
-php -v  > my-artifact.html | tee cat
+php -v  > "$PIPE_DIR"/my-artifact.html | tee cat
 
 cd $APP_DIR
 
@@ -43,5 +45,11 @@ if [ -f ${APP_DIR}/composer.json ]; then
             ${COMPOSER_FLAGS}
 
 fi
+
+cd ..
+
+tar zcvf $DEPLOY_VER.tar.gz $DEPLOY_VER/
+
+cp $DEPLOY_VER.tar.gz "$PIPE_DIR"/
 
 echo "Build finished."
