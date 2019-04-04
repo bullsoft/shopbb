@@ -6,6 +6,7 @@ use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
 use PhalconPlus\Base\SimpleRequest;
 use LightCloud\Com\Protos\Uc\Exceptions\NeedLoginException;
+use LightCloud\Uc\Models\UserModel;
 
 class DispatcherInterceptor extends Plugin
 {
@@ -38,7 +39,12 @@ class DispatcherInterceptor extends Plugin
 
         // 禁止模板
         if($anno->has('disableView') || $anno->has('api')) {
+            $dispatcher->setParam("ApiException", true);
             $this->view->disable();
+        }
+        if(rtrim($dispatcher->getNamespaceName(), "\\") == "LightCloud\Uc\Controllers\\Apis") {
+            $this->view->disable();
+            $dispatcher->setParam("ApiException", true);
         }
 
         // 不允许匿名
@@ -47,7 +53,7 @@ class DispatcherInterceptor extends Plugin
                 if (!$anno->has('api')) {
                     // HTTP跳转登录
                     $response = new \Phalcon\Http\Response();
-                    $response->redirect("user/login");
+                    $response->redirect("user/login?from=".$this->request->getURI());
                     $dispatcher->setReturnedValue($response);
                     // 派遣跳转登录
                     // $dispatcher->forward(array(
@@ -57,22 +63,16 @@ class DispatcherInterceptor extends Plugin
                     return false;
                 } else {
                     $apiException = new NeedLoginException(["user need login to access this resource"]);
-                    $dispatcher->setParam("ApiException", $apiException);
+                    //$dispatcher->setParam("ApiException", true);
                     throw $apiException;
                 }
             }
         }
 
         if($this->session->has('identity')) {
-            $request = new SimpleRequest();
-            $request->setParam($this->session->get('identity'));
-            $response = $this->rpc->callByObject(array(
-                "service" => "\\Demo\\Server\\Services\\User",
-                "method" => "getUserById",
-                "args" => $request,
-                "logId" => $this->logger->getFormatter()->uid,
-            ));
-
+            $userId = intval($this->session->get('identity'));
+            $user = UserModel::findFirst($userId);
+            $response = $user->toProtoBuffer();
             $this->di->setShared("user", function () use ($response) {
                 return $response;
             });
@@ -84,25 +84,32 @@ class DispatcherInterceptor extends Plugin
     public function afterExecuteRoute(\Phalcon\Events\Event $event, \Phalcon\Mvc\Dispatcher $dispatcher)
     {
         $returnValue = $dispatcher->getReturnedValue();
-        if(is_array($returnValue) || is_object($returnValue)) {
-            if(is_object($returnValue)) {
-                if(method_exists($returnValue, "getResult")) {
-                    $returnValue = $returnValue->getResult();
-                } else if(method_exists($returnValue, "toArray")) {
-                    $returnValue = $returnValue->toArray();
-                }
-            }
-            $return = array(
-                'errorCode' => 0,
-                'data' => $returnValue,
-                'errorMsg' => '',
-            );
-            $return["sessionId"] = $this->session->getId();
-            $response = new \Phalcon\Http\Response();
-            $response->setHeader('Content-Type', 'application/json');
-            $response->setJsonContent($return, \JSON_UNESCAPED_UNICODE);
-            $dispatcher->setReturnedValue($response);
+        if(is_null($returnValue) || is_scalar($returnValue)) {
+            return true;
         }
+        
+        if (is_object($returnValue)) { 
+            if($returnValue instanceof \Phalcon\Http\Response) {
+                $dispatcher->setReturnedValue($returnValue);
+                return true;
+            } else if(method_exists($returnValue, "getResult")) {
+                $returnValue = $returnValue->getResult();
+            } else if(method_exists($returnValue, "toArray")) {
+                $returnValue = $returnValue->toArray();
+            }
+        }
+        
+        $return = array(
+            'errorCode' => 0,
+            'data' => $returnValue,
+            'errorMsg' => '',
+        );
+        $return["sessionId"] = $this->session->getId();
+        $response = new \Phalcon\Http\Response();
+        $response->setHeader('Content-Type', 'application/json');
+        $response->setJsonContent($return, \JSON_UNESCAPED_UNICODE);
+        $dispatcher->setReturnedValue($response);
+        
         return true;
     }
 }

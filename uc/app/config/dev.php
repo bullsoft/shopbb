@@ -1,4 +1,9 @@
 <?php
+
+ $oneMonthInterval = new \DateInterval('P1M');
+ $oneHourInterval = new \DateInterval('PT1H');
+ $tenMinutesInterval = new \DateInterval('PT10M');
+
 return array(
     'application' => array(
         "name"  => "uc",
@@ -31,5 +36,9 @@ return array(
         "encryptionKey" => 'def000000f2a7b2d5146dc617e8e0cbcf9c5415f194c7a04c4eb4266c632e8484363bfd395117d54c8f7963d137eff918423f8830febea5fa2f7b3a75eb19f693cb8fa23',
         "privateKeyPath" => APP_MODULE_DIR . "/app/config/private.key",
         "publicKeyPath" => APP_MODULE_DIR . "/app/config/public.key",
+        'alwaysIncludeClientScopes' => false,
+        'refreshTokenLifespan' => $oneMonthInterval,
+        'accessTokenLifespan' => $oneHourInterval,
+        'authCodeLifespan' => $tenMinutesInterval,
     ]
 );

@@ -1,0 +1,22 @@
+{
+    "title": "regInfo",
+    "type": "object",
+    "properties": {
+        "username": {
+            "type": "string",
+            "minLength": 5
+        },
+        "mobile": {
+            "type": "string",
+            "minLength": 11,
+            "maxLength": 11
+        },
+        "passwd": {
+            "type": "string",
+            "minLength": 6
+        }
+    },
+   
+    "required": ["username", "passwd"]
+    
+}

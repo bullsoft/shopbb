@@ -2,11 +2,20 @@
 namespace LightCloud\Uc\Plugins;
 
 use Phalcon\Mvc\User\Plugin;
+use \Defuse\Crypto\Key;
+
 use \LightCloud\Uc\Repositories\ClientRepository;
+use \LightCloud\Uc\Repositories\UserRepository;
+use \LightCloud\Uc\Repositories\ScopeRepository;
+use \LightCloud\Uc\Repositories\RefreshTokenRepository;
+use \LightCloud\Uc\Repositories\AccessTokenRepository;
+use \LightCloud\Uc\Repositories\AuthCodeRepository;
+
+use \League\OAuth2\Server\Grant;
 
 class OAuth2Server extends Plugin
 {
-    public function getInstance()
+    public static function newInstance()
     {
         $clientRepository = new ClientRepository();
         $scopeRepository = new ScopeRepository();
@@ -14,36 +23,43 @@ class OAuth2Server extends Plugin
         $userRepository = new UserRepository();
         $refreshTokenRepository = new RefreshTokenRepository();
         $authCodeRepository = new AuthCodeRepository();
+
+        $config = di()->getConfig();
         // Setup the authorization server
         $server = new \League\OAuth2\Server\AuthorizationServer(
             $clientRepository,
             $accessTokenRepository,
             $scopeRepository,
-            new \League\OAuth2\Server\CryptKey(getenv('PRIVATE_KEY_PATH')),
-            getenv('ENCRYPTION_KEY')
+            new \League\OAuth2\Server\CryptKey($config->oauth2->privateKeyPath),
+            Key::loadFromAsciiSafeString($config->oauth2->encryptionKey)
         );
-        $passwordGrant = new \League\OAuth2\Server\Grant\PasswordGrant($userRepository, $refreshTokenRepository);
-        $passwordGrant->setRefreshTokenTTL($config->oauth->refresh_token_lifespan);
-        $authCodeGrant = new AuthCodeGrant(
+        // Lifespan
+        $accessTokenLifespan = $config->oauth2->accessTokenLifespan;
+        $refreshTokenLifespan = $config->oauth2->refreshTokenLifespan;
+        $authCodeLifespan = $config->oauth2->authCodeLifespan;
+        // Grants
+        $passwordGrant = new Grant\PasswordGrant($userRepository, $refreshTokenRepository);
+        $passwordGrant->setRefreshTokenTTL($refreshTokenLifespan);
+        $authCodeGrant = new Grant\AuthCodeGrant(
             $authCodeRepository,
             $refreshTokenRepository,
-            $config->oauth->auth_code_lifespan
+            $authCodeLifespan
         );
-        $refreshTokenGrant = new \League\OAuth2\Server\Grant\RefreshTokenGrant($refreshTokenRepository);
-        $refreshTokenGrant->setRefreshTokenTTL($config->oauth->refresh_token_lifespan);
+        $refreshTokenGrant = new Grant\RefreshTokenGrant($refreshTokenRepository);
+        $refreshTokenGrant->setRefreshTokenTTL($refreshTokenLifespan);
         // Enable the refresh token grant on the server
-        $server->enableGrantType($refreshTokenGrant, $config->oauth->access_token_lifespan);
-        $authCodeGrant->setRefreshTokenTTL($config->oauth->refresh_token_lifespan);
+        $server->enableGrantType($refreshTokenGrant, $accessTokenLifespan);
+        $authCodeGrant->setRefreshTokenTTL($refreshTokenLifespan);
         // Enable the authentication code grant on the server
-        $server->enableGrantType($authCodeGrant, $config->oauth->access_token_lifespan);
+        $server->enableGrantType($authCodeGrant, $accessTokenLifespan);
         // Enable the password grant on the server
-        $server->enableGrantType($passwordGrant, $config->oauth->access_token_lifespan);
+        $server->enableGrantType($passwordGrant, $accessTokenLifespan);
         // Enable the client credentials grant on the server
-        $server->enableGrantType(new ClientCredentialsGrant(), $config->oauth->access_token_lifespan);
+        $server->enableGrantType(new Grant\ClientCredentialsGrant(), $accessTokenLifespan);
         // Enable the implicit grant on the server
         $server->enableGrantType(
-            new \League\OAuth2\Server\Grant\ImplicitGrant($config->oauth->access_token_lifespan),
-            $config->oauth->access_token_lifespan
+            new Grant\ImplicitGrant($accessTokenLifespan),
+            $accessTokenLifespan
         );
         return $server;
     }

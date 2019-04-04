@@ -11,4 +11,13 @@ use LightCloud\Uc\Models\OauthAuthorizationCodesModel;
 class AuthCodeEntity extends OauthAuthorizationCodesModel implements AuthCodeEntityInterface
 {
     use AuthCodeTrait, EntityTrait, TokenEntityTrait;
+    
+    public function getScopeNames()
+    {
+        $scopes = $this->getScopes();
+        $scopeNames = array_map(function($scope) {
+            return  $scope->getIdentifier();
+        }, $scopes);
+        return $scopeNames;
+    } 
 }

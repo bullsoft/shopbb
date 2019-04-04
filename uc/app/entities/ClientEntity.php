@@ -13,7 +13,7 @@ class ClientEntity extends OauthClientsModel implements ClientEntityInterface
      */
     public function getIdentifier()
     {
-        return $this->clientId;
+        return $this->id;
     }
 
     /**

@@ -22,6 +22,7 @@ class Module extends PlusModule
     public function __construct(\Phalcon\Di $di, \PhalconPlus\Base\ModuleDef $def)
     {
         parent::__construct($di, $def);
+        /*
         set_exception_handler(function ($exception) use ($di) {
             $response = $di->get("response");
             $msg = $exception->getMessage();
@@ -44,7 +45,8 @@ class Module extends PlusModule
             $response->setHeader('Content-Type', 'application/json');
             $response->setJsonContent($error);
             $response->send();
-        });       
+        });  
+        */     
     }
 
     public function registerAutoloaders()
@@ -136,9 +138,6 @@ class Module extends PlusModule
             $di->has("dispatched") || $di->set('dispatcher', function () use ($di) {
                 $evtManager = $di->getShared('eventsManager');
                 $evtManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) {
-                    if(rtrim($dispatcher->getNamespaceName(), "\\") == __NAMESPACE__ ."\\Controllers\\Apis") {
-                         throw $exception;
-                    }
                     if($dispatcher->hasParam("ApiException")) {
                         throw $exception;
                     }

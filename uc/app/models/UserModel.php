@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-03-30 17:43:58$
+ * @version $Rev:2019-04-04 12:29:21$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class UserModel extends ModelBase
@@ -24,7 +24,13 @@ class UserModel extends ModelBase
      * @var string
      * @table user
      */
-    public $mobile = '';
+    public $username = '';
+
+    /**
+     * @var string
+     * @table user
+     */
+    public $mobile = null;
 
     /**
      * @var string
@@ -99,7 +105,8 @@ class UserModel extends ModelBase
     public function onConstruct()
     {
         $this->id = NULL;
-        $this->mobile = '';
+        $this->username = '';
+        $this->mobile = NULL;
         $this->salt = '';
         $this->passwd = '';
         $this->email = '';
@@ -119,6 +126,7 @@ class UserModel extends ModelBase
     {
         return array(
             'id' => 'id', 
+            'username' => 'username', 
             'mobile' => 'mobile', 
             'salt' => 'salt', 
             'passwd' => 'passwd', 

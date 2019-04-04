@@ -1,13 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: guweigang
- * Date: 16/1/14
- * Time: 18:41
- */
-
 namespace PhalconPlus\Com\Protos;
 use \PhalconPlus\Base\ProtoBuffer;
+use PSX\Schema\SchemaTraverser;
+use PSX\Schema\SchemaManager;
+use PSX\Schema\Visitor\TypeVisitor;
 
 class ProtoBase extends ProtoBuffer
 {
@@ -19,5 +15,21 @@ class ProtoBase extends ProtoBuffer
             throw new \Exception("Property {$property} not exists in Class ". get_called_class());
         }
         return $this->{$property} == self::NULL_VALUE;
+    }
+
+    public static function newInstance($data)
+    {
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader('class_exists');
+        $schemaManager = new SchemaManager();
+        // we read the schema annotations from the class
+        $schema = $schemaManager->getSchema(static::class);
+        try {
+            $traverser = new SchemaTraverser();
+            $proto  = $traverser->traverse($data, $schema, new TypeVisitor());
+            return $proto;
+        } catch (\PSX\Schema\ValidationException $e) {
+            // the validation failed
+            throw $e;
+        }
     }
 }

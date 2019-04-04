@@ -11,7 +11,7 @@ class ClientRepository implements ClientRepositoryInterface
         Assert::numeric($clientIdentifier);
 
         $client = ClientEntity::findFirst([
-            "clientId = :id:",
+            "id = :id:",
             "bind" => [
                 "id" => $clientIdentifier,
             ]
@@ -25,7 +25,7 @@ class ClientRepository implements ClientRepositoryInterface
 
         // check grant types
         if (!empty($grantType)) {
-            $enumGrantType = new \LightCloud\Com\Protos\Enums\GrantType(trim($grantType));
+            $enumGrantType = new \LightCloud\Com\Protos\Uc\Enums\GrantType(trim($grantType));
             $clientGrants = explode(",", $client->grantTypes);
             array_walk($clientGrants, function (&$item) {
                 return trim($item);

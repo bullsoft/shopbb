@@ -7,6 +7,8 @@ class GrantType extends AbstractEnum
 {
     const __default = self::CODE;
     const PASSWORD = "password"; //  for trusted first party clients
-    const CODE = "code"; // most populate 
+    const CODE = "authorization_code"; // most populate 
     const TOKEN = "token"; // for user-agent-based clients
+    const CLIENT = "client_credentials";
+    const IMPLICIT = "implicit";
 }

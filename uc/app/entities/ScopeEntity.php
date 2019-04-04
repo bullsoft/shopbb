@@ -13,6 +13,6 @@ class ScopeEntity extends OauthScopesModel implements ScopeEntityInterface
      */
     public function getIdentifier()
     {
-        return $this->id;
+        return $this->scope;
     }
 }
