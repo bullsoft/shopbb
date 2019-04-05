@@ -9,7 +9,6 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use \League\OAuth2\Server\Grant\AbstractGrant;
 
-
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     /**

@@ -5,6 +5,7 @@ use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use LightCloud\Uc\Entities\AuthCodeEntity;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use \League\OAuth2\Server\Grant\AbstractGrant;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
@@ -35,7 +36,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
         $result = $authCodeEntity->create([
             'authorizationCode' => $authCode,
             'expires' => $authCodeEntity->getExpiryDateTime()->format('Y-m-d H:i:s'),
-            'scope' => implode(' ', $authCodeEntity->getScopeNames()),
+            'scope' => implode(AbstractGrant::SCOPE_DELIMITER_STRING, $authCodeEntity->getScopeNames()),
             'clientId' => $authCodeEntity->getClient()->getIdentifier(),
             // I do not understand why redirect_uri isn't saving to the oauth_codes table.. Must be witchcraft
             // switching to redirect_url

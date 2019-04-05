@@ -55,16 +55,9 @@ class DispatcherInterceptor extends Plugin
                     $response = new \Phalcon\Http\Response();
                     $response->redirect("user/login?from=".$this->request->getURI());
                     $dispatcher->setReturnedValue($response);
-                    // 派遣跳转登录
-                    // $dispatcher->forward(array(
-                    //     'controller' => 'user',
-                    //     'action'     =>  'login'
-                    // ));
                     return false;
                 } else {
-                    $apiException = new NeedLoginException(["user need login to access this resource"]);
-                    //$dispatcher->setParam("ApiException", true);
-                    throw $apiException;
+                    throw new NeedLoginException(["user need login to access this resource"]);
                 }
             }
         }
@@ -84,7 +77,8 @@ class DispatcherInterceptor extends Plugin
     public function afterExecuteRoute(\Phalcon\Events\Event $event, \Phalcon\Mvc\Dispatcher $dispatcher)
     {
         $returnValue = $dispatcher->getReturnedValue();
-        if(is_null($returnValue) || is_scalar($returnValue)) {
+        
+        if(!is_array($returnValue) && !is_object($returnValue)) {
             return true;
         }
         

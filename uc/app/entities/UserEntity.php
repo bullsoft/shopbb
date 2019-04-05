@@ -58,7 +58,7 @@ class UserEntity extends UserModel implements UserEntityInterface
 
         // 是否已经被占用
         if ($user->exists() != false) {
-            throw new UserAlreadyExistsException(["user mobile alreay exists", $regInfo->getUsername()]);
+            throw new UserAlreadyExistsException(["username alreay exists", $regInfo->getUsername()]);
         }
 
         // 生成安全密码
@@ -72,7 +72,7 @@ class UserEntity extends UserModel implements UserEntityInterface
 
 
         if ($user->save() == false) {
-            throw new SystemBusyException(["failed to create user, userInfo: ", $userInfo->toArray()], $this->logger);
+            throw new SystemBusyException(["failed to create user, userInfo: ", $user->toArray()]);
         }
         
         return $user->toProtoBuffer([

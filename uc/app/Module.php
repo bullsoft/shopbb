@@ -22,23 +22,18 @@ class Module extends PlusModule
     public function __construct(\Phalcon\Di $di, \PhalconPlus\Base\ModuleDef $def)
     {
         parent::__construct($di, $def);
-        /*
         set_exception_handler(function ($exception) use ($di) {
             $response = $di->get("response");
-            $msg = $exception->getMessage();
+            $errorMsg = $msg = $exception->getMessage();
             $data = new \stdClass();
-            if (substr($msg, 0, 8) == "__DATA__") {
-                $msg = substr($msg, 8);
-                $data = json_decode($msg, true);
-                $msgs = [];
-                foreach ($data as $item) {
-                    $msgs[] = implode(",", $item);
-                }
-                $msg = implode(";", $msgs);
+            if(($offset = \strpos($msg, "__DATA__")) !== false) {
+                $errorMsg = \substr($msg, 0, $offset);
+                $dataMsg = substr($msg, $offset+\strlen("__DATA__"));
+                $data = json_decode($dataMsg, true);
             }
             $error = array(
                 'errorCode' => max(1, $exception->getCode()),
-                'errorMsg' => $msg,
+                'errorMsg' => $errorMsg,
                 'data' => $data,
                 'sessionId' => '',
             );
@@ -46,7 +41,7 @@ class Module extends PlusModule
             $response->setJsonContent($error);
             $response->send();
         });  
-        */     
+            
     }
 
     public function registerAutoloaders()
