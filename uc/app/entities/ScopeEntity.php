@@ -15,4 +15,9 @@ class ScopeEntity extends OauthScopesModel implements ScopeEntityInterface
     {
         return $this->scope;
     }
+
+    public function jsonSerialize() 
+    {
+        return $this->getIdentifier();
+    }
 }

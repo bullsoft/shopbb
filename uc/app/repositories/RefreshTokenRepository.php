@@ -5,6 +5,7 @@ use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use LightCloud\Uc\Entities\RefreshTokenEntity;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use \League\OAuth2\Server\Grant\AbstractGrant;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
@@ -37,6 +38,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
             'refreshToken' => $token,
             'expires' => $refreshTokenEntity->getExpiryDateTime()->format("Y-m-d H:i:s"),
             'clientId' => $accessToken->getClient()->getIdentifier(),
+            'scope' => implode(AbstractGrant::SCOPE_DELIMITER_STRING, $accessToken->getScopeNames()),
             'userId' => $accessToken->getUserIdentifier(),
             'revoked' => 0,
         ]);

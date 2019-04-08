@@ -10,5 +10,24 @@ use LightCloud\Uc\Models\OauthRefreshTokensModel;
 
 class RefreshTokenEntity extends OauthRefreshTokensModel implements RefreshTokenEntityInterface
 {
-    use RefreshTokenTrait, EntityTrait;
+    use RefreshTokenTrait;
+     /**
+     * Get the token's identifier.
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->refreshToken;
+    }
+
+    /**
+     * Set the token's identifier.
+     *
+     * @param mixed $identifier
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->refreshToken = $identifier;
+    }
 }
