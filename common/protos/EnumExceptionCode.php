@@ -44,7 +44,7 @@ class EnumExceptionCode extends EnumException
         ],
 
         self::FORM_INPUT_INVALID => [
-            "message" => "__DATA__%s",
+            "message" => "用户输入错误__DATA__%s",
             "level" => EnumLoggerLevel::INFO
         ],
         

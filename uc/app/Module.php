@@ -34,7 +34,7 @@ class Module extends PlusModule
             $error = array(
                 'errorCode' => max(1, $exception->getCode()),
                 'errorMsg' => $errorMsg,
-                'data' => $data,
+                'data' => $data??(new \stdClass()),
                 'sessionId' => '',
             );
             $response->setHeader('Content-Type', 'application/json');
