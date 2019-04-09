@@ -1,18 +1,24 @@
 #!/bin/bash
 echo "Build start..."
 PIPE_DIR=`pwd`
-echo "Pipeline Working dir..."
-echo $PIPE_DIR
+echo "Pipeline Working dir... ->" $PIPE_DIR
 
+PRJ_NAME="shopbb"
 BUILD_DIR=$HOME/tmp/buildhome
-echo "Buiding Dir... ->"$BUILD_DIR;
-PRJ_DIR=$BUILD_DIR/$GO_PIPELINE_NAME
 
-BUILD_VER=$GO_PIPELINE_LABEL
+echo "Buiding dir... ->" $BUILD_DIR;
+PRJ_DIR=$BUILD_DIR/$PRJ_NAME
+
+DATE=`date '+%Y%m%d_%H%M%S'`
+BUILD_VER=${DATE}_${GO_PIPELINE_COUNTER}
+
 echo "Build Version: "$BUILD_VER
 
 APP_DIR=$PRJ_DIR/$BUILD_VER
-mkdir -p $APP_DIR
+if [ ! -d $APP_DIR ]; then
+  mkdir -p $APP_DIR
+fi
+
 cp -R . $APP_DIR/
 
 
@@ -21,8 +27,8 @@ echo "Detecting PHP version..."
 echo "-------------------------"
 php -v
 
-php -v  > "$PIPE_DIR"/my-artifact.html
-$HOME/bin/composer --version >> "$PIPE_DIR"/my-artifact.html
+echo $PRJ_NAME  > "$PIPE_DIR"/my-artifact.html
+echo $BUILD_VER >> "$PIPE_DIR"/my-artifact.html
 
 cd $APP_DIR
 
@@ -53,6 +59,6 @@ cd ..
 
 tar zcvf $BUILD_VER.tar.gz $BUILD_VER/
 
-cp $BUILD_VER.tar.gz "$PIPE_DIR"/build.tar.gz
+mv $BUILD_VER.tar.gz "$PIPE_DIR"/build.tar.gz
 
 echo "Build finished."

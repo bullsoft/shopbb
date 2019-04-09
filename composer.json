@@ -15,7 +15,8 @@
         "container-interop/container-interop": "^1.1.0",
         "phpoffice/phpword": "^0.14.0",
         "guzzlehttp/guzzle": "~6.0",
-        "psx/schema": "*"
+        "psx/schema": "*",
+        "wildbit/postmark-php": "*"
     },
     "extra": {
         "installer-paths": {

@@ -40,5 +40,9 @@ return array(
         'refreshTokenLifespan' => $oneMonthInterval,
         'accessTokenLifespan' => $oneHourInterval,
         'authCodeLifespan' => $tenMinutesInterval,
+    ],
+    "mail" => [
+        "driver" => "postmark",
+        "token" => \getenv("POSTMARK_API_TOKEN"),
     ]
 );

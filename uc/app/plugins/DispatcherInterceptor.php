@@ -39,9 +39,14 @@ class DispatcherInterceptor extends Plugin
 
         // 禁止模板
         if($anno->has('disableView') || $anno->has('api')) {
+            $this->view->disable();
+        }
+        
+        if($anno->has('api')) {
             $dispatcher->setParam("ApiException", true);
             $this->view->disable();
         }
+
         if(rtrim($dispatcher->getNamespaceName(), "\\") == "LightCloud\Uc\Controllers\\Apis") {
             $this->view->disable();
             $dispatcher->setParam("ApiException", true);

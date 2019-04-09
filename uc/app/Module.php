@@ -165,6 +165,10 @@ class Module extends PlusModule
             }); 
         }  
 
+        $di->setShared("mailClient", function() use($config) {
+            return new \Postmark\PostmarkClient($config->mail->token);
+        });
+
         $di->set("rpc", function() use ($di, $config, $bootstrap) {
             $client = null;
             if($config->debugRPC == true) {
