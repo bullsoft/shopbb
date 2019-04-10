@@ -84,7 +84,7 @@ class Module extends PlusModule
 
         $di->setShared("logger", function() use ($di, $config){
             $logger = new \PhalconPlus\Logger\Adapter\FilePlus($config->application->logFilePath);
-            $logger->registerExtension(".de", [\Phalcon\Logger::DEBUG]);
+            $logger->registerExtension(".debug", [\Phalcon\Logger::DEBUG]);
             
             // 添加formatter
             $formatter = new \PhalconPlus\Logger\Formatter\LinePlus("[%date%][%trace%][%uid%][%type%] %message%");
