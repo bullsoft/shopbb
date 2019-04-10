@@ -243,27 +243,59 @@ class CreateModelTask extends \Phalcon\CLI\Task
 
     private function getTypeString($type)
     {
-        switch($type) {
-        case \Phalcon\Db\Column::TYPE_BIGINTEGER:
-        case \Phalcon\Db\Column::TYPE_INTEGER:
-            return "integer";
-        case \Phalcon\Db\Column::TYPE_DATE:
-            return "date";
-        case \Phalcon\Db\Column::TYPE_CHAR:
-        case \Phalcon\Db\Column::TYPE_TEXT:
-        case \Phalcon\Db\Column::TYPE_VARCHAR:
-            return "string";
-        case \Phalcon\Db\Column::TYPE_DATETIME:
-            return "datetime";
-        case \Phalcon\Db\Column::TYPE_FLOAT:
-            // phalcon 2.0 not support this type
-            // case \Phalcon\Db\Column::TYPE_DOUBLE:
-        case \Phalcon\Db\Column::TYPE_DECIMAL:
-            return "float";
-        case \Phalcon\Db\Column::TYPE_BOOLEAN:
-            return "bool";
-        default:
-            return "unknown";
+        // integer TYPE_INTEGER
+        // integer TYPE_BIGINTEGER
+
+        // integer TYPE_DATE
+        // integer TYPE_TIMESTAMP
+        // integer TYPE_DATETIME
+
+        // integer TYPE_VARCHAR
+        // integer TYPE_CHAR
+        // integer TYPE_TEXT
+
+        // integer TYPE_DECIMAL
+        // integer TYPE_FLOAT
+        // integer TYPE_DOUBLE
+
+        // integer TYPE_BOOLEAN
+
+        // integer TYPE_TINYBLOB
+        // integer TYPE_BLOB
+        // integer TYPE_MEDIUMBLOB
+        // integer TYPE_LONGBLOB
+
+        // integer TYPE_JSON
+        // integer TYPE_JSONB
+
+        switch ($type) {
+            case \Phalcon\Db\Column::TYPE_BIGINTEGER:
+            case \Phalcon\Db\Column::TYPE_INTEGER:
+                return "integer";
+            case \Phalcon\Db\Column::TYPE_DATE:
+            case \Phalcon\Db\Column::TYPE_TIMESTAMP:
+            case \Phalcon\Db\Column::TYPE_DATETIME:
+                return "datetime";
+            case \Phalcon\Db\Column::TYPE_CHAR:
+            case \Phalcon\Db\Column::TYPE_TEXT:
+            case \Phalcon\Db\Column::TYPE_VARCHAR:
+                return "string";
+            case \Phalcon\Db\Column::TYPE_FLOAT:
+            case \Phalcon\Db\Column::TYPE_DOUBLE:
+            case \Phalcon\Db\Column::TYPE_DECIMAL:
+                return "float";
+            case \Phalcon\Db\Column::TYPE_BOOLEAN:
+                return "bool";
+            case \Phalcon\Db\Column::TYPE_TINYBLOB:
+            case \Phalcon\Db\Column::TYPE_BLOB:
+            case \Phalcon\Db\Column::TYPE_MEDIUMBLOB:
+            case \Phalcon\Db\Column::TYPE_LONGBLOB:
+                return "blob";
+            case \Phalcon\Db\Column::TYPE_JSON:
+            case \Phalcon\Db\Column::TYPE_JSONB:
+                return "json";
+            default:
+                return "unknown";
         }
     }
 
@@ -271,7 +303,7 @@ class CreateModelTask extends \Phalcon\CLI\Task
     {
         $ret = array();
         foreach ($columns as $item) {
-            if($item['Type'] == 'timestamp' && $item['Default'] == 'CURRENT_TIMESTAMP') {
+            if(in_array($item['Type'], ['timestamp', 'date', 'datetime']) && $item['Default'] == 'CURRENT_TIMESTAMP') {
                 $item['Default'] = '0001-01-01 00:00:00';
             }
             $ret[$item['Field']] = $item['Default'];

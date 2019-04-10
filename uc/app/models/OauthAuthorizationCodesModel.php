@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-04-04 12:29:21$
+ * @version $Rev:2019-04-10 17:53:56$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class OauthAuthorizationCodesModel extends ModelBase
@@ -66,13 +66,13 @@ class OauthAuthorizationCodesModel extends ModelBase
      * @var datetime
      * @table oauth_authorization_codes
      */
-    public $ctime = null;
+    public $ctime = '0001-01-01 00:00:00';
 
     /**
      * @var datetime
      * @table oauth_authorization_codes
      */
-    public $mtime = null;
+    public $mtime = '0001-01-01 00:00:00';
 
     public function initialize()
     {
@@ -94,8 +94,8 @@ class OauthAuthorizationCodesModel extends ModelBase
         $this->revoked = '0';
         $this->redirectUrl = NULL;
         $this->expires = NULL;
-        $this->ctime = NULL;
-        $this->mtime = NULL;
+        $this->ctime = '0001-01-01 00:00:00';
+        $this->mtime = '0001-01-01 00:00:00';
     }
 
     /**

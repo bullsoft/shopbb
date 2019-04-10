@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-04-04 12:29:21$
+ * @version $Rev:2019-04-10 17:53:56$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class OauthScopesModel extends ModelBase
@@ -36,13 +36,13 @@ class OauthScopesModel extends ModelBase
      * @var datetime
      * @table oauth_scopes
      */
-    public $ctime = null;
+    public $ctime = '0001-01-01 00:00:00';
 
     /**
      * @var datetime
      * @table oauth_scopes
      */
-    public $mtime = null;
+    public $mtime = '0001-01-01 00:00:00';
 
     public function initialize()
     {
@@ -59,8 +59,8 @@ class OauthScopesModel extends ModelBase
         $this->id = NULL;
         $this->scope = NULL;
         $this->isDefault = NULL;
-        $this->ctime = NULL;
-        $this->mtime = NULL;
+        $this->ctime = '0001-01-01 00:00:00';
+        $this->mtime = '0001-01-01 00:00:00';
     }
 
     /**

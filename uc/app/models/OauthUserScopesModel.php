@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-04-04 12:29:21$
+ * @version $Rev:2019-04-10 17:53:56$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class OauthUserScopesModel extends ModelBase
@@ -27,22 +27,28 @@ class OauthUserScopesModel extends ModelBase
     public $user_id = null;
 
     /**
+     * @var integer
+     * @table oauth_user_scopes
+     */
+    public $client_id = null;
+
+    /**
      * @var string
      * @table oauth_user_scopes
      */
-    public $scope = null;
+    public $scope = '';
 
     /**
      * @var datetime
      * @table oauth_user_scopes
      */
-    public $ctime = null;
+    public $ctime = '0001-01-01 00:00:00';
 
     /**
      * @var datetime
      * @table oauth_user_scopes
      */
-    public $mtime = null;
+    public $mtime = '0001-01-01 00:00:00';
 
     public function initialize()
     {
@@ -58,9 +64,10 @@ class OauthUserScopesModel extends ModelBase
     {
         $this->id = NULL;
         $this->userId = NULL;
-        $this->scope = NULL;
-        $this->ctime = NULL;
-        $this->mtime = NULL;
+        $this->clientId = NULL;
+        $this->scope = '';
+        $this->ctime = '0001-01-01 00:00:00';
+        $this->mtime = '0001-01-01 00:00:00';
     }
 
     /**
@@ -71,6 +78,7 @@ class OauthUserScopesModel extends ModelBase
         return array(
             'id' => 'id', 
             'user_id' => 'userId', 
+            'client_id' => 'clientId', 
             'scope' => 'scope', 
             'ctime' => 'ctime', 
             'mtime' => 'mtime', 

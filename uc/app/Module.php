@@ -55,7 +55,7 @@ class Module extends PlusModule
             __NAMESPACE__.'\\Plugins'      => __DIR__.'/plugins/',
             __NAMESPACE__."\\Repositories" => __DIR__.'/repositories/',
             __NAMESPACE__."\\Entities"     => __DIR__.'/entities/',
-            "LightCloud\\Com\\Protos\\Uc"  => APP_ROOT_COMMON_DIR.'/protos/uc/',
+            "LightCloud\\Com\\Protos\\Uc"  => APP_ROOT_COMMON_DIR.'/protos/Uc/',
             "PhalconPlus\\Com\\Protos"     => APP_ROOT_COMMON_DIR.'/protos/',
         ))->register();
 

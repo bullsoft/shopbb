@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-04-04 12:29:21$
+ * @version $Rev:2019-04-10 17:53:56$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class UserModel extends ModelBase
@@ -81,16 +81,22 @@ class UserModel extends ModelBase
     public $status = '0';
 
     /**
-     * @var unknown
+     * @var datetime
      * @table user
      */
-    public $ctime = '0001-01-01 00:00:00';
+    public $reg_time = null;
 
     /**
-     * @var unknown
+     * @var datetime
      * @table user
      */
-    public $mtime = '0001-01-01 00:00:00';
+    public $ctime = null;
+
+    /**
+     * @var datetime
+     * @table user
+     */
+    public $mtime = null;
 
     public function initialize()
     {
@@ -115,8 +121,9 @@ class UserModel extends ModelBase
         $this->inviteUserId = '0';
         $this->inviteCode = '';
         $this->status = '0';
-        $this->ctime = '0001-01-01 00:00:00';
-        $this->mtime = '0001-01-01 00:00:00';
+        $this->regTime = NULL;
+        $this->ctime = NULL;
+        $this->mtime = NULL;
     }
 
     /**
@@ -136,6 +143,7 @@ class UserModel extends ModelBase
             'invite_user_id' => 'inviteUserId', 
             'invite_code' => 'inviteCode', 
             'status' => 'status', 
+            'reg_time' => 'regTime', 
             'ctime' => 'ctime', 
             'mtime' => 'mtime', 
         );
