@@ -75,6 +75,13 @@ class Module extends PlusModule
         // get config
         $config = $di->get('config');
         $that = $this;
+        // load env from {$root}/.env
+        if(\PhalconPlus\Enum\RunEnv::isInProd(APP_RUN_ENV)) {
+            if(\file_exists(APP_ROOT_DIR.".env")) {
+                $dotenv = \Dotenv\Dotenv::create(APP_ROOT_DIR);
+                $dotenv->load();
+            }
+        }
 
         if($this->isPrimary()) {
             $di->set('myConfig', function() use($that) {

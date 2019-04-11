@@ -21,6 +21,7 @@ class BaseController extends \Phalcon\Mvc\Controller
 
         $this->view->setVar("whichController", $whichController);
         $this->view->setVar("whichAction", $whichAction);
+        $this->view->setVar("pageException", null);
         $this->view->setVar("title", $title);
         $this->view->setVar("headDesc",     getSiteConf()->get("headDesc", "网站描述"));
         $this->view->setVar("headKeywords", getSiteConf()->get("headKeywords", "网站关键词"));

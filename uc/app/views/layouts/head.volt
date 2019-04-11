@@ -12,3 +12,11 @@
     <!-- Custom CSS -->
     {{__invoke__('Volt::yourCss', whichController, whichAction)}}
 </head>
+{%- macro error_messages(message, type) %}
+    <div class="alert alert-{{type}} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{%- endmacro %}

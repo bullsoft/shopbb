@@ -3,3 +3,4 @@ composer.lock
 */server.pid
 /vendor
 composer.json.dev
+.env

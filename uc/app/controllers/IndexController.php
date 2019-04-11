@@ -4,7 +4,7 @@ namespace LightCloud\Uc\Controllers;
 class IndexController extends BaseController
 {
     /**
-     * 模板使用示例
+     * @disableGuest
      */
     public function indexAction()
     {

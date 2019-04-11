@@ -16,7 +16,8 @@
         "phpoffice/phpword": "^0.14.0",
         "guzzlehttp/guzzle": "~6.0",
         "psx/schema": "*",
-        "wildbit/postmark-php": "*"
+        "wildbit/postmark-php": "*",
+        "vlucas/phpdotenv": "*"
     },
     "extra": {
         "installer-paths": {

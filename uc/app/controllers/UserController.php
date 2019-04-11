@@ -10,6 +10,7 @@ class UserController extends BaseController
      */
     public function loginAction()
     {
+        $this->view->setVar("fail", false);
         $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
         if($this->request->isGet()) {
             if($this->session->get('identity') > 0) {
@@ -20,13 +21,19 @@ class UserController extends BaseController
             }
         }
         if($this->request->isPost()) {
-            $a = Schemas\RegInfo::newInstance((object) $this->request->getPost());
+            try {
+                $a = Schemas\RegInfo::newInstance((object) $this->request->getPost());
+            } catch(\Exception $e) {
+                $this->view->setVar("pageException", $e);
+                return;
+            }
             $user = UserEntity::passwdMatch($a->getUsername(), $a->getPasswd());
             $this->session->set('identity', $user->id);
             $response = new \Phalcon\Http\Response();
             $redirectUrl = $this->request->getQuery("from", "string", "/");
             $response->redirect($redirectUrl);
             return $response;
+            
         }
     }
 
