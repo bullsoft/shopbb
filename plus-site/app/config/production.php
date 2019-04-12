@@ -5,21 +5,12 @@ return array(
         "ns"    => "Plus\\Web\\",
         "mode"  => "Web",
         "staticUri" => "/",
-        "url" => "https://phalconphp.org/",
+        "url" => "http://phalconplus.bullsoft.org/",
         "logFilePath" => "/tmp/Plus_site.log",
     ),
     "view" => array(
         "compiledPath"      => "/tmp/compiled/",
         "compiledExtension" => ".compiled",
-    ),
-    'db' => array(
-        "host" => "127.0.0.1",
-        "port" => 3306,
-        "username" => "root",
-        "password" => "",
-        "dbname" => "test",
-        "charset" => "utf8",
-        "timeout" => 3, // 3 秒
     ),
     "sayings" => [
         "UNIX很简单。但需要有一定天赋的人才能理解这种简单。 - Dennis Ritchie",
