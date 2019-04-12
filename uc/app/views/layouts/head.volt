@@ -5,6 +5,8 @@
     <meta name="description" content="{{headDesc}}">
     <meta name="author" content="布尔软件">
     <title>轻量云用户中心 - {{title}}</title>
+    <!-- Favicon -->
+    <link href="/favicon.png" rel="icon" type="image/png">
     <!-- Custom fonts for this template-->
     <link href="{{static_url('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->

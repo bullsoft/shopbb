@@ -11,6 +11,9 @@
 
     <title>PhalconPlus - 基于Phalcon框架的框架</title>
 
+    <!-- Favicon -->
+    <link href="/favicon.png" rel="icon" type="image/png">
+    
     <!-- Bootstrap Core CSS -->
     <link href="{{ url('css/bootstrap.min.css') }}" rel="stylesheet">
 
