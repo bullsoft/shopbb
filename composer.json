@@ -17,7 +17,8 @@
         "guzzlehttp/guzzle": "~6.0",
         "psx/schema": "*",
         "wildbit/postmark-php": "*",
-        "vlucas/phpdotenv": "*"
+        "vlucas/phpdotenv": "*",
+        "erusev/parsedown-extra": "*"
     },
     "extra": {
         "installer-paths": {
