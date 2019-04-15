@@ -1,6 +1,6 @@
 <?php
 namespace LightCloud\Uc\Controllers;
-
+use Gregwar\Captcha\CaptchaBuilder;
 class IndexController extends BaseController
 {
     /**
@@ -32,4 +32,15 @@ class IndexController extends BaseController
         );
         var_dump($sendResult);
     }
+
+    public function captchaAction()
+    {
+        $captcha = new CaptchaBuilder();
+        $captcha->build();
+        $response = new \Phalcon\Http\Response();
+        $response->setHeader('Content-Type', 'image/jpeg');
+        $response->setContent($captcha->get());
+        return $response;
+    }
+
 }

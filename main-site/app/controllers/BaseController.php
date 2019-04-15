@@ -2,7 +2,7 @@
 namespace Bull\MainSite\Controllers;
 
 use PhalconPlus\Base\SimpleRequest as SimpleRequest;
-use function LightCloud\Uc\getSiteConf;
+use function Bull\MainSite\getSiteConf;
 
 class BaseController extends \Phalcon\Mvc\Controller
 {
@@ -15,17 +15,18 @@ class BaseController extends \Phalcon\Mvc\Controller
         $this->action = $whichAction = $this->dispatcher->getActionName();
 
         $whichTitle = "网站标题(" . $whichController . ":" . $whichAction . ")";
-        // $title = getSiteConf()->titles->get($whichController) ?
-        //          getSiteConf()->titles->get($whichController)->get($whichAction, $whichTitle) : $whichTitle;
+        $title = getSiteConf()->titles->get($whichController) ?
+                  getSiteConf()->titles->get($whichController)->get($whichAction, $whichTitle) : $whichTitle;
 
 
         $this->view->setVar("whichController", $whichController);
         $this->view->setVar("whichAction", $whichAction);
         $this->view->setVar("pageException", null);
-        //$this->view->setVar("title", $title);
-        // $this->view->setVar("headDesc",     getSiteConf()->get("headDesc", "网站描述"));
-        // $this->view->setVar("headKeywords", getSiteConf()->get("headKeywords", "网站关键词"));
-        // $this->view->setVar("tpl",          getSiteConf()->get("template", "default"));
+        $this->view->setVar("title", $title);
+        $this->view->setVar("headDesc",     getSiteConf()->get("headDesc", "网站描述"));
+        $this->view->setVar("headKeywords", getSiteConf()->get("headKeywords", "网站关键词"));
+        $this->view->setVar("tpl",          getSiteConf()->get("template", "default"));
+        $this->view->setVar("projects", getSiteConf()->get("projects"));
         $this->view->setVar("ver", date("YmdHis").rand(100000, 999999));
     }
 

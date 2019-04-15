@@ -1,3 +1,5 @@
+{% include "layouts/macros.volt" %}
+<div class="position-relative">
 <section class="section section-lg section-hero section-shaped">
     <!-- Background circles -->
     <div class="shape shape-style-1 shape-primary">
@@ -18,15 +20,16 @@
                 <div class="col-lg-6 text-center">
                     <img src="/assets/img/brand/white.png" style="width: 200px;" class="img-fluid">
                     <p class="lead text-white">互联网+，科技为万物赋能。<br />布尔软件不忘初心，致力于成为您身边的软件专家</p>
+
                     <div class="btn-wrapper mt-5">
                         <a href="#"
-                            class="btn btn-lg btn-wechat btn-icon mb-3 mb-sm-0">
+                            class="btn btn-lg btn-wechat btn-icon mb-3 mb-sm-0" data-toggle="modal" data-target="#modal-default-1">
                             <span class="btn-inner--icon"><i class="fa fa-wechat"></i></span>
                             <span class="btn-inner--text">通过微信
                                     <span class="text-warning">赞助我们</span></span>
                         </a>
                         <a href="#"
-                            class="btn btn-lg btn-alipay btn-icon mb-3 mb-sm-0" target="_blank">
+                            class="btn btn-lg btn-alipay btn-icon mb-3 mb-sm-0" data-toggle="modal" data-target="#modal-default-2">
                             <span class="btn-inner--icon"><i class="fa fa-cny"></i></span>
                             <span class="btn-inner--text">通过支付宝
                                 <span class="text-warning">赞助我们</span></span>
@@ -47,3 +50,7 @@
         </svg>
     </div>
 </section>
+</div>
+
+{{msg_modal(1, '微信赞助我们', '<p style="text-align: center;"><img width="80%" src="https://static.bullsoft.org/payme_wechat.jpeg" /></p>')}}
+{{msg_modal(2, '支付宝赞助我们', '<p style="text-align: center;"><img width="60%" src="https://static.bullsoft.org/payme_alipay.png" /></p>')}}

@@ -12,4 +12,4 @@
     <link href="/assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- Argon CSS -->
     <link type="text/css" href="/assets/css/argon.css?v={{ ver }}" rel="stylesheet">
-  </head>
+</head>

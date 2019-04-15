@@ -5,6 +5,18 @@ use PhalconPlus\Base\AbstractModule as PlusModule;
 use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
 use PhalconPlus\Logger\Processor\Uid as UidProcessor;
 
+if(!function_exists("getSiteConf")) {
+    function getSiteConf() 
+    {
+        static $siteConf = [];
+        $siteConfPath = APP_MODULE_DIR . "app/config/siteConf.php";
+        if(empty($siteConf) && is_file($siteConfPath)) {
+            $siteConf = include($siteConfPath);
+        }
+        return new \Phalcon\Config($siteConf);
+    }
+}
+
 class Module extends PlusModule
 {
     public function registerAutoloaders()

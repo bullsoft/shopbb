@@ -18,7 +18,8 @@
         "psx/schema": "*",
         "wildbit/postmark-php": "*",
         "vlucas/phpdotenv": "*",
-        "erusev/parsedown-extra": "*"
+        "erusev/parsedown-extra": "*",
+        "gregwar/captcha": "1.*"
     },
     "extra": {
         "installer-paths": {
