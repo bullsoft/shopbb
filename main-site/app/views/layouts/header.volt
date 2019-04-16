@@ -32,7 +32,7 @@
             <li class="nav-item dropdown">
               <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
                 <i class="ni ni-collection d-lg-none"></i>
-                <span class="nav-link-inner--text">项 目</span>
+                <span class="nav-link-inner--text">开源项目</span>
               </a>
               <div class="dropdown-menu">
                 {% for name, item in projects %}
@@ -40,6 +40,11 @@
                 {% endfor %}
               </div>
             </li>
+            <li class="nav-item">
+                <a href="{{url('project/biz')}}" class="nav-link" role="button">
+                    商业项目
+                </a>
+          </li>
             <li class="nav-item">
                     <a href="#" class="nav-link" role="button">
                         团队成员

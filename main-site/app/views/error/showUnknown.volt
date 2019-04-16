@@ -1,6 +1,6 @@
 <div class="position-relative">
   <!-- shape Hero -->
-  <section class="section section-lg section-shaped pb-250">
+  <section class="section section-lg section-shaped">
     <div class="shape shape-style-1 shape-default">
       <span></span>
       <span></span>

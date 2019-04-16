@@ -22,7 +22,7 @@ $siteConf = [
     // <a href="#" class="dropdown-item">CentCMS: Headless CMS系统</a>
     // <a href="#" class="dropdown-item">UserCenter: 集成OAuth2的用户中心</a>
     // <a href="#" class="dropdown-item">Yar4J: Yar协议的JAVA实现</a>
-    
+
     "projects" => [
         "php-pinyin" => [
             "title"     => "PHP汉字转拼音扩展",
@@ -48,6 +48,79 @@ $siteConf = [
             "repoUrl"   => "https://github.com/bullsoft/php-binlog",
             "paperPath" => ""
         ]
+    ],
+    "depends" => [
+        "composer" => [
+            "title" => "Composer",
+            "logoUrl" => "https://getcomposer.org/img/logo-composer-transparent4.png",
+            "backgroudColor" => "#ffffff",
+            "desc" => "Composer is a tool for dependency management in PHP. It allows you to declare the libraries your project depends on and it will manage (install/update) them for you.",
+            "website" => "https://getcomposer.org/",
+            "tags" => [
+                "Dependency Management",
+                "Tool"
+            ]
+        ],
+        "xdebug" => [
+            "title" => "Xdebug",
+            "logoUrl" => "https://xdebug.org/images/xdebug-logo.png",
+            "backgroudColor" => "#59c44e",
+            "desc" => "Xdebug is an extension for PHP to assist with debugging and development. It contains a single step debugger to use with IDEs; it upgrades PHP's var_dump() function; it adds stack traces for Notices, Warnings, Errors and Exceptions;",
+            "website" => "https://xdebug.org",
+            "tags" => [
+                "Debug",
+                "Tool",
+                "Zend Extension"
+            ]
+        ],
+        "hoaproject" => [
+            "title" => "Hoa Project",
+            "logoUrl" => "https://static.hoa-project.net/Image/Hoa.svg",
+            "backgroudColor" => "#faf9f8",
+            "desc" => "Xdebug is an extension for PHP to assist with debugging and development. It contains a single step debugger to use with IDEs; it upgrades PHP's var_dump() function; it adds stack traces for Notices, Warnings, Errors and Exceptions;",
+            "website" => "https://hoa-project.org",
+            "tags" => [
+                "Packages",
+                "Framework",
+                "Components"
+            ]
+        ],
+        "phalconphp" => [
+            "title" => "Phalcon PHP",
+            "logoUrl" => "https://phalconphp.com/images/phalcon1.png",
+            "backgroudColor" => "#2f4858",
+            "desc" => "A full-stack PHP framework delivered as a C-extension Its innovative architecture makes Phalcon the fastest PHP framework ever built!",
+            "website" => "https://phalconphp.com",
+            "tags" => [
+                "Components",
+                "Framework",
+                "C-Extension"
+            ]
+        ],
+        "thephpleague" => [
+            "title" => "The PHP League",
+            "logoUrl" => "https://thephpleague.com/img/logo.png",
+            "backgroudColor" => "#19232a",
+            "desc" => "The League of Extraordinary Packages is a group of developers who have banded together to build solid, well tested PHP packages using modern coding standards.",
+            "website" => "https://thephpleague.com/",
+            "tags" => [
+                "Components",
+                "Packages",
+                "OAuth2"
+            ]
+        ],
+        "phpcpp" => [
+            "title" => "PHP-CPP",
+            "logoUrl" => "http://media.copernica.com/logos/phpcpp-logo.svg",
+            "backgroudColor" => "#ffffff",
+            "desc" => "A C++ library for developing PHP extensions. It offers a collection of well documented and easy-to-use classes that can be used and extended to build native extensions for PHP.",
+            "website" => "https://thephpleague.com/",
+            "tags" => [
+                "Library",
+                "CPP",
+                "Zend Internal"
+            ]
+        ],
     ]
 ];
 

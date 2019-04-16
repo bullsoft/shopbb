@@ -1,5 +1,6 @@
 <?php
 namespace Bull\MainSite\Controllers;
+use function Bull\MainSite\getSiteConf;
 
 class IndexController extends BaseController
 {
@@ -8,5 +9,7 @@ class IndexController extends BaseController
      */
     public function indexAction()
     {
+        $depends = getSiteConf()->get("depends");
+        $this->view->setVar("depends", $depends);
     }
 }
