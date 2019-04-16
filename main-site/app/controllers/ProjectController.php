@@ -16,4 +16,9 @@ class ProjectController extends BaseController
         }
         $this->view->setVar("proj", $proj);
     }
+
+    public function fintechAction()
+    {
+
+    }
 }
