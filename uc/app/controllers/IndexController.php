@@ -8,7 +8,9 @@ class IndexController extends BaseController
      */
     public function indexAction()
     {
-        //$this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
+        echo "<h2>OAuth2 Code:</h2>";
+        echo 'Code: <code style="word-wrap: break-word; word-break: break-all;"> ' .$this->request->get("code", "string", "Invalid Code")  . '</code>';
+        exit;
     }
 
     /**

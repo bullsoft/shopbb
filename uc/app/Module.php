@@ -4,6 +4,8 @@ namespace LightCloud\Uc;
 use PhalconPlus\Base\AbstractModule as PlusModule;
 use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
 use PhalconPlus\Logger\Processor\Uid as UidProcessor;
+use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
+
 
 if(!function_exists("getSiteConf")) {
     function getSiteConf() 
@@ -112,7 +114,12 @@ class Module extends PlusModule
             ))->convert('action', function ($action) {
                 return lcfirst(\Phalcon\Text::camelize($action));
             });
-            $router->add('/oauth/:controller/([a-zA-Z0-9_\-]+)/:params', array(
+            $router->add('/oauth/:controller', array(
+                'controller' => 1,
+                'action'     => "index",
+                'namespace'  => __NAMESPACE__ . "\\Controllers\\OAuth",
+            ));
+            $router->add('/oauth/:controller/([a-zA-Z0-9_\-]*)/:params', array(
                 'controller' => 1,
                 'action'     => 2,
                 'params'     => 3,
@@ -133,6 +140,8 @@ class Module extends PlusModule
             $mysql = new \PhalconPlus\Db\Mysql($di, "db");
             return $mysql->getConnection();
         });
+
+        $di->set('modelsMetadata', new MetaData());
 
         // check if this module is a primary one?
         if($this->isPrimary()) {

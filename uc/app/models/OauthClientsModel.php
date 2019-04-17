@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-04-10 17:53:56$
+ * @version $Rev:2019-04-17 13:42:33$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class OauthClientsModel extends ModelBase

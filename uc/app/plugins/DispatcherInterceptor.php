@@ -58,7 +58,7 @@ class DispatcherInterceptor extends Plugin
                 if (!$anno->has('api')) {
                     // HTTP跳转登录
                     $response = new \Phalcon\Http\Response();
-                    $response->redirect("user/login?from=".$this->request->getURI());
+                    $response->redirect("user/login?from=".urlencode($this->request->getURI()));
                     $dispatcher->setReturnedValue($response);
                     return false;
                 } else {
