@@ -39,6 +39,7 @@ class IndexController extends BaseController
     {
         $captcha = new CaptchaBuilder();
         $captcha->build();
+        $this->redis->setEx('phrase::'.$this->session->getId(), 300, $captcha->getPhrase());
         $response = new \Phalcon\Http\Response();
         $response->setHeader('Content-Type', 'image/jpeg');
         $response->setContent($captcha->get());

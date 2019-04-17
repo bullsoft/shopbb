@@ -27,11 +27,22 @@
                                         <div class="form-group">
                                             <input type="text" name="username" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Username...">
+                                                placeholder="Enter Username..." value="{{request.getPost('username')}}" />
                                         </div>
                                         <div class="form-group">
                                             <input type="password" name="passwd" class="form-control form-control-user"
                                                 id="exampleInputPassword" placeholder="Password">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row" style="line-height: 44px">
+                                                <div class="col-lg-6">
+                                                    <input type="password" name="passwd" class="form-control form-control-user" id="exampleInputCaptcha"
+                                                        placeholder="验证码">
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <img src="/index/captcha" onClick="this.src='/index/captcha?rand='+Math.random();" style="cursor: pointer;" />
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -40,23 +51,24 @@
                                                     Me</label>
                                             </div>
                                         </div>
+                                        
                                         <a href="#" class="btn btn-primary btn-user btn-block" onclick="document.getElementById('user-login').submit();">
-                                            Login
+                                            登 录
                                         </a>
                                         <hr>
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
+                                        <a href="#" onClick="javascript: alert('暂不支持谷歌登录')" class="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i> Login with Google
                                         </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                                        <a href="#" onClick="javascript: alert('暂不支持脸书登录')" class="btn btn-facebook btn-user btn-block">
                                             <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                         </a>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                        <a class="small" href="forgot-password.html">忘记密码?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
+                                        <a class="small" href="register.html">创建账号!</a>
                                     </div>
                                 </div>
                             </div>

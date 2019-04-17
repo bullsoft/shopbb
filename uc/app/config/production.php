@@ -44,5 +44,19 @@ return array(
     "mail" => [
         "driver" => "postmark",
         "token" => \getenv("PHP_POSTMARK_API_TOKEN"),
-    ]
+    ],
+    "session" => [
+        "uniqueId"   => "lightcloud-uc-app",
+        "host"       => "node00-bullsoft",
+        "port"       => 6379,
+        "auth"       => "",
+        "persistent" => false,
+        "lifetime"   => 3600,
+        "prefix"     => "my",
+        "index"      => 1,
+    ],
+    "redis" => [
+        'host' => "node00-bullsoft",
+        "port" => 6379
+    ],
 );

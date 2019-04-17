@@ -20,26 +20,25 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-2">Forgot Your Password?</h1>
-                                        <p class="mb-4">We get it, stuff happens. Just enter your email address below
-                                            and we'll send you a link to reset your password!</p>
+                                        <h1 class="h4 text-gray-900 mb-2">还有忘记密码这回事?</h1>
+                                        <p class="mb-4">别担心、别焦虑、千万别内分泌失调，有招儿帮你重置密码！一会儿你去收封邮件，点击邮件里的链接，会引导你重置密码的！</p>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" id="user-forgot-passwd">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address...">
                                         </div>
-                                        <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                            Reset Password
+                                        <a href="#"  onclick="document.getElementById('user-forgot-passwd').submit();" class="btn btn-primary btn-user btn-block">
+                                            重置密码
                                         </a>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
+                                        <a class="small" href="register.html">创建账号!</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="login.html">Already have an account? Login!</a>
+                                        <a class="small" href="login.html">别打扰我，我要登录!</a>
                                     </div>
                                 </div>
                             </div>

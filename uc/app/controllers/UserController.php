@@ -2,6 +2,7 @@
 namespace LightCloud\Uc\Controllers;
 use LightCloud\Com\Protos\Uc\Schemas;
 use LightCloud\Uc\Entities\UserEntity;
+use Gregwar\Captcha\CaptchaBuilder;
 
 class UserController extends BaseController
 {
@@ -10,7 +11,6 @@ class UserController extends BaseController
      */
     public function loginAction()
     {
-        $this->view->setVar("fail", false);
         $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
         if($this->request->isGet()) {
             if($this->session->get('identity') > 0) {

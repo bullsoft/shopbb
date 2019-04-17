@@ -6,6 +6,14 @@
             "type": "string",
             "minLength": 5
         },
+        "email": {
+            "type": "string",
+            "format": "email"
+        },
+        "captcha": {
+            "type": "string",
+            "pattern": "^([0-9A-Za-z]{5})?$"
+        },
         "mobile": {
             "type": "string",
             "minLength": 11,

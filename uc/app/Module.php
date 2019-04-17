@@ -5,7 +5,7 @@ use PhalconPlus\Base\AbstractModule as PlusModule;
 use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
 use PhalconPlus\Logger\Processor\Uid as UidProcessor;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
-
+use Phalcon\Session\Adapter\Redis as SessionRedis;
 
 if(!function_exists("getSiteConf")) {
     function getSiteConf() 
@@ -185,6 +185,13 @@ class Module extends PlusModule
             return new \Postmark\PostmarkClient($config->mail->token);
         });
 
+        
+        $di->setShared('redis', function () use ($config) {
+            $redis = new \Redis();
+            $redis->connect($config->redis->host, $config->redis->port, 1, NULL, 100);
+            return $redis;
+        });
+
         $di->set("rpc", function() use ($di, $config, $bootstrap) {
             $client = null;
             if($config->debugRPC == true) {
@@ -196,6 +203,12 @@ class Module extends PlusModule
                 $client->SetOpt(\YAR_OPT_CONNECT_TIMEOUT, 5);
             }
             return $client;
+        });
+
+        $di->setShared('session', function () use ($config) {
+            $session = new SessionRedis($config->session->toArray());
+            $session->start();
+            return $session;
         });
         
         // set view with volt
