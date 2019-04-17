@@ -40,11 +40,15 @@
                 {% endfor %}
               </div>
             </li>
-            <li class="nav-item">
-                <a href="{{url('project/biz')}}" class="nav-link" role="button">
-                    商业项目
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link" data-toggle="dropdown" href="#" role="button">
+                  <i class="ni ni-collection d-lg-none"></i>
+                  <span class="nav-link-inner--text">商业项目</span>
                 </a>
-          </li>
+                <div class="dropdown-menu">
+                  <a href="{{url('project/fintech')}}" class="dropdown-item">金融科技云</a>
+                </div>
+              </li>
             <li class="nav-item">
                     <a href="#" class="nav-link" role="button">
                         团队成员

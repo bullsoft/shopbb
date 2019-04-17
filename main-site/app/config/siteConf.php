@@ -50,6 +50,50 @@ $siteConf = [
         ]
     ],
     "depends" => [
+        "php" => [
+            "title" => "The PHP Lanuage",
+            "logoUrl" => "https://www.php.net/images/logos/php-logo.svg",
+            "backgroudColor" => "#8893bd",
+            "desc" => "PHP is a popular general-purpose scripting language that is especially suited to web development.
+            <br />Fast, flexible and pragmatic, PHP powers everything from your blog to the most popular websites in the world.",
+            "website" => "https://www.php.net/",
+            "tags" => [
+                "Lanuage",
+                "Script",
+                "Web Development"
+            ]
+        ],
+        "python" => [
+            "title" => "The Python Lanuage",
+            "logoUrl" => "https://www.python.org/static/img/python-logo@2x.png",
+            "backgroudColor" => "#1f415d",
+            "desc" => "Python is a programming language that lets you work more quickly and integrate your systems more effectively.<br />Python is powerful... and fast; 
+            plays well with others; 
+            runs everywhere; 
+            is friendly & easy to learn; 
+            is Open.",
+            "website" => "https://www.python.org/",
+            "tags" => [
+                "Lanuage",
+                "Script",
+                "Science", 
+                "Computing"
+            ]
+        ],
+        "elixir" => [
+            "title" => "The Elixir Lanuage",
+            "logoUrl" => "https://elixir-lang.org/images/logo/logo.png",
+            "backgroudColor" => "#ffffff",
+            "desc" => "Elixir is a dynamic, functional language designed for building scalable and maintainable applications.<br />
+            Elixir leverages the Erlang VM, known for running low-latency, distributed and fault-tolerant systems.",
+            "website" => "https://elixir-lang.org/",
+            "tags" => [
+                "Lanuage",
+                "Erlang",
+                "Functional", 
+                "Distributed"
+            ]
+        ],
         "composer" => [
             "title" => "Composer",
             "logoUrl" => "https://getcomposer.org/img/logo-composer-transparent4.png",
@@ -77,7 +121,7 @@ $siteConf = [
             "title" => "Hoa Project",
             "logoUrl" => "https://static.hoa-project.net/Image/Hoa.svg",
             "backgroudColor" => "#faf9f8",
-            "desc" => "Xdebug is an extension for PHP to assist with debugging and development. It contains a single step debugger to use with IDEs; it upgrades PHP's var_dump() function; it adds stack traces for Notices, Warnings, Errors and Exceptions;",
+            "desc" => "Hoa is a modular, extensible and structured set of PHP libraries. Moreover, Hoa aims at being a bridge between industrial and research worlds.",
             "website" => "https://hoa-project.org",
             "tags" => [
                 "Packages",
