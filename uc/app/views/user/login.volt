@@ -36,7 +36,7 @@
                                         <div class="form-group">
                                             <div class="row" style="line-height: 44px">
                                                 <div class="col-lg-6">
-                                                    <input type="password" name="passwd" class="form-control form-control-user" id="exampleInputCaptcha"
+                                                    <input type="text" name="captcha" class="form-control form-control-user" id="exampleInputCaptcha"
                                                         placeholder="验证码">
                                                 </div>
                                                 <div class="col-lg-5">
