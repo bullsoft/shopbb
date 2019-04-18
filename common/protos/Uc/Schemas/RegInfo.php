@@ -21,6 +21,11 @@ class RegInfo extends ProtoBase
      */
     protected $email;
     /**
+     * @Key("nickname")
+     * @Type("string")
+     */
+    protected $nickname;
+    /**
      * @Key("captcha")
      * @Type("string")
      * @Pattern("^([0-9A-Za-z]{5})?$")
@@ -54,6 +59,14 @@ class RegInfo extends ProtoBase
     public function getEmail()
     {
         return $this->email;
+    }
+    public function setNickname($nickname)
+    {
+        $this->nickname = $nickname;
+    }
+    public function getNickname()
+    {
+        return $this->nickname;
     }
     public function setCaptcha($captcha)
     {

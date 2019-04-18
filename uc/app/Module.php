@@ -24,25 +24,25 @@ class Module extends PlusModule
     public function __construct(\Phalcon\Di $di, \PhalconPlus\Base\ModuleDef $def)
     {
         parent::__construct($di, $def);
-        set_exception_handler(function ($exception) use ($di) {
-            $response = $di->get("response");
-            $errorMsg = $msg = $exception->getMessage();
-            $data = new \stdClass();
-            if(($offset = \strpos($msg, "__DATA__")) !== false) {
-                $errorMsg = \substr($msg, 0, $offset);
-                $dataMsg = substr($msg, $offset+\strlen("__DATA__"));
-                $data = json_decode($dataMsg, true);
-            }
-            $error = array(
-                'errorCode' => max(1, $exception->getCode()),
-                'errorMsg' => $errorMsg,
-                'data' => $data??(new \stdClass()),
-                'sessionId' => '',
-            );
-            $response->setHeader('Content-Type', 'application/json');
-            $response->setJsonContent($error);
-            $response->send();
-        });  
+        // set_exception_handler(function ($exception) use ($di) {
+        //     $response = $di->get("response");
+        //     $errorMsg = $msg = $exception->getMessage();
+        //     $data = new \stdClass();
+        //     if(($offset = \strpos($msg, "__DATA__")) !== false) {
+        //         $errorMsg = \substr($msg, 0, $offset);
+        //         $dataMsg = substr($msg, $offset+\strlen("__DATA__"));
+        //         $data = json_decode($dataMsg, true);
+        //     }
+        //     $error = array(
+        //         'errorCode' => max(1, $exception->getCode()),
+        //         'errorMsg' => $errorMsg,
+        //         'data' => $data??(new \stdClass()),
+        //         'sessionId' => '',
+        //     );
+        //     $response->setHeader('Content-Type', 'application/json');
+        //     $response->setJsonContent($error);
+        //     $response->send();
+        // });  
             
     }
 
@@ -90,6 +90,12 @@ class Module extends PlusModule
                 return $that->getDef()->getConfig();
             });
         }
+
+        $di->setShared("url", function() use ($config) {
+            $url = new \Phalcon\Mvc\Url();
+            $url->setBaseUri($config->application->url);
+            return $url;
+        });
 
         $di->setShared("logger", function() use ($di, $config){
             $logger = new \PhalconPlus\Logger\Adapter\FilePlus($config->application->logFilePath);

@@ -10,7 +10,7 @@ return array(
         "ns"    => "LightCloud\\Uc\\",
         "mode"  => "Web",
         "staticUri" => "/",
-        "url" => "http://uc.bullsoft.org",
+        "url" => "http://uc.bullsoft.org/",
         "logFilePath" => "/tmp/LightCloud_uc.log",
     ),
     "view" => array(

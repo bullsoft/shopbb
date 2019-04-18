@@ -70,10 +70,16 @@ class DispatcherInterceptor extends Plugin
         if($this->session->has('identity')) {
             $userId = intval($this->session->get('identity'));
             $user = UserModel::findFirst($userId);
-            $response = $user->toProtoBuffer();
-            $this->di->setShared("user", function () use ($response) {
-                return $response;
-            });
+            if($user == false) {
+                $this->session->remove('identity');
+                throw new NeedLoginException(["user need login to access this resource"]);
+                return false;
+            } else {
+                $response = $user->toProtoBuffer();
+                $this->di->setShared("user", function () use ($response) {
+                    return $response;
+                });
+            }
         }
 
         return true;

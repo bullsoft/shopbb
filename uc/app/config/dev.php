@@ -10,7 +10,7 @@ return array(
         "ns"    => "LightCloud\\Uc\\",
         "mode"  => "Web",
         "staticUri" => "/",
-        "url" => "http//server.localhost.com/",
+        "url" => "http://127.0.0.1:8086/",
         "logFilePath" => "/tmp/LightCloud_uc.log",
     ),
     "view" => array(

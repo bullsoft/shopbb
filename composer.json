@@ -19,7 +19,10 @@
         "wildbit/postmark-php": "*",
         "vlucas/phpdotenv": "*",
         "erusev/parsedown-extra": "*",
-        "gregwar/captcha": "1.*"
+        "gregwar/captcha": "1.*",
+        "ramsey/uuid": "*",
+        "hashids/hashids": "*",
+        "chillerlan/php-qrcode": "*"
     },
     "extra": {
         "installer-paths": {

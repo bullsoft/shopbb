@@ -37,7 +37,7 @@
                                         <a href="#" class="btn btn-success btn-circle">
                                             <i class="fas fa-check" style="z-index:10;"></i>
                                         </a>
-                                        <div  id="lightcloud-client" class="mb-4 rounded-circle" style="float: right; line-height: 96px; background-color: rgb(29, 22, 22); height: 96px; width: 96px;">
+                                        <div  id="lightcloud-client" class="mb-4 rounded-circle" style="float: right; line-height: 96px; background-color: rgb(78, 115, 223); height: 96px; width: 96px;">
                                             <img src="/favicon.png" height="64px" />
                                         </div>
                                 </div>

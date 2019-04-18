@@ -25,6 +25,25 @@ class UserEntity extends UserModel implements UserEntityInterface
         return $this->id;
     }
 
+    public static function activateThroughMail($mail, $userId)
+    {
+        $user = UserEntity::findFirst([
+            "id=:id: AND email=:m:",
+            "bind" => [
+                "id" => $userId,
+                "m" => $mail,
+            ]
+        ]);
+        if($user == false) {
+            throw new UserNotExistsException(["activated failed with wrong params", $mail, $userId]);
+        }
+        $user->status = UserStatus::NORMAL;
+        if($user->save()) {
+            return true;
+        } 
+        return false;
+    }
+
     public static function passwdMatch($username, $passwd)
     {
         $userInfo = UserEntity::findFirst([
@@ -52,14 +71,33 @@ class UserEntity extends UserModel implements UserEntityInterface
         $user = new UserModel();
         if($regInfo->getMobile()) {
             $user->mobile = $regInfo->getMobile();
+            $user->setUniqueKeys(["mobile"]);
+            // 是否已经被占用
+            if ($user->exists() != false) {
+                throw new UserAlreadyExistsException(["mobile alreay exists", $regInfo->getMobile()]);
+            }
+        }
+
+        if($regInfo->getEmail()) {
+            $user->email = $regInfo->getEmail();
+            $user->setUniqueKeys(["email"]);
+            // 是否已经被占用
+            if ($user->exists() != false) {
+                throw new UserAlreadyExistsException(["email alreay exists", $regInfo->getEmail()]);
+            }
+        }
+
+        if($regInfo->getNickname()) {
+            $user->nickname = $regInfo->getNickname();
         }
 
         $user->username = $regInfo->getUsername();
-        $user->setUniqueKeys(["username"]);
-
-        // 是否已经被占用
-        if ($user->exists() != false) {
-            throw new UserAlreadyExistsException(["username alreay exists", $regInfo->getUsername()]);
+        if(!in_array($user->username, ["m".$user->mobile, $user->email])) {
+            $user->setUniqueKeys(["username"]);
+            // 是否已经被占用
+            if ($user->exists() != false) {
+                throw new UserAlreadyExistsException(["username alreay exists", $regInfo->getUsername()]);
+            }
         }
 
         // 生成安全密码
@@ -68,9 +106,10 @@ class UserEntity extends UserModel implements UserEntityInterface
         $passwd = hash("sha256", $salt . $regInfo->getPasswd());
         $user->passwd = $passwd;
 
-        // 默认合法用户
-        $user->status = UserStatus::NORMAL;
-
+        // 默认需要验证
+        $user->status = UserStatus::NEED_VALID;
+        $user->regTime = date("Y-m-d H:i:s");
+        $user->inviteCode = new \Phalcon\Db\RawValue("NULL");
 
         if ($user->save() == false) {
             throw new SystemBusyException(["failed to create user, userInfo: ", $user->toArray()]);

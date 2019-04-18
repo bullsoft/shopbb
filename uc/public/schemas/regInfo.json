@@ -10,6 +10,9 @@
             "type": "string",
             "format": "email"
         },
+        "nickname": {
+            "type": "string"
+        },
         "captcha": {
             "type": "string",
             "pattern": "^([0-9A-Za-z]{5})?$"
