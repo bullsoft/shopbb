@@ -8,7 +8,6 @@ use Hashids\Hashids;
 use function GuzzleHttp\json_encode;
 use function GuzzleHttp\json_decode;
 use \PhalconPlus\Assert\Assertion;
-use ___PHPSTORM_HELPERS\object;
 
 class UserController extends BaseController
 {
