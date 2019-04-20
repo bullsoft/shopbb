@@ -221,6 +221,7 @@ class Module extends PlusModule
         $di->set('view', function() use ($di) {
             $view = new \Phalcon\Mvc\View();
             $view->setViewsDir(__DIR__.'/views/');
+            $view->setViewsDir(__DIR__.'/views_stisla/');
             $view->registerEngines(array(
                 ".volt" => function($view, $di) {
                     $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);

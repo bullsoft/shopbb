@@ -1,127 +1,200 @@
 <?php
 namespace LightCloud\Uc\Controllers;
+
 use LightCloud\Com\Protos\Uc\Schemas;
 use LightCloud\Uc\Entities\UserEntity;
 use Gregwar\Captcha\CaptchaBuilder;
 use Hashids\Hashids;
 use function GuzzleHttp\json_encode;
 use function GuzzleHttp\json_decode;
+use \PhalconPlus\Assert\Assertion;
+use ___PHPSTORM_HELPERS\object;
 
 class UserController extends BaseController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->view->setVar("showSider", false);
+    }
+
     /**
      * 模板使用示例
      */
     public function loginAction()
     {
-        $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
-        if($this->request->isGet()) {
-            if($this->session->get('identity') > 0) {
+        if ($this->request->isGet()) {
+            if ($this->session->get('identity') > 0) {
                 $response = new \Phalcon\Http\Response();
                 $redirectUrl = $this->request->getQuery("from", "string", "/");
-                $response->redirect($redirectUrl);
+                $response->redirect(\Phalcon\Text::reduceSlashes($redirectUrl));
                 return $response;
             }
         }
-        if($this->request->isPost()) {
+        if ($this->request->isPost()) {
+            $captchaKey = 'phrase::' . $this->session->getId();
             try {
-                $regInfo = Schemas\RegInfo::newInstance((object) $this->request->getPost());
-            } catch(\Exception $e) {
+                $email = $this->request->getPost("email");
+                Assertion::notEmpty("email", "请输入邮箱");
+                Assertion::eq(
+                    strtolower($this->redis->get($captchaKey)),
+                    strtolower($this->request->getPost("captcha")),
+                    "验证码错误"
+                );
+                $this->redis->delete($captchaKey);
+                $_POST['username'] = $email;
+                $regInfo = Schemas\RegInfo::newInstance((object)$this->request->getPost());
+                $user = UserEntity::passwdMatch($regInfo->getUsername(), $regInfo->getPasswd());
+                $this->session->set('identity', $user->id);
+            } catch (\Exception $e) {
                 $this->view->setVar("pageException", $e);
                 return;
             }
-            $user = UserEntity::passwdMatch($regInfo->getUsername(), $regInfo->getPasswd());
-            $this->session->set('identity', $user->id);
             $response = new \Phalcon\Http\Response();
             $redirectUrl = $this->request->getQuery("from", "string", "/");
-            $response->redirect($redirectUrl);
-            return $response;  
+            $response->redirect(\Phalcon\Text::reduceSlashes($redirectUrl));
+            return $response;
         }
     }
 
     public function registerAction()
     {
-        $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW); 
         $this->view->setVar("regStatus", false);
-        if($this->request->isPost()) {
+        if ($this->request->isPost()) {
             try {
-                \PhalconPlus\Assert\Assertion::notEmpty($this->request->getPost("firstName"), "名字不能为空");
-                \PhalconPlus\Assert\Assertion::notEmpty($this->request->getPost("email"), "邮件地址不能为空");
-                \PhalconPlus\Assert\Assertion::eq($this->request->getPost("passwd"), $this->request->getPost("passwd1"), "两次输入的密码不一致");
+                Assertion::notEmpty($this->request->getPost("firstName"), "名字不能为空");
+                Assertion::notEmpty($this->request->getPost("email"), "邮件地址不能为空");
+                Assertion::eq($this->request->getPost("passwd"), $this->request->getPost("passwd1"), "两次输入的密码不一致");
                 // UserName is required, use email here
                 $_POST['username'] = $this->request->getPost("email");
-                // get name from lastName + firstName
-                $lastName = $this->request->getPost("lastName")?$this->request->getPost("lastName")." " : "";
+                // Get name from lastName + firstName
+                $lastName = $this->request->getPost("lastName") ? $this->request->getPost("lastName") . " " : "";
                 $firstName = $this->request->getPost("firstName");
 
-                $regInfo = Schemas\RegInfo::newInstance((object) $this->request->getPost());
-                if(empty($regInfo->getNickname())) {
-                    $regInfo->setNickname($lastName.$firstName);
+                $regInfo = Schemas\RegInfo::newInstance((object)$this->request->getPost());
+                if (empty($regInfo->getNickname())) {
+                    $regInfo->setNickname($lastName . $firstName);
                 }
                 $result = UserEntity::createOne($regInfo);
                 $this->session->set('identity', $result->id);
+                $this->di->setShared('user', $result);
                 $this->view->setVar("regStatus",  true);
                 $this->view->setVar("email", $regInfo->getEMail());
-                // empty POST data
+
+                // Empty POST data
                 $_POST = [];
-                $hashids = new Hashids();
-                $rand = str_replace(".", "-", uniqid("lightcloud-", true));
-                $this->redis->setEx($rand, 3600, json_encode([$regInfo->getEmail(), $result->id]));
+                $rand = \LightCloud\Uc\Plugins\getRandomCode();
+                $this->redis->setEx($rand, 3600, json_encode([$result->id, $regInfo->getEmail()]));
 
                 // SendEmail
-                $sendResult = $this->mailClient->sendEmailWithTemplate(
-                    "no-reply@lightcloud.org",
-                    $regInfo->getEMail(),
-                    "11196862",
-                    [
-                        "product_name" => "轻量云用户中心", 
-                        "name" => $regInfo->getNickname(),
-                        "action_url" => $this->url->get("user/activate", ["rand" => $rand], true),
-                        "login_url" => $this->url->get("user/login", null ,true),
-                        "username" => $regInfo->getUsername(),
-                        "company_name" => "布尔软件",
-                        "company_address" => "北京市朝阳区霄云路"
-                    ],
-                    true,
-                    "welcome_to_lightcloud"
-                );
-
-            } catch(\Exception $e) {
+                $sendResult = $this->mailer->welcome($regInfo->getEmail(), [
+                    "name" => $regInfo->getNickname(),
+                    "action_url" => $this->url->get("user/activate", ["rand" => $rand, "from" => "email"], true),
+                    "username" => $regInfo->getUsername(),
+                ]);
+            } catch (\Exception $e) {
                 $this->view->setVar("pageException", $e);
                 return;
-            }  
+            }
         }
-
     }
 
+    /**
+     * 通过邮件激活账号
+     */
     public function activateAction()
     {
         $randStr = $this->request->getQuery("rand");
-        \PhalconPlus\Assert\Assertion::notEmpty($randStr, "非法访问");
+        Assertion::notEmpty($randStr, "非法访问");
         $cacheInfo = $this->redis->get($randStr);
         $info = json_decode($cacheInfo, true);
         $result = UserEntity::activateThroughMail($info[0], $info[1]);
-        if(!$result) {
+        if (!$result) {
             echo "激活失败，请联系我们";
             exit;
         }
+        $this->redis->delete($randStr);
         $response = new \Phalcon\Http\Response();
         $response->redirect('/');
         return $response;
     }
-    
-    public function forgotPasswordAction()
+
+    public function logoutAction()
     {
-        $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
+        $this->session->destroy();
+        $response = new \Phalcon\Http\Response();
+        $response->redirect('user/login');
+        return $response;
     }
 
+    public function forgotPasswordAction()
+    {
+        if ($this->request->isPost()) { }
+    }
+
+    /**
+     * @disableGuest
+     */
     public function resetPasswordAction()
     {
-        
+        $this->view->setVar("resetPasswdStatus", false);
+        if ($this->request->isPost()) {
+            try {
+                Assertion::notEmpty($this->request->getPost("passwd"));
+                Assertion::notEmpty($this->request->getPost("passwd1"));
+                Assertion::eq($this->request->getPost("passwd"), $this->request->getPost("passwd1"), "两次输入的密码不一致");
+                $data = [
+                    "username" => $this->user->username,
+                    "passwd" => $this->request->getPost("passwd"),
+                ];
+                $regInfo = Schemas\RegInfo::newInstance((object) $data);
+            } catch(\Exception $e) {
+                $this->view->setVar("pageException", $e);
+                return ;
+            }
+            $code = \LightCloud\Uc\Plugins\getRandomCode();
+            $newPassword = UserEntity::hashPasswd($regInfo->getPasswd(), $this->user->salt);
+            $this->redis->setEx($code, 3600, json_encode(["userId" => $this->user->id, "password" => $newPassword]));
+            $this->mailer->resetPassword($this->user->email, [
+                "name" => $this->user->nickname ?: $this->user->username,
+                "action_url" => $this->url->get("user/reset-password-verify", ["rand" => $code, "from" => "email"], true),
+            ]);
+            $this->view->setVar("resetPasswdStatus", true);
+        }
+    }
+
+    public function resetPasswordVerifyAction()
+    { 
+        $randStr = $this->request->getQuery("rand");
+        Assertion::notEmpty($randStr, "非法访问");
+        $cacheInfo = $this->redis->get($randStr);
+        $info = json_decode($cacheInfo, true);
+        $result = UserEntity::changePasswdThroughMail($info["userId"], $info["password"]);
+        if (!$result) {
+            echo "激活失败，请联系我们";
+            exit;
+        }
+        $this->redis->delete($randStr);
+        $response = new \Phalcon\Http\Response();
+        $response->redirect('/');
+        return $response;
     }
 
     public function indexAction()
     {
+        $this->dispatcher->forward([
+            "controller" => "index",
+            "action" => "index"
+        ]);
+        return;
+    }
 
+    public function profileAction()
+    {
+        $this->dispatcher->forward([
+            "controller" => "index",
+            "action" => "index"
+        ]);
+        return;
     }
 }

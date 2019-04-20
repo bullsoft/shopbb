@@ -5,16 +5,17 @@ use chillerlan\QRCode\{QRCode, QROptions};
 
 class IndexController extends BaseController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->view->setVar("showSider", false);
+    }
     /**
      * @disableGuest
      */
     public function indexAction()
     {
-        echo "<h1>Hello, ".$this->user->username."</h1>";
-        echo "<p>Your status: ".$this->user->status."</p>";
-        echo "<h2>OAuth2 Code:</h2>";
-        echo 'Code: <code style="word-wrap: break-word; word-break: break-all;"> ' .$this->request->get("code", "string", "Invalid Code")  . '</code>';
-        exit;
+
     }
 
     /**
@@ -22,20 +23,7 @@ class IndexController extends BaseController
      */
     public function sendMailAction()
     {
-        // $sendResult = $this->mailClient->sendEmail(
-        //     "no-reply@lightcloud.org",
-        //     "guweigang@bullsoft.org",
-        //     "Test",
-        //     "Hello from Postmark!"
-        // );
-        $sendResult = $this->mailClient->sendEmailWithTemplate(
-            "no-reply@lightcloud.org",
-            "guweigang@bullsoft.org",
-            "11065549",
-            ["read_link" => "http://bullsoft.org"],
-            true,
-            "welcome_to_bullsoft"
-        );
+        $sendResult = $this->mailer->test();
         var_dump($sendResult);
     }
 

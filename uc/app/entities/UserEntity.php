@@ -10,6 +10,7 @@ use LightCloud\Com\Protos\Uc\Enums\UserStatus;
 use PhalconPlus\Com\Protos\Exceptions\SystemBusyException;
 use LightCloud\Com\Protos\Uc\Exceptions\UserAlreadyExistsException;
 use \League\OAuth2\Server\Grant\AbstractGrant;
+use \PhalconPlus\Assert\Assertion;
 
 class UserEntity extends UserModel implements UserEntityInterface
 {
@@ -25,7 +26,7 @@ class UserEntity extends UserModel implements UserEntityInterface
         return $this->id;
     }
 
-    public static function activateThroughMail($mail, $userId)
+    public static function activateThroughMail($userId, $mail)
     {
         $user = UserEntity::findFirst([
             "id=:id: AND email=:m:",
@@ -38,9 +39,24 @@ class UserEntity extends UserModel implements UserEntityInterface
             throw new UserNotExistsException(["activated failed with wrong params", $mail, $userId]);
         }
         $user->status = UserStatus::NORMAL;
+        $user->isEmailVerified = 1;
         if($user->save()) {
             return true;
-        } 
+        }
+        return false;
+    }
+
+    public static function changePasswdThroughMail($userId, $passwd)
+    {
+        $user = UserEntity::findFirst($userId);
+        if($user == false) {
+            throw new UserNotExistsException(["changePasswd failed with wrong params", $userId]);
+        }
+        $user->passwd = $passwd;
+        
+        if($user->save()) {
+            return true;
+        }
         return false;
     }
 
@@ -52,17 +68,31 @@ class UserEntity extends UserModel implements UserEntityInterface
                 "m" => $username
             ]
         ]);
-
         if (empty($userInfo)) {
             throw new UserNotExistsException(["mobile not exists", $username]);
         }
-
-        $hashPasswd = hash("sha256", hex2bin($userInfo->salt) . $passwd);
+        //$hashPasswd = hash("sha256", hex2bin($userInfo->salt) . $passwd);
+        $hashPasswd = self::hashPasswd($passwd, $userInfo->salt);
         if ($hashPasswd != $userInfo->passwd) {
             throw new UserNotExistsException(["password not matched", $username]);
         }
-
         return $userInfo;
+    }
+
+    public static function hashPasswd($raw, $salt)
+    {
+        Assertion::notEmpty($raw);
+        Assertion::notEmpty($salt);
+        return hash("sha256", hex2bin($salt) . $raw);
+    }
+
+    public static function makePasswd($raw) 
+    {
+        $salt = random_bytes(32);
+        return [
+            "passwd" => hash("sha256", $salt . $raw),
+            "salt" => bin2hex($salt)
+        ];
     }
 
     public static function createOne(RegInfo $regInfo)
@@ -101,10 +131,13 @@ class UserEntity extends UserModel implements UserEntityInterface
         }
 
         // 生成安全密码
-        $salt = random_bytes(32);
-        $user->salt = bin2hex($salt);
-        $passwd = hash("sha256", $salt . $regInfo->getPasswd());
-        $user->passwd = $passwd;
+        // $salt = random_bytes(32);
+        // $user->salt = bin2hex($salt);
+        // $passwd = hash("sha256", $salt . $regInfo->getPasswd());
+        // $user->passwd = $passwd;
+        $sec = self::makePasswd($regInfo->getPasswd());
+        $user->salt = $sec['salt'];
+        $user->passwd = $sec['passwd'];
 
         // 默认需要验证
         $user->status = UserStatus::NEED_VALID;
@@ -117,6 +150,11 @@ class UserEntity extends UserModel implements UserEntityInterface
         
         return $user->toProtoBuffer([
             "id",
+            "username",
+            "nickname",
+            "email",
+            "status",
+            "regTime"
         ]);
     }
 
@@ -144,7 +182,7 @@ class UserEntity extends UserModel implements UserEntityInterface
         }
         $result = $unitwork->exec();
 
-        \PhalconPlus\Assert\Assertion::same($result, true);
+        \PhalconPlus\Assert\Assertion::same($result, true, "用户Scope保存失败");
     }
 
     public static function getApprovedScopes($userId, $clientId)

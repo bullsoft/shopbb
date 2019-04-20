@@ -8,13 +8,16 @@ class BaseController extends \Phalcon\Mvc\Controller
 {
     protected $controller;
     protected $action;
+    protected $mailer;
 
     public function initialize()
     {
         $this->controller = $whichController = $this->dispatcher->getControllerName();
         $this->action = $whichAction = $this->dispatcher->getActionName();
+        $this->mailer = new \LightCloud\Uc\Plugins\SendMail();
+        \LightCloud\Uc\Plugins\Util::load();
 
-        $whichTitle = "网站标题(" . $whichController . ":" . $whichAction . ")";
+        $whichTitle = "页面标题(" . $whichController . ":" . $whichAction . ")";
         $title = getSiteConf()->titles->get($whichController) ?
                  getSiteConf()->titles->get($whichController)->get($whichAction, $whichTitle) : $whichTitle;
 
@@ -22,6 +25,7 @@ class BaseController extends \Phalcon\Mvc\Controller
         $this->view->setVar("whichController", $whichController);
         $this->view->setVar("whichAction", $whichAction);
         $this->view->setVar("pageException", null);
+        $this->view->setVar("showSider", true);
         $this->view->setVar("title", $title);
         $this->view->setVar("headDesc",     getSiteConf()->get("headDesc", "网站描述"));
         $this->view->setVar("headKeywords", getSiteConf()->get("headKeywords", "网站关键词"));
