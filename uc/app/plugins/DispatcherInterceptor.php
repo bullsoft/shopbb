@@ -67,6 +67,13 @@ class DispatcherInterceptor extends Plugin
             }
         }
 
+        /**
+         * set empty protobuffer here
+         */
+        $this->di->setShared("user", function() {
+            return new \PhalconPlus\Base\ProtoBuffer();
+        });
+
         if($this->session->has('identity')) {
             $userId = intval($this->session->get('identity'));
             $user = UserModel::findFirst($userId);

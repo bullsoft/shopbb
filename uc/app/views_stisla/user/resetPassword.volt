@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input id="email" type="email" class="form-control" name="email" tabindex="1" required
-                            autofocus value="{{user.email}}" disabled />
+                            autofocus value="{{email}}" disabled />
                     </div>
 
                     <div class="form-group">
@@ -39,7 +39,9 @@
                         <input id="password-confirm" type="password" class="form-control" name="passwd1"
                             tabindex="2" required>
                     </div>
-
+                    <div class="form-group">
+                        <input type="hidden" name="changePasswd" value="{{request.getQuery('changePassword', 'int', 0)}}" />
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block" tabindex="4">
                             Reset Password

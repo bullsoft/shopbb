@@ -11,6 +11,7 @@ class ErrorController extends BaseController
 
     public function showUnknownAction()
     {
+        $this->view->setVar("showSider", false);
         $e = $this->dispatcher->getParams()[0];
         echo "<h1>Whoops!</h1>";
         echo "<p>ErrorCode: " . $e->getCode() . "</p>";

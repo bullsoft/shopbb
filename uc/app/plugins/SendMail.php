@@ -17,7 +17,7 @@ class SendMail extends Plugin
         ],
         "resetPassword" => [
             "templateId" => "835401",
-        ]
+        ],
     ];
 
     private $mailFrom = 'no-reply@lightcloud.org';
@@ -25,12 +25,6 @@ class SendMail extends Plugin
     public function __construct()
     {
         $this->data['login_url'] = $this->url->get("user/login", null ,true);
-    }
-
-    public function welcome($to, array $toSend)
-    {
-        $data = array_merge($this->data, $toSend);
-        return $this->sendWithTemplate($to, $data, "welcome2Lightcloud");
     }
 
     public function __call($name, $params) 

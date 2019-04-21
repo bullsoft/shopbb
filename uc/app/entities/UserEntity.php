@@ -46,13 +46,17 @@ class UserEntity extends UserModel implements UserEntityInterface
         return false;
     }
 
-    public static function changePasswdThroughMail($userId, $passwd)
+    public static function changePasswdThroughMail($userId, $passwd, $isRaw = false)
     {
         $user = UserEntity::findFirst($userId);
         if($user == false) {
             throw new UserNotExistsException(["changePasswd failed with wrong params", $userId]);
         }
-        $user->passwd = $passwd;
+        if($isRaw === false) {
+            $user->passwd = $passwd;
+        } else {
+            $user->passwd = self::hashPasswd($passwd, $user->salt);
+        }
         
         if($user->save()) {
             return true;
@@ -71,7 +75,6 @@ class UserEntity extends UserModel implements UserEntityInterface
         if (empty($userInfo)) {
             throw new UserNotExistsException(["mobile not exists", $username]);
         }
-        //$hashPasswd = hash("sha256", hex2bin($userInfo->salt) . $passwd);
         $hashPasswd = self::hashPasswd($passwd, $userInfo->salt);
         if ($hashPasswd != $userInfo->passwd) {
             throw new UserNotExistsException(["password not matched", $username]);

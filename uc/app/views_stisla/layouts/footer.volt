@@ -1,4 +1,4 @@
-<footer class="main-footer"{% if !showSider %} style="margin-left: -250px; text-align: center;"{% endif %}>
+<footer class="main-footer"{% if !showSider %} style="padding-left: 0px; text-align: center;"{% endif %}>
     <div class="footer-left">
         Copyright &copy; {{date("Y")}} 
         <div class="bullet"></div>

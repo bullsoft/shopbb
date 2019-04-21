@@ -32,7 +32,7 @@
                                 </a>
                             </div>
                         </label>
-                        <input id="password" type="password" class="form-control" name="passwd" tabindex="2" required>
+                        <input id="password" type="password" class="form-control" name="passwd" tabindex="2" required />
                         <div class="invalid-feedback">
                             please fill in your password
                         </div>
@@ -41,8 +41,8 @@
                     <div class="form-group">
                         <div class="row" style="line-height: 44px">
                             <div class="col-lg-7">
-                                <input type="text" name="captcha" class="form-control form-control-user" id="exampleInputCaptcha"
-                                    placeholder="验证码">
+                                <input type="text" name="captcha" tabindex="3" class="form-control form-control-user" id="exampleInputCaptcha"
+                                    placeholder="验证码" required />
                             </div>
                             <div class="col-lg-5">
                                 <img src="/index/captcha" onClick="this.src='/index/captcha?rand='+Math.random();" style="cursor: pointer;" />
@@ -52,7 +52,7 @@
 
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" name="remember" class="custom-control-input" tabindex="3"
+                            <input type="checkbox" name="remember" class="custom-control-input" tabindex="4"
                                 id="remember-me" />
                             <label class="custom-control-label" for="remember-me">Remember Me</label>
                         </div>

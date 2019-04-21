@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg main-navbar"{% if !showSider %} style="left: 30px"{% endif %}>
+<nav class="navbar navbar-expand-lg main-navbar"{% if !showSider %} style="left: 0"{% endif %}>
     <form class="form-inline mr-auto">
         
         <ul class="navbar-nav mr-3">
