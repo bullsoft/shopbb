@@ -2,6 +2,7 @@
 namespace LightCloud\Uc\Controllers;
 use Gregwar\Captcha\CaptchaBuilder;
 use chillerlan\QRCode\{QRCode, QROptions};
+use Enqueue\Redis\RedisConnectionFactory;
 
 class IndexController extends BaseController
 {
@@ -63,5 +64,38 @@ class IndexController extends BaseController
             true
         );
         exit;
+    }
+
+    public function queueAction()
+    {
+        $redisConfig = $this->config->get("redis")->toArray();
+        // connect to Redis at example.com port 1000 using phpredis extension
+        $queueConfig = $redisConfig;
+        $queueConfig['scheme_extensions'] = ['phpredis'];
+        $factory = new RedisConnectionFactory($queueConfig);
+        $context = $factory->createContext();
+        //$fooTopic = $context->createTopic('aTopic');
+        //$message = $context->createMessage('Hello world!');
+        //$context->createProducer()->send($fooTopic, $message);
+
+        /** @var \Enqueue\Redis\RedisContext $context */
+        $fooQueue = $context->createQueue('aQueue');
+        $message = $context->createMessage('Hello world!' . date("Y-m-d H:i:s"));
+        $context->createProducer()->send($fooQueue, $message);
+    }
+
+    public function receiveAction()
+    {
+        $redisConfig = $this->config->get("redis")->toArray();
+        // connect to Redis at example.com port 1000 using phpredis extension
+        $queueConfig = $redisConfig;
+        $queueConfig['scheme_extensions'] = ['phpredis'];
+        $factory = new RedisConnectionFactory($queueConfig);
+        $context = $factory->createContext();
+        /** @var \Enqueue\Redis\RedisContext $context */
+        $fooQueue = $context->createQueue('aQueue');
+        $consumer = $context->createConsumer($fooQueue);
+        $message = $consumer->receive();
+        var_dump($message);
     }
 }

@@ -46,6 +46,16 @@ class SendMail extends Plugin
         );
     }
 
+    private function sendText($to, $title, $body)
+    {
+        return $this->mailClient->sendEmail(
+            $this->mailFrom,
+            $to,
+            $title,
+            $body
+        );
+    }
+
     private function sendWithTemplate($to, $data, $tag)
     {
         return $this->mailClient->sendEmailWithTemplate(

@@ -22,7 +22,8 @@
         "gregwar/captcha": "1.*",
         "ramsey/uuid": "*",
         "hashids/hashids": "*",
-        "chillerlan/php-qrcode": "*"
+        "chillerlan/php-qrcode": "*",
+        "enqueue/redis": "^0.9.7"
     },
     "extra": {
         "installer-paths": {
