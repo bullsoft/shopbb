@@ -35,10 +35,10 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="register.html">创建账号!</a>
+                                        <a class="small" href="register">创建账号!</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="login.html">别打扰我，我要登录!</a>
+                                        <a class="small" href="login">别打扰我，我要登录!</a>
                                     </div>
                                 </div>
                             </div>

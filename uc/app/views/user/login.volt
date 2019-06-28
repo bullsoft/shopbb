@@ -65,10 +65,10 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="forgot-password.html">忘记密码?</a>
+                                        <a class="small" href="forgot-password">忘记密码?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="register.html">创建账号!</a>
+                                        <a class="small" href="register">创建账号!</a>
                                     </div>
                                 </div>
                             </div>

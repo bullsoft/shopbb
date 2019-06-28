@@ -1,0 +1,17 @@
+{
+  "http": {
+    "address": "0.0.0.0:8086",
+    "workers": {
+      "command": "/usr/local/opt/php@7.2/bin/php psr-worker.php",
+      "relay": "unix://rr.sock",
+      "pool": {
+        "numWorkers": 4 
+      }
+    }
+  },
+  "static" : {
+  	"enable" : true,
+  	"dir": "public",
+  	"forbid": [".php", ".htaccess"]
+  }
+}

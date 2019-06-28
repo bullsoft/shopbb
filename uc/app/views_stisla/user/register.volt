@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="mt-5 text-muted text-center">
-            <a class="small" href="login.html">别拦着我，我要登录!</a>
+            <a class="small" href="/user/login">别拦着我，我要登录!</a>
         </div>
         <div class="simple-footer">   
         </div>

@@ -22,6 +22,16 @@ class UserController extends BaseController
      */
     public function loginAction()
     {
+        // error_log($this->request->getMethod());
+        // error_log(json_encode($_GET));
+        error_log(var_export($_COOKIE, true));
+        error_log(var_export($this->request->getPost(), true));
+        //error_log(var_export($_POST, true));
+        error_log(var_export($_GET, true));
+        error_log(var_export($_POST, true));
+        // error_log(var_export($this->request->getUploadedFiles(), true));
+
+        //error_log('phrase::' . $this->session->getId());
         if ($this->request->isGet()) {
             if ($this->session->get('identity') > 0) {
                 $response = new \Phalcon\Http\Response();
@@ -31,7 +41,11 @@ class UserController extends BaseController
             }
         }
         if ($this->request->isPost()) {
+            //error_log(var_export($this->request->getPost(), true));
             $captchaKey = 'phrase::' . $this->session->getId();
+            //error_log($captchaKey);
+            //error_log($this->redis->get($captchaKey));
+
             try {
                 $email = $this->request->getPost("email");
                 Assertion::notEmpty("email", "请输入邮箱");

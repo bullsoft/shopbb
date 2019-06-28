@@ -3,6 +3,8 @@ namespace LightCloud\Uc\Controllers;
 use Gregwar\Captcha\CaptchaBuilder;
 use chillerlan\QRCode\{QRCode, QROptions};
 use Enqueue\Redis\RedisConnectionFactory;
+use Soluble\Japha\Bridge\Adapter as JBridgeAdapter;
+use Soluble\Japha\Bridge\Exception as JBridgeException;
 
 class IndexController extends BaseController
 {
@@ -63,7 +65,7 @@ class IndexController extends BaseController
             ["a" => 1],
             true
         );
-        exit;
+        //exit;
     }
 
     public function queueAction()
@@ -98,4 +100,39 @@ class IndexController extends BaseController
         $message = $consumer->receive();
         var_dump($message);
     }
+
+    public function javabridgeAction()
+    {
+        $options = [     
+            'servlet_address' => 'http://127.0.0.1:8888/MyJavaBridge/servlet.phpjavabridge'
+        ];
+        try {
+            $ba = new JBridgeAdapter($options); 
+            $hashMap = $ba->java('java.util.HashMap', [         
+                                    'message' => 'Hello world',                 
+                                    'value'   => $ba->java('java.math.BigInteger', PHP_INT_MAX)]);
+            $hashMap->put('message', '你好，世界');
+            echo $hashMap->get('message') . "<br />";   
+            echo $hashMap->get('value'); 
+        } catch (JBridgeException\ConnectionException $e) {  
+            // Server is not reachable
+            echo $e->getMessage();
+        }
+    }
+
+    public function fileAction()
+    {
+        $response = new \Phalcon\Http\Response();
+        $response->setFileToSend("/Users/weigang/Desktop/123.pdf", "123.pdf", true);
+        return $response;
+    }
+
+    public function pdoAction()
+    {
+        $pdo = new \PhalconPlus\Db\Pdo\Mysql($this->config->db->toArray(), false);
+        error_log(var_export($pdo->isUnderTransaction(), true));
+        var_dump($pdo->describeColumns("test"));
+        error_log(var_export($pdo->isUnderTransaction(), true));
+    }
+
 }

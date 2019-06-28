@@ -60,12 +60,6 @@ class Module extends PlusModule
             "LightCloud\\Com\\Protos\\Uc"  => APP_ROOT_COMMON_DIR.'/protos/Uc/',
             "PhalconPlus\\Com\\Protos"     => APP_ROOT_COMMON_DIR.'/protos/',
         ))->register();
-
-        // load composer library
-        $composer = APP_ROOT_DIR . "/vendor/autoload.php";
-        if(file_exists($composer)) {
-            require_once $composer;
-        }
     }
     
     public function registerServices()
@@ -152,7 +146,7 @@ class Module extends PlusModule
         // check if this module is a primary one?
         if($this->isPrimary()) {
             // register a dispatcher
-            $di->has("dispatched") || $di->set('dispatcher', function () use ($di) {
+            $di->set('dispatcher', function () use ($di) {
                 $evtManager = $di->getShared('eventsManager');
                 $evtManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) {
                     if($dispatcher->hasParam("ApiException")) {

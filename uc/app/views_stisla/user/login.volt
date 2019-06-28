@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label for="password" class="d-block">Password
                             <div class="float-right">
-                                <a href="forgot-password.html">
+                                <a href="/user/forgot-password">
                                     忘记密码？
                                 </a>
                             </div>
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="mt-5 text-muted text-center">
-            Don't have an account? <a href="register.html">Create One</a>
+            Don't have an account? <a href="/user/register">Create One</a>
         </div>
         <div class="simple-footer">
             

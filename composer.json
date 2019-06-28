@@ -23,7 +23,9 @@
         "ramsey/uuid": "*",
         "hashids/hashids": "*",
         "chillerlan/php-qrcode": "*",
-        "enqueue/redis": "^0.9.7"
+        "enqueue/redis": "^0.9.7",
+        "spiral/roadrunner": "^1.4",
+        "soluble/japha": "^2.6"
     },
     "extra": {
         "installer-paths": {

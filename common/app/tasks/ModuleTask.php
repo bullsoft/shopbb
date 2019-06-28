@@ -27,6 +27,7 @@ class ModuleTask extends \Phalcon\CLI\TASK
         foreach($contents as $item) {
             if($item['type'] == "file") continue;
             $module = $item['basename'];
+            if(\Phalcon\Text::startsWith($module, ".")) continue;
             if(in_array($module, $this->skipDirs)) continue;
             $configPath = "{$module}/app/config/" . APP_ENV . ".php";
             if(!$filesystem->has($configPath)) {
