@@ -1,7 +1,4 @@
 <?php
-/**
- * @var Goridge\RelayInterface $relay
- */
 use Spiral\Goridge;
 use Spiral\RoadRunner;
 
