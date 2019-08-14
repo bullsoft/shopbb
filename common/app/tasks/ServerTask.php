@@ -173,9 +173,13 @@ class ServerTask extends \Phalcon\CLI\Task
                 } elseif($phpOS == "linux") {
                     exec("ps -P {$pid}", $output);
                 }
-                $newItem['running_command'] = join(" ", array_slice(str_getcsv($output[1], " "), -6));
-
-                $modules[] = $newItem;
+                if(isset($output[1])) {
+                    // server.pid exists, but process die
+                    $newItem['running_command'] = join(" ", array_slice(str_getcsv($output[1], " "), -6));
+                    $modules[] = $newItem;
+                } else {
+                    unlink($pidPath);
+                }
             }
         }
 
