@@ -1,8 +1,7 @@
 <?php
 namespace LightCloud\Uc\Plugins;
-use Phalcon\Mvc\User\Plugin;
 
-class Volt extends Plugin
+class Volt extends \Phalcon\Di\Injectable
 {
     public static function showField($fields, $field)
     {

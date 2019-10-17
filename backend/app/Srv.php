@@ -16,14 +16,14 @@ class Srv extends PlusModule
     public function registerAutoloaders()
     {
         $loader = new \Phalcon\Loader();
-        $loader->registerNamespaces(array(
+        $loader->registerNamespaces([
             __NAMESPACE__.'\\Services' => __DIR__.'/services/',
             __NAMESPACE__.'\\Plugins'  => __DIR__.'/plugins/',
             __NAMESPACE__.'\\Models'   => __DIR__.'/models/',
             __NAMESPACE__.'\\Tasks'    => __DIR__.'/tasks/tasks/',
             __NAMESPACE__.'\\Daos'     => __DIR__.'/daos/',
             "Common\\Protos"           => APP_ROOT_COMMON_DIR.'/protos/',
-        ))->register();
+        ])->register();
 
         // load composer library
         $composer = APP_ROOT_DIR . "/vendor/autoload.php";

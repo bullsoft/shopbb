@@ -33,7 +33,7 @@ class UserController extends BaseController
 
         //error_log('phrase::' . $this->session->getId());
         if ($this->request->isGet()) {
-            if ($this->session->get('identity') > 0) {
+            if ($this->session->read('identity') > 0) {
                 $response = new \Phalcon\Http\Response();
                 $redirectUrl = $this->request->getQuery("from", "string", "/");
                 $response->redirect(\Phalcon\Text::reduceSlashes($redirectUrl));
@@ -42,7 +42,7 @@ class UserController extends BaseController
         }
         if ($this->request->isPost()) {
             //error_log(var_export($this->request->getPost(), true));
-            $captchaKey = 'phrase::' . $this->session->getId();
+            $captchaKey = 'phrase::' . session_id();
             //error_log($captchaKey);
             //error_log($this->redis->get($captchaKey));
 

@@ -1,11 +1,11 @@
 return array(
     'application' => array(
         "name"  => "{{module}}",
-        "ns"    => "{{rootNs}}\\{{moduleName}}\\",
+        "ns"    => "{{rootNs}}\\",
         "mode"  => "{{mode}}",
         "staticUri" => "/",
         "url" => "http//server.localhost.com/",
-        "logFilePath" => "/tmp/{{rootNs}}_{{module}}.log",
+        "logFilePath" => "/tmp/{{module}}.log",
     ),
 {% if mode == "Web" %}
     "view" => array(

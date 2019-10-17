@@ -1,6 +1,7 @@
 <?php
 namespace LightCloud\Uc\Controllers;
 use Gregwar\Captcha\CaptchaBuilder;
+use Gregwar\Captcha\PhraseBuilder;
 use chillerlan\QRCode\{QRCode, QROptions};
 use Enqueue\Redis\RedisConnectionFactory;
 use Soluble\Japha\Bridge\Adapter as JBridgeAdapter;
@@ -31,10 +32,22 @@ class IndexController extends BaseController
     }
 
     public function captchaAction()
-    {
-        $captcha = new CaptchaBuilder();
+    {   
+        // Will build phrases of 5 characters, only digits
+        $phraseBuilder = new PhraseBuilder(5);
+        
+        // Pass it as first argument of CaptchaBuilder, passing it the phrase
+        // builder
+        $captcha = new CaptchaBuilder(null, $phraseBuilder);
+        //$captcha->setBackgroundImages(["/Users/weigang/Desktop/200w.webp"]);
+        //$captcha->setIgnoreAllEffects(true);
         $captcha->build();
-        $this->redis->setEx('phrase::'.$this->session->getId(), 300, $captcha->getPhrase());
+        //$captcha->setMaxAngle(25);
+       
+        // 可以设置图片宽高及字体
+        //$captcha->buildAgainstOCR(150, 40, "/Users/weigang/Developments/github/shopbb/vendor/gregwar/captcha/src/Gregwar/Captcha/Font/JMH Sindbad.ttf");
+
+        $this->redis->setEx('phrase::'.session_id(), 300, $captcha->getPhrase());
         $response = new \Phalcon\Http\Response();
         $response->setHeader('Content-Type', 'image/jpeg');
         $response->setContent($captcha->get());

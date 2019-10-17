@@ -6,6 +6,9 @@ require_once(dirname(dirname(__DIR__)) . "/vendor/autoload.php");
 
 $bootstrap = new \PhalconPlus\Bootstrap(dirname(__DIR__));
 $di = new \Phalcon\DI\FactoryDefault\CLI();
+$version = \Phalcon\Version::getPart(
+    \Phalcon\Version::VERSION_MAJOR
+);
 
 $di->setShared('cli', function(){
     return new \League\CLImate\CLImate();

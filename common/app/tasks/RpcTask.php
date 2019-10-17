@@ -9,6 +9,11 @@ class RpcTask extends \Phalcon\CLI\Task
 {
     public function callAction($argv)
     {
+        global $version;
+        if($version > 3) {
+            $argv = func_get_args();
+        }
+        
         if(count($argv) < 3) {
             $this->cli->backgroundRed("请指定模块名称和Service名称！");
             exit(1);
@@ -32,7 +37,7 @@ class RpcTask extends \Phalcon\CLI\Task
 
         $bootstrap = $this->di->getBootstrap();
         $bootstrap->dependModule($module);
-        $moduleConfig = $this->di->getModuleConfig();
+        $moduleConfig = $bootstrap->getModuleDef($module)->getConfig();
         $ns = $moduleConfig->application->ns;
         $srvClassName = $ns . "Services\\" . $srvName;
         $realSrvClassName = $srvClassName ."Service";
@@ -41,18 +46,29 @@ class RpcTask extends \Phalcon\CLI\Task
         $this->cli->text("{$realSrvClassName}::{$method}");
 
         // 开始RPC请求
-        $request = new SimpleRequest();
-        if(!empty($args)) {
-            if(is_array($args)) {
-                $request->setParams($args);
-            } elseif(is_scalar($args)) {
-                $request->setParam($args);
+        
+        $methodRef = new \Zend\Code\Reflection\MethodReflection($realSrvClassName, $method);
+        $params = $methodRef->getParameters();
+        if(empty($params)) {
+            $request = new SimpleRequest();
+        } else {
+            $paramClass = reset($params)->detectType();
+            if(!is_null($paramClass)) {
+                $request = new $paramClass();
+            } else {
+                $request = new SimpleRequest();
+            }
+            if(!empty($args)) {
+                if(is_array($args)) {
+                    $request->softClone($args);
+                }
             }
         }
         $this->cli->blue("====== Request ======");
         var_export($request);
+        $rpc = new \PhalconPlus\RPC\Client\Adapter\Local($this->di);
         try {
-            $ret = $this->rpc->callByObject(array(
+            $ret = $rpc->callByObject(array(
                 "service" => $srvClassName,
                 "method" => $method,
                 "args"   => $request,

@@ -2,13 +2,12 @@
 namespace LightCloud\Uc\Plugins;
 
 use Phalcon\Events\Event;
-use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
 use PhalconPlus\Base\SimpleRequest;
 use LightCloud\Com\Protos\Uc\Exceptions\NeedLoginException;
 use LightCloud\Uc\Models\UserModel;
 
-class DispatcherInterceptor extends Plugin
+class DispatcherInterceptor extends \Phalcon\Di\Injectable
 {
     protected $di;
     protected $eventManager;
@@ -54,7 +53,7 @@ class DispatcherInterceptor extends Plugin
 
         // 不允许匿名
         if($anno->has('disableGuest')) {
-            if (!$this->session->has('identity')) {
+            if (!$this->session->read('identity')) {
                 if (!$anno->has('api')) {
                     // HTTP跳转登录
                     $response = new \Phalcon\Http\Response();
@@ -74,7 +73,7 @@ class DispatcherInterceptor extends Plugin
             return new \PhalconPlus\Base\ProtoBuffer();
         });
 
-        if($this->session->has('identity')) {
+        if($this->session->read('identity')) {
             $userId = intval($this->session->get('identity'));
             $user = UserModel::findFirst($userId);
             if($user == false) {

@@ -21,13 +21,13 @@ class HelloTask extends \Phalcon\CLI\Task
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $section = $phpWord->addSection();
         $imgUrl = '/Users/guweigang/Desktop/ms.png';
-        $section->addImage($imgUrl, array(
+        $section->addImage($imgUrl, [
             'width'         => 100,
             'height'        => 100,
             'marginTop'     => -1,
             'marginLeft'    => -1,
             'wrappingStyle' => 'behind'
-        ));
+        ]);
         $ele = $section->getElements()[0];
         $template->setImageValue("userImage", $ele);
         $template->saveAs("/Users/guweigang/Desktop/ttt.docx");

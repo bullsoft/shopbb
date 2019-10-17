@@ -1,13 +1,13 @@
 <?php
-return array(
-    'application' => array(
+return [
+    'application' => [
         "name"  => "backend",
         "ns"    => "ShBB\\Backend\\",
         "mode"  => "Srv",
         "staticUri" => "/",
         "url" => "http//server.localhost.com/",
         "logFilePath" => "/tmp/ShBB_backend.log",
-    ),
+    ],
     'db' => [
         "host" => "rds2yafurnqibun.mysql.rds.aliyuncs.com",
         "port" => 3306,
@@ -26,4 +26,4 @@ return array(
         'db'   => 1,
         'timeout' => 1,
     ],
-);
+];

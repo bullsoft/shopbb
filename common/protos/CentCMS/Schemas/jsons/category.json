@@ -1,0 +1,41 @@
+{
+    "title": "Category",
+    "type": "object",
+    "properties" : {
+        "name": {
+            "type": "string",
+            "description": "",
+            "minLength": 6
+        },
+        "parentId": {
+            "type": "integer",
+            "description": "",
+            "minimum": 1
+        },
+        "desc": {
+            "type": "string",
+            "description": "",
+            "default": ""
+        },
+        "identity": {
+            "type": "string",
+            "description" : "",
+            "pattern": "^[_0-9a-zA-Z]{1,32}$"
+        },
+        "sortNo": {
+            "type": "integer",
+            "description" : "",
+            "default": 0
+        },
+        "status": {
+            "type": "integer",
+            "description" : "",
+            "default": 0
+        }
+    },
+    "required": [
+        "name",
+        "parentId",
+        "identity"
+    ]
+}

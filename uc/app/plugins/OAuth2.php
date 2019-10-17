@@ -1,7 +1,6 @@
 <?php
 namespace LightCloud\Uc\Plugins;
 
-use Phalcon\Mvc\User\Plugin;
 use \Defuse\Crypto\Key;
 use \LightCloud\Uc\Repositories\ClientRepository;
 use \LightCloud\Uc\Repositories\UserRepository;
@@ -11,7 +10,7 @@ use \LightCloud\Uc\Repositories\AccessTokenRepository;
 use \LightCloud\Uc\Repositories\AuthCodeRepository;
 use \League\OAuth2\Server\Grant;
 
-class OAuth2 extends Plugin
+class OAuth2 extends \Phalcon\Di\Injectable
 {
     public static function newAuthorizationServer()
     {

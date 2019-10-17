@@ -1,4 +1,4 @@
-namespace {{rootNs}}\{{moduleName}}\Controllers;
+namespace {{rootNs}}\Controllers;
 
 class ErrorController extends \Phalcon\Mvc\Controller
 {

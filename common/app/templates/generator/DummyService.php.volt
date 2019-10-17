@@ -1,4 +1,4 @@
-namespace {{rootNs}}\{{moduleName}}\Services;
+namespace {{rootNs}}\Services;
 use PhalconPlus\Base\SimpleRequest as SimpleRequest;
 
 class DummyService extends \PhalconPlus\Base\Service

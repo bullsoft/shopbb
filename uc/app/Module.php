@@ -8,7 +8,7 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
 use Phalcon\Session\Adapter\Redis as SessionRedis;
 
 if(!function_exists("getSiteConf")) {
-    function getSiteConf() 
+    function getSiteConf()
     {
         static $siteConf = [];
         $siteConfPath = APP_MODULE_DIR . "app/config/siteConf.php";
@@ -42,8 +42,8 @@ class Module extends PlusModule
         //     $response->setHeader('Content-Type', 'application/json');
         //     $response->setJsonContent($error);
         //     $response->send();
-        // });  
-            
+        // });
+
     }
 
     public function registerAutoloaders()
@@ -61,7 +61,7 @@ class Module extends PlusModule
             "PhalconPlus\\Com\\Protos"     => APP_ROOT_COMMON_DIR.'/protos/',
         ))->register();
     }
-    
+
     public function registerServices()
     {
         // get di
@@ -71,6 +71,11 @@ class Module extends PlusModule
         // get config
         $config = $di->get('config');
         $that = $this;
+        // phalcon version
+        $version = \Phalcon\Version::getPart(
+            \Phalcon\Version::VERSION_MAJOR
+        );
+
         // load env from {$root}/.env
         if(\PhalconPlus\Enum\RunEnv::isInProd(APP_RUN_ENV)) {
             if(\file_exists(APP_ROOT_DIR.".env")) {
@@ -86,7 +91,13 @@ class Module extends PlusModule
         }
 
         $di->setShared("url", function() use ($config) {
-            $url = new \Phalcon\Mvc\Url();
+            if (class_exists("\Phalcon\Url")) { // for Phalcon 4.0
+                $url = new \Phalcon\Url();
+            } elseif(class_exists("\Phalcon\Mvc\Url")) {
+                $url = new \Phalcon\Mvc\Url(); // for Phalcon 3.x
+            } else {
+                // nothing to do
+            }
             $url->setBaseUri($config->application->url);
             return $url;
         });
@@ -94,16 +105,16 @@ class Module extends PlusModule
         $di->setShared("logger", function() use ($di, $config){
             $logger = new \PhalconPlus\Logger\Adapter\FilePlus($config->application->logFilePath);
             $logger->registerExtension(".debug", [\Phalcon\Logger::DEBUG]);
-            
+
             // 添加formatter
             $formatter = new \PhalconPlus\Logger\Formatter\LinePlus("[%date%][%trace%][%uid%][%type%] %message%");
             $formatter->addProcessor("uid", new UidProcessor(18));
             $formatter->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
-            
+
             $logger->setFormatter($formatter);
             return $logger;
         });
-        
+
         $router = $di->getShared("router");
         if($router instanceof \Phalcon\Mvc\Router) {
             $router->add('/apis/:controller/([a-zA-Z0-9_\-]+)/:params', array(
@@ -153,8 +164,8 @@ class Module extends PlusModule
                         throw $exception;
                     }
                     switch ($exception->getCode()) {
-                        case \Phalcon\Mvc\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
-                        case \Phalcon\Mvc\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+                        case \Phalcon\Dispatcher\Exception::EXCEPTION_HANDLER_NOT_FOUND:
+                        case \Phalcon\Dispatcher\Exception::EXCEPTION_ACTION_NOT_FOUND:
                             $dispatcher->forward(array(
                                 'controller' => "error",
                                 'action'     => 'show404'
@@ -169,8 +180,8 @@ class Module extends PlusModule
                             return false;
                     }
                 });
-                $evtManager->attach("dispatch:beforeForward", function($event, $dispatcher, array $forward) {                
-                    $dispatcher->setNamespaceName(__NAMESPACE__."\\Controllers\\");    
+                $evtManager->attach("dispatch:beforeForward", function($event, $dispatcher, array $forward) {
+                    $dispatcher->setNamespaceName(__NAMESPACE__."\\Controllers\\");
                 });
                 $interceptor = new \LightCloud\Uc\Plugins\DispatcherInterceptor($di, $evtManager);
                 $evtManager->attach('dispatch', $interceptor);
@@ -178,14 +189,14 @@ class Module extends PlusModule
                 $dispatcher->setEventsManager($evtManager);
                 $dispatcher->setDefaultNamespace(__NAMESPACE__."\\Controllers\\");
                 return $dispatcher;
-            }); 
-        }  
+            });
+        }
 
         $di->setShared("mailClient", function() use($config) {
             return new \Postmark\PostmarkClient($config->mail->token);
         });
 
-        
+
         $di->setShared('redis', function () use ($config) {
             $redis = new \Redis();
             $redis->connect($config->redis->host, $config->redis->port, 1, NULL, 100);
@@ -205,23 +216,30 @@ class Module extends PlusModule
             return $client;
         });
 
-        $di->setShared('session', function () use ($config) {
-            $session = new SessionRedis($config->session->toArray());
-            $session->start();
-            return $session;
+        $di->setShared('session', function () use ($config, $version) {
+            if($version < 4) {
+                $session = new SessionRedis($config->session->toArray());
+                $session->start();
+                return $session;
+            } else {
+                $factory = new \Phalcon\Storage\AdapterFactory();
+                $session = new SessionRedis($factory, $config->session->toArray());
+                return $session;
+            }
         });
-        
+
         // set view with volt
         $di->set('view', function() use ($di) {
             $view = new \Phalcon\Mvc\View();
             $view->setViewsDir(__DIR__.'/views/');
             $view->setViewsDir(__DIR__.'/views_stisla/');
-            $view->registerEngines(array(
-                ".volt" => function($view, $di) {
+            $a = 1;
+            $view->registerEngines([
+                ".volt" => function($view) use ($di) {
                     $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
                     $volt->setOptions(array(
-                        "compiledPath"      => $di->get('config')->view->compiledPath,
-                        "compiledExtension" => $di->get('config')->view->compiledExtension,
+                        "path"      => $di->get('config')->view->compiledPath,
+                        "extension" => $di->get('config')->view->compiledExtension,
                     ));
                     // 如果模板缓存目录不存在，则创建它
                     if(!file_exists($di->get('config')->view->compiledPath)) {
@@ -233,10 +251,10 @@ class Module extends PlusModule
                     $compiler->addExtension($ext);
                     return $volt;
                 }
-            ));
+            ]);
             return $view;
         });
 
-        
+
     }
 }

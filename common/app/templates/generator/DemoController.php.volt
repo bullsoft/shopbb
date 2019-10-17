@@ -1,4 +1,4 @@
-namespace {{rootNs}}\{{moduleName}}\Controllers\Apis;
+namespace {{rootNs}}\Controllers\Apis;
 
 class DemoController extends \Phalcon\Mvc\Controller
 {

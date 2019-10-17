@@ -1,6 +1,5 @@
 date_default_timezone_set('Asia/Shanghai');
 ini_set("memory_limit", "4G");
-require_once(dirname(dirname(__DIR__)) . "/vendor/autoload.php");
 
 $bootstrap = new \PhalconPlus\Bootstrap(dirname(__DIR__));
 $di = new \Phalcon\DI\FactoryDefault\CLI();

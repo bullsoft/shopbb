@@ -1,4 +1,4 @@
-namespace {{rootNs}}\{{moduleName}};
+namespace {{rootNs}};
 
 use PhalconPlus\Base\AbstractModule as PlusModule;
 use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
@@ -47,36 +47,52 @@ class Module extends PlusModule
             });
         }
 
-        // register a dispatcher
-        $di->has("dispatched") || $di->set('dispatcher', function () use ($di) {
-            $evtManager = $di->getShared('eventsManager');
-            $evtManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) {
-                if(rtrim($dispatcher->getNamespaceName(), "\\") == __NAMESPACE__ ."\\Controllers\\Apis") {
-                    throw $exception;
-                }
-                switch ($exception->getCode()) {
-                    case \Phalcon\Mvc\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
-                    case \Phalcon\Mvc\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
-                        $dispatcher->forward(array(
-                            'controller' => 'error',
-                            'action'     => 'show404'
-                        ));
-                        return false;
-                    default:
-                        $dispatcher->forward(array(
-                            'controller' => 'error',
-                            'action'     => 'showUnknown',
-                            "params"     => [$exception],
-                        ));
-                        return false;
-                }
-            });
-            $dispatcher = new \Phalcon\Mvc\Dispatcher();
-            $dispatcher->setEventsManager($evtManager);
-            $dispatcher->setDefaultNamespace(__NAMESPACE__."\\Controllers\\");
-            return $dispatcher;
-        });   
+        // load env from {$root}/.env
+        if(\PhalconPlus\Enum\RunEnv::isInProd(APP_RUN_ENV)) {
+            if(\file_exists(APP_ROOT_DIR.".env")) {
+                $dotenv = \Dotenv\Dotenv::create(APP_ROOT_DIR);
+                $dotenv->load();
+            }
+        }
 
+        if($this->isPrimary()) {
+            $di->set('myConfig', function() use($that) {
+                return $that->getDef()->getConfig();
+            });
+        }
+
+        if($this->isPrimary()) {
+            // register a dispatcher
+            $di->has("dispatched") || $di->set('dispatcher', function () use ($di) {
+                $evtManager = $di->getShared('eventsManager');
+                $evtManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) {
+                    if(rtrim($dispatcher->getNamespaceName(), "\\") == __NAMESPACE__ ."\\Controllers\\Apis") {
+                        throw $exception;
+                    }
+                    switch ($exception->getCode()) {
+                        case \Phalcon\Mvc\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+                        case \Phalcon\Mvc\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+                            $dispatcher->forward(array(
+                                'controller' => 'error',
+                                'action'     => 'show404'
+                            ));
+                            return false;
+                        default:
+                            $dispatcher->forward(array(
+                                'controller' => 'error',
+                                'action'     => 'showUnknown',
+                                "params"     => [$exception],
+                            ));
+                            return false;
+                    }
+                });
+                $dispatcher = new \Phalcon\Mvc\Dispatcher();
+                $dispatcher->setEventsManager($evtManager);
+                $dispatcher->setDefaultNamespace(__NAMESPACE__."\\Controllers\\");
+                return $dispatcher;
+            });   
+        }
+        
         $di->set("rpc", function() use ($di, $config, $bootstrap) {
             $client = null;
             if($config->debugRPC == true) {

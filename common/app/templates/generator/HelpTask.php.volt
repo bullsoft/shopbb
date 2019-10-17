@@ -1,4 +1,4 @@
-namespace {{rootNs}}\{{moduleName}}\Tasks;
+namespace {{rootNs}}\Tasks;
 
 class HelpTask extends \Phalcon\CLI\Task
 {

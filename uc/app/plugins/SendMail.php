@@ -1,9 +1,8 @@
 <?php
 namespace LightCloud\Uc\Plugins;
-use Phalcon\Mvc\User\Plugin;
 use \PhalconPlus\Assert\Assertion;
 
-class SendMail extends Plugin
+class SendMail extends \Phalcon\Di\Injectable
 {
     private $data  = [
         "product_name" => "轻量云用户中心", 

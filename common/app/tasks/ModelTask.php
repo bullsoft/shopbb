@@ -38,6 +38,11 @@ class ModelTask extends \Phalcon\CLI\Task
 
     public function listAction($argv)
     {
+        global $version;
+        if($version > 3) {
+            $argv = func_get_args();
+        }
+        
         if(empty($argv)) {
             $this->cli->backgroundRed("致命错误：模块名称不能为空！");
             exit(1);
@@ -102,7 +107,7 @@ class ModelTask extends \Phalcon\CLI\Task
 
         $bootstrap = $this->di->getBootstrap();
         $bootstrap->dependModule($module);
-        $moduleConfig = $this->di->getModuleConfig();
+        $moduleConfig = $bootstrap->getModuleDef($module)->getConfig();
         $ns = $moduleConfig->application->ns;
         $modelClassName = $ns . "Models\\" . $modelName;
 
