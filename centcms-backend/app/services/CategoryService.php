@@ -45,7 +45,7 @@ class CategoryService extends \PhalconPlus\Base\Service
         return $repo->getChildren($categoryId, $depth, $status, $backward);
     }
 
-    public function getCategoryIdNameMap(SimpleRequest $request)
+    public function getIdNameMap(SimpleRequest $request)
     {
         $categoryIds = $request->getParam("ids") ?: [];
         $categoryIds = array_filter($categoryIds, "is_int");

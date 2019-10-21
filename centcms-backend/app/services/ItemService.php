@@ -25,16 +25,9 @@ class ItemService extends \PhalconPlus\Base\Service
             if (empty($categoryList)) {
                 return [];
             }
-            $categoryIds = [];
-            $categoryMap = [];
-            foreach ($categoryList as $item) {
-                $categoryIds[] = $item['id'];
-                $categoryMap[$item['id']] = $item['name'];
-            }
-
+            $categoryIds = array_column($categoryList, "id");
             $repo = new ItemRepository();
             return $repo->getItemList($categoryIds, $name, $pagealbe);
-            // return ["page" => $result, "categoryMap" => $categoryMap];
         } catch (\Exception $e) {
             throw $e;
         }
