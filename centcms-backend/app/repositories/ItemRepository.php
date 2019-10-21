@@ -21,7 +21,7 @@ class ItemRepository
         }
         $query = implode(" AND ",$condition);
 
-        if(empty($pageable->getOrderBys())) {
+        if(!$pageable->hasOrderBy()) {
             $pageable->setOrderBys(
                 [
                     [
@@ -35,7 +35,7 @@ class ItemRepository
                 ]
             );
         }
-        return ItemModel::newInstance()->findByPagable($pageable, [
+        return ItemModel::newInstance()->findByPageable($pageable, [
             'conditions' => $query, 
             'bind' => $parameters,
             'hydration' => \Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS
