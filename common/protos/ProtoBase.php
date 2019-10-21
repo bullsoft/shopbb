@@ -10,7 +10,7 @@ class ProtoBase extends ProtoBuffer
 {
     const NULL_VALUE = "__PhalconPlus_ProtoBuffer_NullValue__";
 
-    public function isNull($property)
+    public function isNull(string $property) : bool
     {
         if(!property_exists($this, $property)) {
             throw new \Exception("Property {$property} not exists in Class ". get_called_class());
@@ -18,7 +18,7 @@ class ProtoBase extends ProtoBuffer
         return $this->{$property} == self::NULL_VALUE;
     }
 
-    public static function newInstance(\stdClass $data)
+    public static function newInstance(\stdClass $data) : ProtoBase
     {
         \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader('class_exists');
         $schemaManager = new SchemaManager();
@@ -34,12 +34,12 @@ class ProtoBase extends ProtoBuffer
         }
     }
 
-    public function validate()
+    public function validate() : ProtoBase
     {
        return self::newInstance($this->toObject());
     }
 
-    public function toObject()
+    public function toObject() : \stdClass
     {
         $dumper = new \PSX\Schema\Parser\Popo\Dumper();
         $record   = $dumper->dump($this);

@@ -1,0 +1,1 @@
+-I/usr/local/Cellar/php@7.2/7.2.23/include/php -I/usr/local/Cellar/php@7.2/7.2.23/include/php/main -I/usr/local/Cellar/php@7.2/7.2.23/include/php/TSRM -I/usr/local/Cellar/php@7.2/7.2.23/include/php/Zend -I/usr/local/Cellar/php@7.2/7.2.23/include/php/ext -I/usr/local/Cellar/php@7.2/7.2.23/include/php/ext/date/lib

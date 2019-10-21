@@ -9,11 +9,11 @@ class Srv extends PlusModule
     {
         $loader = new \Phalcon\Loader();
         $loader->registerNamespaces(array(
-            __NAMESPACE__.'\\Services' => __DIR__.'/services/',
-            __NAMESPACE__.'\\Models'   => __DIR__.'/models/',
-            __NAMESPACE__.'\\Tasks'    => __DIR__.'/tasks/tasks/',
-            __NAMESPACE__.'\\Daos'     => __DIR__.'/daos/',
-            "LightCloud\\Com\\Protos"  => APP_ROOT_COMMON_DIR.'/protos/',
+            __NAMESPACE__.'\\Services'     => __DIR__.'/services/',
+            __NAMESPACE__.'\\Models'       => __DIR__.'/models/',
+            __NAMESPACE__.'\\Tasks'        => __DIR__.'/tasks/tasks/',
+            __NAMESPACE__.'\\Repositories' => __DIR__.'/repositories/',
+            "LightCloud\\Com\\Protos"      => APP_ROOT_COMMON_DIR.'/protos/',
         ))->register();
 
         // load composer library

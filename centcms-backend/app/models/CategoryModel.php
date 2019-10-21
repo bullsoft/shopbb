@@ -152,7 +152,7 @@ class CategoryModel extends ModelBase
     /**
      * return related table name
      */
-    public function getSource()
+    public function getSource() : string
     {
         return 'category';
     }

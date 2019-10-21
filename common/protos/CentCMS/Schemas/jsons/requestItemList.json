@@ -1,0 +1,25 @@
+{
+    "title": "RequestItemList",
+    "type": "object",
+    "properties" : {
+        "categoryId": {
+            "type": "integer",
+            "description": "",
+            "minimum": 1
+        },
+        "name": {
+            "type": "string",
+            "minLength": 6,
+            "description": ""
+        },
+        "pageable": {
+            "type": "object",
+            "$ref": "file://./pageable.json",
+            "description": ""
+        }
+    },
+    "required": [
+        "categoryId",
+        "pageable"
+    ]
+}

@@ -46,7 +46,6 @@ class RpcTask extends \Phalcon\CLI\Task
         $this->cli->text("{$realSrvClassName}::{$method}");
 
         // 开始RPC请求
-        
         $methodRef = new \Zend\Code\Reflection\MethodReflection($realSrvClassName, $method);
         $params = $methodRef->getParameters();
         if(empty($params)) {
