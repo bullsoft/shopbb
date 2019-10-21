@@ -4,8 +4,23 @@ use \PhalconPlus\Enum\AbstractEnum;
 
 class ItemStatus extends AbstractEnum
 {
-    const __default = self::TO_PUBLISH;
+    const __default = self::STATUS_NO_RELEASE;
+    
+    const STATUS_NO_RELEASE = 0; // 待发布
+    const STATUS_RELEASED = 1; // 已发布
 
-    const TO_PUBLISH = 0;
-    const PUBLISHED = 1;
+    private static $detail = [
+        self::STATUS_NO_RELEASE => '待发布',
+        self::STATUS_RELEASED   => '已发布',
+    ];
+
+    public function getTypeName()
+    {
+        return self::$detail[$this->val];
+    }
+
+    public static function getTypeMap()
+    {
+        return self::$detail;
+    }
 }

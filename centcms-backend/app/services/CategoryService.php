@@ -50,16 +50,10 @@ class CategoryService extends \PhalconPlus\Base\Service
         $categoryIds = $request->getParam("ids") ?: [];
         $categoryIds = array_filter($categoryIds, "is_int");
         if(empty($categoryIds)) return [];
-
-        $resultset = CategoryModel::find([
-            "conditions" => "id IN ({cateIds:array})",
-            "bind" => [
-                "cateIds" => $categoryIds
-            ],
-            "columns" => ["id", "name"],
-            'hydration' => \Phalcon\Mvc\Model\Resultset::HYDRATE_ARRAYS
-        ]);
-        return array_column($resultset->toArray(), "name", "id");
+        $repo = new CategoryRepository();
+        $ret = $repo->get($categoryIds);
+        if(empty($ret)) return [];
+        return array_column($ret, "name", "id");
     }
 
     public function a()

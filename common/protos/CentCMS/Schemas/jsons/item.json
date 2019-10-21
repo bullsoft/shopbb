@@ -1,0 +1,53 @@
+{
+    "title": "Item",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "",
+            "minLength": 6
+        },
+        "categoryId": {
+            "type": "integer",
+            "description": "",
+            "minimum": 1
+        },
+        "desc": {
+            "type": "string",
+            "description": ""
+        },
+        "identity": {
+            "type": "string",
+            "description": "",
+            "minLength": 4
+        },
+        "schemaTemplateId": {
+            "type": "integer",
+            "description": "",
+            "minimum": 1
+        },
+        "content": {
+            "type": "string",
+            "description": ""
+        },
+        "sortNo": {
+            "type": "integer",
+            "description": "",
+            "minimum": 0,
+            "default": 1
+        },
+        "status": {
+            "type": "integer",
+            "description": "",
+            "default": 0
+        },
+        "createUserId": {
+            "type": "integer",
+            "description": "",
+            "minimum": 1
+        }
+    },
+    "required": [
+        "name", "categoryId", "identity", "schemaTemplateId", "content", "createUserId"
+    ]
+}

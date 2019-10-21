@@ -102,14 +102,14 @@ class ItemModel extends ModelBase
         $this->desc = '';
         $this->identity = NULL;
         $this->categoryId = NULL;
+        $this->createUserId = '';
         $this->schemaTemplateId = NULL;
         $this->content = NULL;
         $this->sortNo = '0';
         $this->status = NULL;
         $this->isDelete = '0';
-        $this->ctime = '0000-00-00 00:00:00';
+        $this->ctime = '0001-01-01 00:00:00';
         $this->mtime = '0001-01-01 00:00:00';
-        $this->createUid = '';
     }
 
     /**
@@ -123,6 +123,7 @@ class ItemModel extends ModelBase
             'desc' => 'desc', 
             'identity' => 'identity', 
             'category_id' => 'categoryId', 
+            'create_user_id' => 'createUserId', 
             'schema_template_id' => 'schemaTemplateId', 
             'content' => 'content', 
             'sort_no' => 'sortNo', 
@@ -130,7 +131,6 @@ class ItemModel extends ModelBase
             'is_delete' => 'isDelete', 
             'ctime' => 'ctime', 
             'mtime' => 'mtime', 
-            'create_uid' => 'createUid', 
         );
     }
 
