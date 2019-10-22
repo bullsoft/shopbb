@@ -12,6 +12,8 @@ class Ids extends \PhalconPlus\Com\Protos\ProtoBase
      * @Key("ids")
      * @Type("array")
      * @Items(@Schema(type="integer", minimum=1))
+     * @UniqueItems(true)
+     * @MinItems(1)
      */
     protected $ids;
     /**

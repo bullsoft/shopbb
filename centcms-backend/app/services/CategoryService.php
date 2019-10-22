@@ -1,7 +1,11 @@
 <?php
 namespace LightCloud\CentCMS\Backend\Services;
 use PhalconPlus\Base\SimpleRequest as SimpleRequest;
-use LightCloud\Com\Protos\CentCMS\Schemas\Category as CategorySchema;
+use LightCloud\Com\Protos\CentCMS\Schemas\{
+    Category as CategorySchema,
+    Id,
+    Ids
+};
 use LightCloud\CentCMS\Backend\Repositories\CategoryRepository;
 use LightCloud\CentCMS\Backend\Models\CategoryModel;
 
@@ -20,16 +24,16 @@ class CategoryService extends \PhalconPlus\Base\Service
         return $repo->getTops();
     }
 
-    public function getCategoryDetail(SimpleRequest $request)
+    public function getCategoryDetail(Id $request)
     {
-        $categoryId = $request->getParam("id");
+        $categoryId = ($request->validate())->getId();
         $repo = new CategoryRepository();
         return $repo->getOne($categoryId);
     }
 
-    public function getChildrenList(SimpleRequest $request)
+    public function getChildrenList(Id $request)
     {
-        $categoryId = $request->getParam("id");
+        $categoryId = ($request->validate())->getId();
         $repo = new CategoryRepository();
         if ($categoryId < 0) {
             $categoryId = $repo->getRootId();
@@ -45,11 +49,9 @@ class CategoryService extends \PhalconPlus\Base\Service
         return $repo->getChildren($categoryId, $depth, $status, $backward);
     }
 
-    public function getIdNameMap(SimpleRequest $request)
+    public function getIdNameMap(Ids $request)
     {
-        $categoryIds = $request->getParam("ids") ?: [];
-        $categoryIds = array_filter($categoryIds, "is_int");
-        if(empty($categoryIds)) return [];
+        $categoryIds = ($request->validate())->getIds();
         $repo = new CategoryRepository();
         $ret = $repo->get($categoryIds);
         if(empty($ret)) return [];

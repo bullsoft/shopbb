@@ -55,12 +55,12 @@ class SchemaTemplateService extends \PhalconPlus\Base\Service
 
         $repo = new SchemaTemplateRepository();
         return $repo->addSchemaTemplate([
-            "name" => $data->getName(),
-            "identity" => $data->getIdentity(),
-            "content" => $data->getContent(),
-            "desc" => $data->getDesc(),
+            "name"         => $data->getName(),
+            "identity"     => $data->getIdentity(),
+            "content"      => $data->getContent(),
+            "desc"         => $data->getDesc(),
             "createUserId" => $data->getCreateUserId(),
-            "status" => is_null($status) ? SchemaTemplateStatus::STATUS_NO_RELEASE : (new SchemaTemplateStatus($status))->getValue(),
+            "status"       => is_null($status) ? SchemaTemplateStatus::STATUS_NO_RELEASE : (new SchemaTemplateStatus($status))->getValue(),
         ]);
     }
 }

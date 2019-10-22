@@ -18,6 +18,7 @@ use LightCloud\Com\Protos\CentCMS\Schemas\{
     RequestItemList,
     Item as ItemSchema,
     Pageable,
+    Id,
 };
 use LightCloud\Com\Protos\CentCMS\Enums\{
     CategoryStatus,
@@ -91,21 +92,16 @@ class ItemService extends \PhalconPlus\Base\Service
         }
     }
 
-    public function getItemDetail(SimpleRequest $request) : array
+    public function getItemDetail(Id $request) : array
     {
-        $id = $request->getParam("id");
-        Assert::notEmpty($id, "id不能为空!");
-        Assert::integer($id, "id必须是数字!");
-
+        $id = ($request->validate())->getId();
         $repo = new ItemRepository();
         return $repo->getItemById($id);
     }
 
-    public function getAllDirectItemList(SimpleRequest $request) : \PhalconPlus\Base\Page
+    public function getAllDirectItemList(Id $request) : \PhalconPlus\Base\Page
     {
-        $categoryId = $request->getParam("categoryId");
-        Assert::notEmpty($categoryId, "分类id不能为空!");
-        Assert::integer($categoryId, "分类id必须是数字!");
+        $categoryId = ($request->validate())->getId();
         $pageable = (new Pageable())->setPageSize(10000);
         $repo = new ItemRepository();
         return $repo->getItemList($pageable, [$categoryId]);
