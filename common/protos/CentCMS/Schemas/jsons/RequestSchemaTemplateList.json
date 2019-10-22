@@ -1,0 +1,23 @@
+{
+    "title": "RequestSchemaTemplateList",
+    "type": "object",
+    "properties" : {
+        "name": {
+            "type": "string",
+            "minLength": 6,
+            "description": ""
+        },
+        "createUserId": {
+            "type": "string",
+            "description": ""
+        },
+        "pageable": {
+            "type": "object",
+            "$ref": "file://./pageable.json",
+            "description": ""
+        }
+    },
+    "required": [
+        "pageable"
+    ]
+}

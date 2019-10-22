@@ -84,11 +84,11 @@ class SchemaTemplateModel extends ModelBase
         $this->content = NULL;
         $this->name = NULL;
         $this->desc = '';
+        $this->createUserId = '';
         $this->status = NULL;
         $this->isDelete = '0';
-        $this->ctime = '0000-00-00 00:00:00';
+        $this->ctime = '0001-01-01 00:00:00';
         $this->mtime = '0001-01-01 00:00:00';
-        $this->createUid = '';
     }
 
     /**
@@ -106,7 +106,7 @@ class SchemaTemplateModel extends ModelBase
             'is_delete' => 'isDelete', 
             'ctime' => 'ctime', 
             'mtime' => 'mtime', 
-            'create_uid' => 'createUid', 
+            'create_user_id' => 'createUserId', 
         );
     }
 

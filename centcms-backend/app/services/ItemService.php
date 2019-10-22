@@ -73,10 +73,9 @@ class ItemService extends \PhalconPlus\Base\Service
     public function getItemList(RequestItemList $request) : \PhalconPlus\Base\Page
     {
         $data = $request->validate();
-
         $categoryId = $data->getCategoryId();
         $name = $data->getName();
-        $pagealbe = $data->getPageable();
+        $pageable = $data->getPageable();
 
         try {
             $cateRepo = new CategoryRepository();
@@ -86,7 +85,7 @@ class ItemService extends \PhalconPlus\Base\Service
             }
             $categoryIds = array_column($categoryList, "id");
             $repo = new ItemRepository();
-            return $repo->getItemList($pagealbe, $categoryIds, $name);
+            return $repo->getItemList($pageable, $categoryIds, $name);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -107,7 +106,6 @@ class ItemService extends \PhalconPlus\Base\Service
         $categoryId = $request->getParam("categoryId");
         Assert::notEmpty($categoryId, "分类id不能为空!");
         Assert::integer($categoryId, "分类id必须是数字!");
-
         $pageable = (new Pageable())->setPageSize(10000);
         $repo = new ItemRepository();
         return $repo->getItemList($pageable, [$categoryId]);

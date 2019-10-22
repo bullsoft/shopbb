@@ -7,11 +7,11 @@ use LightCloud\Com\Protos\CentCMS\Enums\CategoryStatus;
 
 class CategoryRepository
 {
-    private static $table = 'category';
+    private static $table = '';
 
     public function __construct()
     {
-        // self::$table = CategoryModel::newInstance()->getSource();
+        self::$table = CategoryModel::newInstance()->getSource();
     }
 
     public function add(string $name, string $identity, int $parentId, int $status = 0, string $desc = "", int $sortNo = 0): int

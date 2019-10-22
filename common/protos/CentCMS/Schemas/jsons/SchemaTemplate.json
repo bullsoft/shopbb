@@ -1,0 +1,37 @@
+{
+    "title": "SchemaTemplate",
+    "type": "object",
+    "properties" : {
+        "name": {
+            "type": "string",
+            "description": "",
+            "pattern": "^[_0-9a-zA-Z]{1,32}$"
+        },
+        "desc": {
+            "type": "string",
+            "description": ""
+        },
+        "identity": {
+            "type": "string",
+            "description": "",
+            "minLenght": 5
+        },
+        "content": {
+            "type": "string",
+            "description": ""
+        },
+        "status": {
+            "type": "integer",
+            "description": "",
+            "minimum": 1
+        },
+        "createUserId": {
+            "type": "integer",
+            "description": "",
+            "minimum": 1
+        }
+    },
+    "required": [
+        "name", "identity", "content", "createUserId"
+    ]
+}

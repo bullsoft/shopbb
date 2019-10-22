@@ -1,0 +1,16 @@
+{
+    "title": "Ids",
+    "type": "object",
+    "properties" : {
+        "ids": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 1
+            }
+        }
+    },
+    "required": [
+        "ids"
+    ]
+}
