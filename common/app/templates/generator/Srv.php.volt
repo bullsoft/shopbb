@@ -29,6 +29,7 @@ class Srv extends PlusModule
         $bootstrap = $di->get('bootstrap');
         // get config
         $config = $di->get('config');
+        $that = $this;
 
         // load env from {$root}/.env
         if(\PhalconPlus\Enum\RunEnv::isInProd(APP_RUN_ENV)) {

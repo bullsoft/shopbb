@@ -1,4 +1,5 @@
-namespace {{rootNs}};
+<?php
+namespace LightCloud\CentCMS\Api;
 
 use PhalconPlus\Base\AbstractModule as PlusModule;
 use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
@@ -13,7 +14,8 @@ class Module extends PlusModule
             __NAMESPACE__.'\\Controllers' => __DIR__.'/controllers/',
             __NAMESPACE__.'\\Controllers\\Apis' => __DIR__.'/controllers/apis/',
             __NAMESPACE__.'\\Models'      => __DIR__.'/models/',
-            "Common\\Protos"              => APP_ROOT_COMMON_DIR.'/protos/',
+            __NAMESPACE__.'\\Plugins'     => __DIR__.'/plugins/',
+            "LightCloud\\Com\\Protos"     => APP_ROOT_COMMON_DIR.'/protos/',
         ))->register();
 
         // load composer library
@@ -87,6 +89,12 @@ class Module extends PlusModule
                             return false;
                     }
                 });
+
+                $evtManager->attach("dispatch:beforeForward", function($event, $dispatcher, array $forward) {
+                    $dispatcher->setNamespaceName(__NAMESPACE__."\\Controllers\\");
+                });
+                $interceptor = new \LightCloud\CentCMS\Api\Plugins\DispatcherInterceptor($di, $evtManager);
+                $evtManager->attach('dispatch', $interceptor);
                 $dispatcher = new \Phalcon\Mvc\Dispatcher();
                 $dispatcher->setEventsManager($evtManager);
                 $dispatcher->setDefaultNamespace(__NAMESPACE__."\\Controllers\\");
@@ -97,7 +105,7 @@ class Module extends PlusModule
         $di->set("rpc", function() use ($di, $config, $bootstrap) {
             $client = null;
             if($config->debugRPC == true) {
-                $bootstrap->dependModule("server"); // 可能需要修改
+                $bootstrap->dependModule("centcms-backend"); // 可能需要修改
                 $client = new \PhalconPlus\RPC\Client\Adapter\Local($di);
             } else {
                 $remoteUrls = $config->demoServerUrl;
@@ -136,7 +144,7 @@ class Module extends PlusModule
             
             // 添加formatter
             $formatter = new \PhalconPlus\Logger\Formatter\LinePlus("[%date%][%trace%][%uid%][%type%] %message%");
-            $formatter->addProcessor("uid", new UidProcessor(18));
+            $formatter->addProcessor("logId", new UidProcessor(18));
             $formatter->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
             
             $logger->setFormatter($formatter);

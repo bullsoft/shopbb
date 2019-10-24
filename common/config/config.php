@@ -16,6 +16,7 @@ return array(
 
     'namespace' => array(
         'BullSoft' => $rootPath . '/common/vendor/BullSoft/',
+        'PhalconPlus\\Com\\Protos' => $rootPath . '/common/protos/'
     ),
 );
 

@@ -24,14 +24,14 @@ class CategoryService extends \PhalconPlus\Base\Service
         return $repo->getTops();
     }
 
-    public function getCategoryDetail(Id $request)
+    public function getCategoryDetail(Id $request) : array
     {
         $categoryId = ($request->validate())->getId();
         $repo = new CategoryRepository();
         return $repo->getOne($categoryId);
     }
 
-    public function getChildrenList(Id $request)
+    public function getChildrenList(Id $request) : array
     {
         $categoryId = ($request->validate())->getId();
         $repo = new CategoryRepository();
@@ -49,12 +49,11 @@ class CategoryService extends \PhalconPlus\Base\Service
         return $repo->getChildren($categoryId, $depth, $status, $backward);
     }
 
-    public function getIdNameMap(Ids $request)
+    public function getIdNameMap(Ids $request) : array
     {
         $categoryIds = ($request->validate())->getIds();
         $repo = new CategoryRepository();
         $ret = $repo->get($categoryIds);
-        if(empty($ret)) return [];
         return array_column($ret, "name", "id");
     }
 
