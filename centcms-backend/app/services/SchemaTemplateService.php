@@ -1,6 +1,7 @@
 <?php
 
 namespace LightCloud\CentCMS\Backend\Services;
+use PhalconPlus\Base\SimpleRequest as SimpleRequest;
 
 use PhalconPlus\Assert\Assertion as Assert;
 use LightCloud\CentCMS\Backend\Repositories\SchemaTemplateRepository;
@@ -41,7 +42,7 @@ class SchemaTemplateService extends \PhalconPlus\Base\Service
         $createUserId = $request->getParam('createUserId');
 
         Assert::integer($schemaTemplateId);
-        Assert::min(1);
+        Assert::min($schemaTemplateId, 1);
  
         $repo = new SchemaTemplateRepository();
         return $repo->getSchemaTemplateById($schemaTemplateId, $createUserId);
@@ -52,12 +53,12 @@ class SchemaTemplateService extends \PhalconPlus\Base\Service
         $data = $request->validate();
         Assert::isJsonString($data->getContent());
         $status = $data->getStatus();
-
+        $miniContent = json_encode(json_decode($data->getContent()), \JSON_UNESCAPED_UNICODE);
         $repo = new SchemaTemplateRepository();
         return $repo->addSchemaTemplate([
             "name"         => $data->getName(),
             "identity"     => $data->getIdentity(),
-            "content"      => $data->getContent(),
+            "content"      => $miniContent,
             "desc"         => $data->getDesc(),
             "createUserId" => $data->getCreateUserId(),
             "status"       => is_null($status) ? SchemaTemplateStatus::STATUS_NO_RELEASE : (new SchemaTemplateStatus($status))->getValue(),

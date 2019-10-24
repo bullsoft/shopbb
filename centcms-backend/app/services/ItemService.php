@@ -54,7 +54,7 @@ class ItemService extends \PhalconPlus\Base\Service
                 "categoryId"       => $item->getCategoryId(),
                 "identity"         => $item->getIdentity(),
                 "schemaTemplateId" => $item->getSchemaTemplateId(),
-                "content"          => $item->getContent(),
+                "content"          => json_encode($data, \JSON_UNESCAPED_UNICODE),
                 "status"           => is_null($item->getStatus()) ? ItemStatus::STATUS_NO_RELEASE : (new ItemStatus($item->getStatus()))->getValue(),
                 "createUserId"     => $item->getCreateUserId(),
                 "sortNo"           => $item->getSortNo() ?: 0,

@@ -3,6 +3,7 @@ namespace LightCloud\CentCMS\Api\Controllers;
 use LightCloud\Com\Protos\CentCMS\Schemas\{
     Pageable,
     RequestItemList,
+    Id,
 };
 
 class ItemController extends \Phalcon\Mvc\Controller
@@ -30,6 +31,20 @@ class ItemController extends \Phalcon\Mvc\Controller
             'logId'   => $this->logger->getProcessorVar("logId"),
         ]);
 
+        return $response;
+    }
+
+    public function getItemDetailAction()
+    {
+        $itemId = (int) $this->request->get('itemId', "int");
+        $request = new Id();
+        $request->setId($itemId);
+        $response = $this->rpc->callByObject([
+            'service' => 'LightCloud\CentCMS\Backend\Services\Item',
+            'method'  => 'getItemDetail',
+            'args'    => $request,
+            'logId'   => $this->logger->getProcessorVar("logId"),
+        ]);
         return $response;
     }
 }

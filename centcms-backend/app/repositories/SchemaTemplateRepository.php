@@ -42,7 +42,7 @@ class SchemaTemplateRepository
                 ]
             );
         }
-        return SchemaTemplateModel::findByPageable(
+        return SchemaTemplateModel::newInstance()->findByPageable(
             $pageable, 
             [
                 'condition' => implode(' AND ',  $condition), 
@@ -94,11 +94,11 @@ class SchemaTemplateRepository
 
         if (!empty($createUserId)) {
             $condition[] = "createUserId = :createuserId:";
-            $bind['createUserId'] = $createUserId;
+            $bind['createuserId'] = $createUserId;
         }
 
         $template = SchemaTemplateModel::findFirst([
-            'condition' => implode(" AND ", $condition),
+            implode(" AND ", $condition),
             'bind' => $bind
         ]);
 
