@@ -11,7 +11,7 @@ class Category extends \PhalconPlus\Com\Protos\ProtoBase
     /**
      * @Key("name")
      * @Type("string")
-     * @MinLength(6)
+     * @MinLength(2)
      */
     protected $name;
     /**
@@ -28,7 +28,7 @@ class Category extends \PhalconPlus\Com\Protos\ProtoBase
     /**
      * @Key("identity")
      * @Type("string")
-     * @Pattern("^[_0-9a-zA-Z]{1,32}$")
+     * @Pattern("^[_0-9a-zA-Z]{4,32}$")
      */
     protected $identity;
     /**

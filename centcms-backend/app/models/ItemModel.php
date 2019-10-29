@@ -8,7 +8,7 @@ namespace LightCloud\CentCMS\Backend\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\CentCMS\Backend\Models
- * @version $Rev:2019-10-15 19:53:38$
+ * @version $Rev:2019-10-29 15:37:50$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class ItemModel extends ModelBase
@@ -54,6 +54,12 @@ class ItemModel extends ModelBase
      * @var string
      * @table item
      */
+    public $create_user_id = '';
+
+    /**
+     * @var string
+     * @table item
+     */
     public $content = null;
 
     /**
@@ -78,19 +84,13 @@ class ItemModel extends ModelBase
      * @var datetime
      * @table item
      */
-    public $ctime = '0000-00-00 00:00:00';
+    public $ctime = '0001-01-01 00:00:00';
 
     /**
      * @var datetime
      * @table item
      */
     public $mtime = '0001-01-01 00:00:00';
-
-    /**
-     * @var string
-     * @table item
-     */
-    public $create_uid = '';
 
     /**
      * When an instance created, it would be executed
@@ -102,8 +102,8 @@ class ItemModel extends ModelBase
         $this->desc = '';
         $this->identity = NULL;
         $this->categoryId = NULL;
-        $this->createUserId = '';
         $this->schemaTemplateId = NULL;
+        $this->createUserId = '';
         $this->content = NULL;
         $this->sortNo = '0';
         $this->status = NULL;
@@ -123,8 +123,8 @@ class ItemModel extends ModelBase
             'desc' => 'desc', 
             'identity' => 'identity', 
             'category_id' => 'categoryId', 
-            'create_user_id' => 'createUserId', 
             'schema_template_id' => 'schemaTemplateId', 
+            'create_user_id' => 'createUserId', 
             'content' => 'content', 
             'sort_no' => 'sortNo', 
             'status' => 'status', 
@@ -137,8 +137,8 @@ class ItemModel extends ModelBase
     public function initialize()
     {
         parent::initialize();
-        $this->setWriteConnectionService("db");
-        $this->setReadConnectionService("dbRead");
+        $this->setWriteConnectionService("dbCms");
+        $this->setReadConnectionService("dbCmsRead");
     }
 
     /**

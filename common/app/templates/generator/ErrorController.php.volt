@@ -14,5 +14,6 @@ class ErrorController extends \Phalcon\Mvc\Controller
         echo "<h1>Whoops!</h1>";
         echo "<p>ErrorCode: " . $e->getCode() . "</p>";
         echo "<p>ErrorMessage: " . $e->getMessage() . "</p>";
+        echo "<hr />Trace: <p>" . nl2br($e->getTraceAsString()) . "</p>";
     }
 }

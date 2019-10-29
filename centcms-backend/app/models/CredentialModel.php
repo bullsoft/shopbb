@@ -8,7 +8,7 @@ namespace LightCloud\CentCMS\Backend\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\CentCMS\Backend\Models
- * @version $Rev:2019-10-15 19:53:38$
+ * @version $Rev:2019-10-29 15:37:50$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class CredentialModel extends ModelBase
@@ -121,14 +121,14 @@ class CredentialModel extends ModelBase
     public function initialize()
     {
         parent::initialize();
-        $this->setWriteConnectionService("db");
-        $this->setReadConnectionService("dbRead");
+        $this->setWriteConnectionService("dbCms");
+        $this->setReadConnectionService("dbCmsRead");
     }
 
     /**
      * return related table name
      */
-    public function getSource()
+    public function getSource() : string
     {
         return 'credential';
     }

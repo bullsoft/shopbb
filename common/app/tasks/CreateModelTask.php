@@ -219,7 +219,7 @@ class CreateModelTask extends \Phalcon\CLI\Task
                 );
             }
 
-            $generator->addMethod(
+            $methodGenerator4 = new \Zend\Code\Generator\MethodGenerator(
                 'getSource',
                 array(),
                 MethodGenerator::FLAG_PUBLIC,
@@ -230,6 +230,8 @@ class CreateModelTask extends \Phalcon\CLI\Task
 
                 ))
             );
+            $methodGenerator4->setReturnType("string");
+            $generator->addMethodFromGenerator($methodGenerator4);
 
             $file = new FileGenerator();
             $file->setFilename($filePath);

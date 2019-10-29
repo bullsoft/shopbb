@@ -135,8 +135,8 @@ class Module extends PlusModule
             $logger->registerExtension(".de", [\Phalcon\Logger::DEBUG]);
             
             // 添加formatter
-            $formatter = new \PhalconPlus\Logger\Formatter\LinePlus("[%date%][%trace%][%uid%][%type%] %message%");
-            $formatter->addProcessor("uid", new UidProcessor(18));
+            $formatter = new \PhalconPlus\Logger\Formatter\LinePlus("[%date%][%trace%][%logId%][%type%] %message%");
+            $formatter->addProcessor("logId", new UidProcessor(18));
             $formatter->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
             
             $logger->setFormatter($formatter);

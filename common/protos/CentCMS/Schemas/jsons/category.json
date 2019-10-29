@@ -5,7 +5,7 @@
         "name": {
             "type": "string",
             "description": "",
-            "minLength": 6
+            "minLength": 2
         },
         "parentId": {
             "type": "integer",
@@ -20,7 +20,7 @@
         "identity": {
             "type": "string",
             "description" : "",
-            "pattern": "^[_0-9a-zA-Z]{1,32}$"
+            "pattern": "^[_0-9a-zA-Z]{4,32}$"
         },
         "sortNo": {
             "type": "integer",

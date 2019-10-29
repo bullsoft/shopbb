@@ -8,7 +8,7 @@ return array(
         "url" => "http//server.localhost.com/",
         "logFilePath" => "/tmp/centcms-backend.log",
     ),
-    'db' => array(
+    'dbCms' => array(
         "host" => "127.0.0.1",        
         "port" => 3306,
         "username" => "root",

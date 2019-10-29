@@ -120,7 +120,7 @@ class CategoryRepository
      */
     public function update(int $id, array $data) : bool
     {
-        $conn = di()->getDb();
+        $conn = CategoryModel::newInstance()->getReadConnection();
         $columns = array_flip(CategoryModel::newInstance()->columnMap());
         $mapData = [];
         foreach($data as $key => $val) {
@@ -161,7 +161,7 @@ class CategoryRepository
      */
     public function getMaxDepth() : int
     {
-        $conn = di()->getDbRead();
+        $conn = CategoryModel::newInstance()->getReadConnection();
         $ret = $conn->fetchOne(
             'SELECT depth FROM '.self::$table.' ORDER BY depth DESC LIMIT 1'
         );
@@ -176,7 +176,7 @@ class CategoryRepository
      * @param boolean $backward 返回的数据是否包含本身
      * @return array
      */
-    public function getChildren(int $id, int $depth, ?array $status, bool $backward = false) : array
+    public function getChildren(int $id, int $depth, ?array $status, bool $backward = false, int $limit = 10000, int $offset = 0) : array
     {
         $node = CategoryModel::findFirst($id);
         if ($node) {
@@ -196,10 +196,10 @@ class CategoryRepository
             }
             $conn = $node->getWriteConnection();
             $ret = $conn->fetchAll(
-                sprintf("SELECT * FROM ".$node->getSource()." WHERE lft > ? AND rgt < ? AND depth < ? AND status IN (%s) ORDER BY lft ASC", $commaStatus),
+                sprintf("SELECT * FROM ".$node->getSource()." WHERE lft > ? AND rgt < ? AND depth < ? AND status IN (%s) ORDER BY lft ASC LIMIT ?, ?", $commaStatus),
                 \Phalcon\Db::FETCH_ASSOC,
                 [
-                    $offsetLft, $offsetRgt, $absDepth
+                    $offsetLft, $offsetRgt, $absDepth, $offset, $limit
                 ]
             );
             return $ret ?: [];
@@ -215,7 +215,7 @@ class CategoryRepository
      */
     public function getTops() : array
     {
-        $conn = di()->getDbRead();
+        $conn = CategoryModel::newInstance()->getReadConnection();
         $ret = $conn->fetchAll(
             "SELECT * FROM ".self::$table." WHERE depth = ? ORDER BY lft ASC",
             \Phalcon\Db::FETCH_ASSOC,
@@ -296,7 +296,7 @@ class CategoryRepository
      */
     public function hasChildren(int $id) : bool
     {
-        $conn = di()->getDbRead();
+        $conn = CategoryModel::newInstance()->getReadConnection();
         $ret = $conn->fetchOne(
             "SELECT COUNT(*) AS count FROM ".self::$table." WHERE pid = ?",
             \Phalcon\Db::FETCH_ASSOC,
@@ -314,9 +314,9 @@ class CategoryRepository
      * @param array[int] $ids
      * @return array
      */
-    public function get(array $ids)
+    public function get(array $ids) : array
     {
-        $conn = di()->getDbRead();
+        $conn = CategoryModel::newInstance()->getReadConnection();
         $ret = $conn->fetchAll(
             sprintf("SELECT * FROM ".self::$table." WHERE id IN (%s)", implode(",", $ids)),
             \Phalcon\Db::FETCH_ASSOC
@@ -331,9 +331,9 @@ class CategoryRepository
      * @param integer $id
      * @return array
      */
-    public function getOne(int $id): array
+    public function getOne(int $id) : array
     {
-        $conn = di()->getDbRead();
+        $conn = CategoryModel::newInstance()->getReadConnection();
         $node = $conn->fetchOne(
             "SELECT * FROM ".self::$table." WHERE id = :id",
             \Phalcon\Db::FETCH_ASSOC,
@@ -344,9 +344,22 @@ class CategoryRepository
         return $node ?: [];
     }
 
+    public function getOneByIdentity(string $identity) : array
+    {
+        $conn = CategoryModel::newInstance()->getReadConnection();
+        $node = $conn->fetchOne(
+            "SELECT * FROM ".self::$table." WHERE identity = :identity",
+            \Phalcon\Db::FETCH_ASSOC,
+            [
+                "identity" => $identity
+            ]
+        );
+        return $node ?: [];
+    }
+
     public function getRootNode() : array
     {
-        $conn = di()->getDbRead();
+        $conn = CategoryModel::newInstance()->getReadConnection();
         $ret = $conn->fetchOne(
             "SELECT * FROM ".self::$table." WHERE depth = 0 ORDER BY lft ASC",
             \Phalcon\Db::FETCH_ASSOC

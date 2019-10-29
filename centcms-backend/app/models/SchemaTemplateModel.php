@@ -8,7 +8,7 @@ namespace LightCloud\CentCMS\Backend\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\CentCMS\Backend\Models
- * @version $Rev:2019-10-15 19:53:38$
+ * @version $Rev:2019-10-29 15:37:50$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class SchemaTemplateModel extends ModelBase
@@ -42,6 +42,12 @@ class SchemaTemplateModel extends ModelBase
      * @var string
      * @table schema_template
      */
+    public $create_user_id = '';
+
+    /**
+     * @var string
+     * @table schema_template
+     */
     public $desc = '';
 
     /**
@@ -60,19 +66,13 @@ class SchemaTemplateModel extends ModelBase
      * @var datetime
      * @table schema_template
      */
-    public $ctime = '0000-00-00 00:00:00';
+    public $ctime = '0001-01-01 00:00:00';
 
     /**
      * @var datetime
      * @table schema_template
      */
     public $mtime = '0001-01-01 00:00:00';
-
-    /**
-     * @var string
-     * @table schema_template
-     */
-    public $create_uid = '';
 
     /**
      * When an instance created, it would be executed
@@ -83,8 +83,8 @@ class SchemaTemplateModel extends ModelBase
         $this->identity = NULL;
         $this->content = NULL;
         $this->name = NULL;
-        $this->desc = '';
         $this->createUserId = '';
+        $this->desc = '';
         $this->status = NULL;
         $this->isDelete = '0';
         $this->ctime = '0001-01-01 00:00:00';
@@ -101,20 +101,20 @@ class SchemaTemplateModel extends ModelBase
             'identity' => 'identity', 
             'content' => 'content', 
             'name' => 'name', 
+            'create_user_id' => 'createUserId', 
             'desc' => 'desc', 
             'status' => 'status', 
             'is_delete' => 'isDelete', 
             'ctime' => 'ctime', 
             'mtime' => 'mtime', 
-            'create_user_id' => 'createUserId', 
         );
     }
 
     public function initialize()
     {
         parent::initialize();
-        $this->setWriteConnectionService("db");
-        $this->setReadConnectionService("dbRead");
+        $this->setWriteConnectionService("dbCms");
+        $this->setReadConnectionService("dbCmsRead");
     }
 
     /**

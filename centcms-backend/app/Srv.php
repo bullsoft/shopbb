@@ -2,7 +2,8 @@
 namespace LightCloud\CentCMS\Backend;
 
 use PhalconPlus\Base\AbstractModule as PlusModule;
-
+use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
+use PhalconPlus\Logger\Processor\Uid as UidProcessor;
 class Srv extends PlusModule
 {
     public function registerAutoloaders()
@@ -48,14 +49,14 @@ class Srv extends PlusModule
         }
 
         // register db write service
-        $di->setShared('db', function() use ($di) {
-            $mysql = new \PhalconPlus\Db\Mysql($di, "db");
+        $di->setShared('dbCms', function() use ($di) {
+            $mysql = new \PhalconPlus\Db\Mysql($di, "dbCms");
             return $mysql->getConnection();
         });
 
         // register db read service
-        $di->setShared('dbRead', function() use ($di) {
-            $mysql = new \PhalconPlus\Db\Mysql($di, "db");
+        $di->setShared('dbCmsRead', function() use ($di) {
+            $mysql = new \PhalconPlus\Db\Mysql($di, "dbCms");
             return $mysql->getConnection();
         });
 
@@ -68,5 +69,18 @@ class Srv extends PlusModule
                 return $dispatcher;
             });
         }
+
+        $di->setShared("logger", function() use ($di, $config){
+            $logger = new \PhalconPlus\Logger\Adapter\FilePlus($config->application->logFilePath);
+            $logger->registerExtension(".de", [\Phalcon\Logger::DEBUG]);
+            
+            // 添加formatter
+            $formatter = new \PhalconPlus\Logger\Formatter\LinePlus("[%date%][%trace%][%logId%][%type%] %message%");
+            $formatter->addProcessor("logId", new UidProcessor(18));
+            $formatter->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
+            
+            $logger->setFormatter($formatter);
+            return $logger;
+        });
     }
 }

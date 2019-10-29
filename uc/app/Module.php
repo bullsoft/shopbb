@@ -157,15 +157,20 @@ class Module extends PlusModule
         // check if this module is a primary one?
         if($this->isPrimary()) {
             // register a dispatcher
-            $di->set('dispatcher', function () use ($di) {
+            $di->set('dispatcher', function () use ($di, $version) {
                 $evtManager = $di->getShared('eventsManager');
-                $evtManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) {
+                $evtManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) use ($version) {
                     if($dispatcher->hasParam("ApiException")) {
                         throw $exception;
                     }
+                    if($version < 4) {
+                        $exceptionClass = \Phalcon\Mvc\Dispatcher::class;
+                    } else {
+                        $exceptionClass = \Phalcon\Dispatcher\Exception::class;
+                    }
                     switch ($exception->getCode()) {
-                        case \Phalcon\Dispatcher\Exception::EXCEPTION_HANDLER_NOT_FOUND:
-                        case \Phalcon\Dispatcher\Exception::EXCEPTION_ACTION_NOT_FOUND:
+                        case $exceptionClass::EXCEPTION_HANDLER_NOT_FOUND:
+                        case $exceptionClass::EXCEPTION_ACTION_NOT_FOUND:
                             $dispatcher->forward(array(
                                 'controller' => "error",
                                 'action'     => 'show404'
