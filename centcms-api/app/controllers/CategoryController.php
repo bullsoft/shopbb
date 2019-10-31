@@ -15,6 +15,8 @@ use LightCloud\Com\Protos\CentCMS\Schemas\{
 
 use LightCloud\Com\Protos\CentCMS\Enums\CategoryStatus;
 
+use GuzzleHttp\Client as HttpClient;
+
 class CategoryController extends \Phalcon\Mvc\Controller
 {
     public function addCategoryAction()
@@ -152,6 +154,21 @@ class CategoryController extends \Phalcon\Mvc\Controller
     // 获取某个分类下的所有数据带分页
     public function getDataByCategoryPageableAction()
     {
+        $client = new HttpClient([
+            'base_uri' => 'http://127.0.0.1:8086',
+            'timeout'  => 2.0,
+        ]);
+        $response = $client->request('POST', '/oauth/access-token/validate', [
+            'form_params' => [
+                'scope' => 'user',
+                'accessToken' => $this->request->getPost("accessToken"),
+            ]
+        ]);
+        $json = json_decode($response->getBody()->getContents(), true);
+        Assert::eq($json['errorCode'], 0);
+        Assert::eq($json['data']['access'], true);
+           
+
         $categoryIdentity = $this->request->get('categoryIdentity');
         $pageNo = (int) $this->request->get('pageNo', 'int', 1);
         $pageSize = (int) $this->request->get('pageSize', 'int', 30);

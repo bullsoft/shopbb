@@ -19,8 +19,10 @@ class ClientRepository implements ClientRepositoryInterface
 
         if (empty($client)) return null;
         
-        if ($mustValidateSecret && $client->clientSecret !== $clientSecret) {
-            return null;
+        if (!is_null($clientSecret)) {
+            if ($mustValidateSecret && $client->clientSecret !== $clientSecret) {
+                return null;
+            }
         }
 
         // check grant types
@@ -37,5 +39,10 @@ class ClientRepository implements ClientRepositoryInterface
         }
         
         return $client;
+    }
+
+    public function validateClient($clientIdentifier, $clientSecret, $grantType)
+    {
+
     }
 }

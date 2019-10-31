@@ -55,7 +55,8 @@ class AuthorizeController extends BaseController
         // grant_type, client_id, client_secret, scope, username, password
         $serverResponse = new \GuzzleHttp\Psr7\Response();
         try {
-            $request = ServerRequest::fromGlobals();
+            // $request = ServerRequest::fromGlobals();
+            $request = $this->request->getPsrRequest();
             $oauth2Server = OAuth2::newAuthorizationServer();
             $response = $oauth2Server->respondToAccessTokenRequest($request, $serverResponse);
             $content = (string) $response->getBody();
@@ -75,7 +76,8 @@ class AuthorizeController extends BaseController
         // response_type, client_id, redirect_uri, scope, state
         $oauth2Server = OAuth2::newAuthorizationServer();
         try {
-            $request = ServerRequest::fromGlobals();
+            // $request = ServerRequest::fromGlobals();
+            $request = $this->request->getPsrRequest();
             // Validate the HTTP request and return an AuthorizationRequest object.
             $authRequest = $oauth2Server->validateAuthorizationRequest($request);
             // The auth request object can be serialized and saved into a user's session.
@@ -111,7 +113,8 @@ class AuthorizeController extends BaseController
         // response_type, client_id, redirect_uri, scope, state
         $oauth2Server = OAuth2::newAuthorizationServer();
         try {
-            $request = ServerRequest::fromGlobals();
+            // $request = ServerRequest::fromGlobals();
+            $request = $this->request->getPsrRequest();
             // Validate the HTTP request and return an AuthorizationRequest object.
             $authRequest = $oauth2Server->validateAuthorizationRequest($request);
             $loginUserId = $this->session->get('identity');
@@ -122,7 +125,6 @@ class AuthorizeController extends BaseController
             $requestScopes = explode(AbstractGrant::SCOPE_DELIMITER_STRING, $this->request->getQuery("scope"));
             $userScopes = UserEntity::getApprovedScopes($loginUserId, $this->request->getQuery("client_id"));
             $reqApprovedScopes = array_intersect($requestScopes, $userScopes);
-
             if(count($requestScopes) == count($reqApprovedScopes)) {
                 $authRequest->setAuthorizationApproved(true);
             } else {

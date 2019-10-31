@@ -18,7 +18,8 @@ class UserController extends BaseController
     {
         $serverResponse = new \GuzzleHttp\Psr7\Response();
         try {
-            $request = ServerRequest::fromGlobals();
+            // $request = ServerRequest::fromGlobals();
+            $request = $this->request->getPsrRequest();
             $server = OAuth2::newResourceServer();
             // Validate 
             // Header Authorization: Bearer {access-token}
@@ -34,7 +35,7 @@ class UserController extends BaseController
             } else if($result instanceof ServerRequest) {
                 $attrs = $result->getAttributes();
                 $scopes = array_filter($attrs['oauth_scopes'], function($item) {
-                    if("user" == $item->scope) return true;
+                    if("user" == reset($item)) return true;
                     return false;
                 });
                 if(empty($scopes)) throw new AuthFailedException(["no scope there in user scopes", "scope=user"]);

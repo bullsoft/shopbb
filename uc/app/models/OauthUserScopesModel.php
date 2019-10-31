@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-04-17 13:42:33$
+ * @version $Rev:2019-10-30 11:25:14$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class OauthUserScopesModel extends ModelBase
@@ -50,13 +50,6 @@ class OauthUserScopesModel extends ModelBase
      */
     public $mtime = '0001-01-01 00:00:00';
 
-    public function initialize()
-    {
-        parent::initialize();
-        $this->setWriteConnectionService("db");
-        $this->setReadConnectionService("dbRead");
-    }
-
     /**
      * When an instance created, it would be executed
      */
@@ -85,10 +78,17 @@ class OauthUserScopesModel extends ModelBase
         );
     }
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->setWriteConnectionService("db");
+        $this->setReadConnectionService("dbRead");
+    }
+
     /**
      * return related table name
      */
-    public function getSource()
+    public function getSource() : string
     {
         return 'oauth_user_scopes';
     }

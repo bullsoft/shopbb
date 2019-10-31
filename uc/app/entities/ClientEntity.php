@@ -54,4 +54,9 @@ class ClientEntity extends OauthClientsModel implements ClientEntityInterface
         return $clientEntity;
     }
 
+    public function isConfidential()
+    {
+
+    }
+
 }

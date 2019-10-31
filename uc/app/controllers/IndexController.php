@@ -19,7 +19,7 @@ class IndexController extends BaseController
      */
     public function indexAction()
     {
-
+        var_dump($this->dispatcher->getParam("loginUser"));exit;
     }
 
     /**
@@ -39,13 +39,10 @@ class IndexController extends BaseController
         // Pass it as first argument of CaptchaBuilder, passing it the phrase
         // builder
         $captcha = new CaptchaBuilder(null, $phraseBuilder);
-        //$captcha->setBackgroundImages(["/Users/weigang/Desktop/200w.webp"]);
-        //$captcha->setIgnoreAllEffects(true);
         $captcha->build();
-        //$captcha->setMaxAngle(25);
        
         // 可以设置图片宽高及字体
-        //$captcha->buildAgainstOCR(150, 40, "/Users/weigang/Developments/github/shopbb/vendor/gregwar/captcha/src/Gregwar/Captcha/Font/JMH Sindbad.ttf");
+        //$captcha->buildAgainstOCR(150, 40");
 
         $this->redis->setEx('phrase::'.session_id(), 300, $captcha->getPhrase());
         $response = new \Phalcon\Http\Response();

@@ -53,7 +53,7 @@ class DispatcherInterceptor extends \Phalcon\Di\Injectable
 
         // 不允许匿名
         if($anno->has('disableGuest')) {
-            if (!$this->session->read('identity')) {
+            if (!$this->session->has('identity')) {
                 if (!$anno->has('api')) {
                     // HTTP跳转登录
                     $response = new \Phalcon\Http\Response();
@@ -66,14 +66,7 @@ class DispatcherInterceptor extends \Phalcon\Di\Injectable
             }
         }
 
-        /**
-         * set empty protobuffer here
-         */
-        $this->di->setShared("user", function() {
-            return new \PhalconPlus\Base\ProtoBuffer();
-        });
-
-        if($this->session->read('identity')) {
+        if($this->session->has('identity')) {
             $userId = intval($this->session->get('identity'));
             $user = UserModel::findFirst($userId);
             if($user == false) {
@@ -82,9 +75,7 @@ class DispatcherInterceptor extends \Phalcon\Di\Injectable
                 return false;
             } else {
                 $response = $user->toProtoBuffer();
-                $this->di->setShared("user", function () use ($response) {
-                    return $response;
-                });
+                $dispatcher->setParam("loginUser", $response);
             }
         }
 
@@ -117,7 +108,7 @@ class DispatcherInterceptor extends \Phalcon\Di\Injectable
         );
         $return["sessionId"] = $this->session->getId();
         $response = new \Phalcon\Http\Response();
-        $response->setHeader('Content-Type', 'application/json');
+        $response->setContentType("application/json", "UTF-8");
         $response->setJsonContent($return, \JSON_UNESCAPED_UNICODE);
         $dispatcher->setReturnedValue($response);
         

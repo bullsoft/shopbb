@@ -39,7 +39,7 @@ return array(
         'alwaysIncludeClientScopes' => false,
         'refreshTokenLifespan' => $oneMonthInterval,
         'accessTokenLifespan' => $oneHourInterval,
-        'authCodeLifespan' => $tenMinutesInterval,
+        'authCodeLifespan' => $oneHourInterval,
     ],
     "mail" => [
         "driver" => "postmark",
@@ -53,7 +53,7 @@ return array(
         "persistent" => false,
         "lifetime"   => 3600,
         "prefix"     => "my",
-        "index"      => 1,
+        "index"      => 0,
     ],
     "redis" => [
         'host' => "127.0.0.1",

@@ -5,6 +5,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use LightCloud\Uc\Entities\ScopeEntity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
+use PhalconPlus\Assert\Assertion as Assert;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
@@ -17,6 +18,7 @@ class ScopeRepository implements ScopeRepositoryInterface
      */
     public function getScopeEntityByIdentifier($identifier)
     {
+        Assert::notEmpty($identifier);
         if(is_string($identifier)) {
             $scopeName = $identifier;
         } elseif(is_object($identifier)) {

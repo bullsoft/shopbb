@@ -8,7 +8,7 @@ namespace LightCloud\Uc\Models;
  * 此文件由代码自动生成，代码依赖PhalconPlus和Zend\Code\Generator
  *
  * @namespace LightCloud\Uc\Models
- * @version $Rev:2019-04-17 13:42:33$
+ * @version $Rev:2019-10-30 11:25:14$
  * @license PhalconPlus( http://phalconplus.bullsoft.org/license-1.0.html )
  */
 class UserModel extends ModelBase
@@ -98,13 +98,6 @@ class UserModel extends ModelBase
      */
     public $mtime = null;
 
-    public function initialize()
-    {
-        parent::initialize();
-        $this->setWriteConnectionService("db");
-        $this->setReadConnectionService("dbRead");
-    }
-
     /**
      * When an instance created, it would be executed
      */
@@ -147,6 +140,13 @@ class UserModel extends ModelBase
             'ctime' => 'ctime', 
             'mtime' => 'mtime', 
         );
+    }
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->setWriteConnectionService("db");
+        $this->setReadConnectionService("dbRead");
     }
 
     /**

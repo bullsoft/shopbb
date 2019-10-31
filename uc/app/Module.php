@@ -24,26 +24,25 @@ class Module extends PlusModule
     public function __construct(\Phalcon\Di $di, \PhalconPlus\Base\ModuleDef $def)
     {
         parent::__construct($di, $def);
-        // set_exception_handler(function ($exception) use ($di) {
-        //     $response = $di->get("response");
-        //     $errorMsg = $msg = $exception->getMessage();
-        //     $data = new \stdClass();
-        //     if(($offset = \strpos($msg, "__DATA__")) !== false) {
-        //         $errorMsg = \substr($msg, 0, $offset);
-        //         $dataMsg = substr($msg, $offset+\strlen("__DATA__"));
-        //         $data = json_decode($dataMsg, true);
-        //     }
-        //     $error = array(
-        //         'errorCode' => max(1, $exception->getCode()),
-        //         'errorMsg' => $errorMsg,
-        //         'data' => $data??(new \stdClass()),
-        //         'sessionId' => '',
-        //     );
-        //     $response->setHeader('Content-Type', 'application/json');
-        //     $response->setJsonContent($error);
-        //     $response->send();
-        // });
-
+        set_exception_handler(function ($exception) use ($di) {
+            $response = $di->get("response");
+            $errorMsg = $msg = $exception->getMessage();
+            $data = new \stdClass();
+            if(($offset = \strpos($msg, "__DATA__")) !== false) {
+                $errorMsg = \substr($msg, 0, $offset);
+                $dataMsg = substr($msg, $offset+\strlen("__DATA__"));
+                $data = json_decode($dataMsg, true);
+            }
+            $error = array(
+                'errorCode' => max(1, $exception->getCode()),
+                'errorMsg' => $errorMsg,
+                'data' => $data??(new \stdClass()),
+                'sessionId' => '',
+            );
+            $response->setContentType("application/json", "UTF-8");
+            $response->setJsonContent($error, \JSON_UNESCAPED_UNICODE);
+            $response->send();
+        });
     }
 
     public function registerAutoloaders()
@@ -236,16 +235,16 @@ class Module extends PlusModule
         // set view with volt
         $di->set('view', function() use ($di) {
             $view = new \Phalcon\Mvc\View();
-            $view->setViewsDir(__DIR__.'/views/');
             $view->setViewsDir(__DIR__.'/views_stisla/');
-            $a = 1;
             $view->registerEngines([
                 ".volt" => function($view) use ($di) {
                     $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
-                    $volt->setOptions(array(
-                        "path"      => $di->get('config')->view->compiledPath,
-                        "extension" => $di->get('config')->view->compiledExtension,
-                    ));
+                    $volt->setOptions([
+                        "path"              => $di->get('config')->view->compiledPath,       // phalcon 4
+                        "extension"         => $di->get('config')->view->compiledExtension,  // phalcon 4
+                        "compiledPath"      => $di->get('config')->view->compiledPath,       // phalcon 3
+                        "compiledExtension" => $di->get('config')->view->compiledExtension,  // phalcon 3 
+                    ]);
                     // 如果模板缓存目录不存在，则创建它
                     if(!file_exists($di->get('config')->view->compiledPath)) {
                         mkdir($di->get('config')->view->compiledPath, 0777, true);
