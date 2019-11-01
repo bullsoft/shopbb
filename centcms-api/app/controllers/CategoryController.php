@@ -151,7 +151,11 @@ class CategoryController extends \Phalcon\Mvc\Controller
      
     }
 
-    // 获取某个分类下的所有数据带分页
+    /**
+     * @OAuth("centcms.data")
+     * 
+     * 获取某个分类下的所有数据带分页
+     */
     public function getDataByCategoryPageableAction()
     {
         $client = new HttpClient([
@@ -160,12 +164,12 @@ class CategoryController extends \Phalcon\Mvc\Controller
         ]);
         $response = $client->request('POST', '/oauth/access-token/validate', [
             'form_params' => [
-                'scope' => 'user',
+                'scope' => 'centcms.category',
                 'accessToken' => $this->request->getPost("accessToken"),
             ]
         ]);
         $json = json_decode($response->getBody()->getContents(), true);
-        Assert::eq($json['errorCode'], 0);
+        Assert::eq($json['errorCode'], 0, $json['errorMsg']);
         Assert::eq($json['data']['access'], true);
            
 

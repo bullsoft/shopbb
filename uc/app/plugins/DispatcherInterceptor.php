@@ -101,11 +101,11 @@ class DispatcherInterceptor extends \Phalcon\Di\Injectable
             }
         }
         
-        $return = array(
+        $return = [
             'errorCode' => 0,
             'data' => $returnValue,
             'errorMsg' => '',
-        );
+        ];
         $return["sessionId"] = $this->session->getId();
         $response = new \Phalcon\Http\Response();
         $response->setContentType("application/json", "UTF-8");

@@ -25,6 +25,12 @@ class Module extends PlusModule
     {
         parent::__construct($di, $def);
         set_exception_handler(function ($exception) use ($di) {
+            error_log(
+                get_class($exception) . "\n" .
+                "   Message: " . $exception->getMessage() . "\n" .
+                "   " . "Stack trace:" . "\n" .
+                $exception->getTraceAsString()
+            );
             $response = $di->get("response");
             $errorMsg = $msg = $exception->getMessage();
             $data = new \stdClass();

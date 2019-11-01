@@ -6,6 +6,6 @@ namespace LightCloud\Com\Protos\Uc\Exceptions;
 class AuthFailedException extends \PhalconPlus\Com\Protos\ExceptionBase
 {
     protected $code = 20002;
-    protected $message = '未知错误';
+    protected $message = '权限验证失败';
     protected $level = 7;
 }

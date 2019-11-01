@@ -6,6 +6,7 @@ use LightCloud\Uc\Entities\ScopeEntity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use PhalconPlus\Assert\Assertion as Assert;
+use \League\OAuth2\Server\Grant\AbstractGrant;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
@@ -51,16 +52,20 @@ class ScopeRepository implements ScopeRepositoryInterface
         $userIdentifier = null
     ) {
         $client = (new ClientRepository())->getClientEntity($clientEntity->getIdentifier(), $grantType);
-        $clientScopeStr = empty($client) ? null : $client->scope;
-         //if scope was not saved for client or * was saved, ignore and return all scopes
-        if (empty($clientScopeStr) || $clientScopeStr === '*') {
+        $clientScopeStr = empty($client) ? "" : $client->scope;
+        // if scope was not saved for client or * was saved, ignore and return all scopes
+        // if (empty($clientScopeStr) || $clientScopeStr === '*') {
+        if(empty($clientScopeStr)) {
+            return [];
+        }
+        if ($clientScopeStr === '*') {
             //grant all scopes
             return $scopes;
         }
-        //scopes of client from database
-        $clientScopes = array_map('trim', explode(' ', $clientScopeStr));
+        // scopes of client from database
+        $clientScopes = array_map('trim', explode(AbstractGrant::SCOPE_DELIMITER_STRING, $clientScopeStr));
 
-        //remove any scope requested but not associated to client
+        // remove any scope requested but not associated to client
         $result = [];
         foreach ($scopes as $scope) {
             if (!in_array($scope->getIdentifier(), $clientScopes)) {
@@ -68,7 +73,7 @@ class ScopeRepository implements ScopeRepositoryInterface
             }
             $result[] = $scope;
         }
-        //include scope not requested but associated to client (optional)
+        // include scope not requested but associated to client (optional)
         if (di()->getConfig()->oauth2->alwaysIncludeClientScopes) {
             $includedScopes = array_map(function (Scope $scope) {
                 return $scope->getIdentifier();

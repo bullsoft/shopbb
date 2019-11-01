@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 use PhalconPlus\Com\Protos\Exceptions\FormInputInvalidException;
 use LightCloud\Com\Protos\Uc\Exceptions\AuthFailedException;
 use PhalconPlus\Assert\Assertion as Assert;
+use \League\OAuth2\Server\Grant\AbstractGrant;
 
 class AccessTokenController extends BaseController
 {
@@ -22,6 +23,7 @@ class AccessTokenController extends BaseController
 
         $accessToken = $this->request->getPost("accessToken", "string");
         Assert::notEmpty($accessToken);
+        $accessScope = $this->request->getPost("scope", "string");
 
         $newRequest = $request->withHeader("Authorization", "Bearer " . $accessToken);
 
@@ -32,17 +34,22 @@ class AccessTokenController extends BaseController
         $result = (new ResourceServerMiddleware($server))($newRequest, $serverResponse, function($req, $res) {
             return $req;
         });
-        $accessScope = $this->request->getPost("scope", "string");
+        
         if($result instanceof \GuzzleHttp\Psr7\Response) {
             $content = (string) $result->getBody();
             throw new FormInputInvalidException(["OAuth AccessToken validate failed", $content]);
         } else if($result instanceof ServerRequest) {
             $attrs = $result->getAttributes();
-            $scopes = array_filter($attrs['oauth_scopes'], function($scopeItem) use ($accessScope) {
-                if($accessScope == $scopeItem) return true;
-                return false;
+            $holdingScopes = $attrs['oauth_scopes'];
+            
+            $requestScopes = explode(AbstractGrant::SCOPE_DELIMITER_STRING, $accessScope);
+            error_log(88888 . var_export($holdingScopes, true));
+            error_log(88888 . var_export($requestScopes, true));
+            $unexceptedScopes = array_filter($requestScopes, function($scopeItem) use ($holdingScopes) {
+                if(in_array($scopeItem, $holdingScopes)) return false;
+                return true;
             });
-            if(empty($scopes)) throw new AuthFailedException("no scope there in user scopes", 333232);
+            if(!empty($unexceptedScopes)) throw new AuthFailedException("Scopes not allowed: " . implode(", ", $unexceptedScopes));
             return ["access" => true];
         }
     }

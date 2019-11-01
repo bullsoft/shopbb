@@ -10,7 +10,9 @@ class ExceptionBase extends \PhalconPlus\Base\Exception
         if(is_null($logger)) {
             $logger = di()->get("logger");
         }
-        $this->setCode($code);
+        if($this->code < 1) {
+            $this->setCode($code);
+        }
         parent::__construct($info, $logger);
     }
 
