@@ -7,9 +7,11 @@ use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 use LightCloud\Uc\Models\OauthAccessTokensModel;
 
-class AccessTokenEntity extends OauthAccessTokensModel implements AccessTokenEntityInterface
+class AccessTokenEntity implements AccessTokenEntityInterface
 {
-    use AccessTokenTrait, EntityTrait, TokenEntityTrait;
+    use AccessTokenTrait, EntityTrait, TokenEntityTrait, EntityModelTrait;
+
+    protected static $modelClass = OauthAccessTokensModel::class;
 
     public function getScopeNames()
     {

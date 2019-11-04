@@ -2,9 +2,8 @@
 namespace LightCloud\Uc\Entities;
 use PhalconPlus\Assert\Assertion  as Assert;
 
-class BaseEntity 
+trait EntityModelTrait
 {
-    protected static $modelClass = "";
     protected $model = null;
 
     public function __construct(?\LightCloud\Uc\Models\ModelBase $model = null)

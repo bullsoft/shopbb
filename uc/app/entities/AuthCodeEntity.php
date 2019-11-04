@@ -8,9 +8,11 @@ use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
 use LightCloud\Uc\Models\OauthAuthorizationCodesModel;
 
-class AuthCodeEntity extends OauthAuthorizationCodesModel implements AuthCodeEntityInterface
+class AuthCodeEntity implements AuthCodeEntityInterface
 {
-    use AuthCodeTrait, EntityTrait, TokenEntityTrait;
+    use AuthCodeTrait, EntityTrait, TokenEntityTrait, EntityModelTrait;
+
+    protected static $modelClass = OauthAuthorizationCodesModel::class;
     
     public function getScopeNames()
     {

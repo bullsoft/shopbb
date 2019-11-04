@@ -5,9 +5,10 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use LightCloud\Uc\Models\OauthScopesModel;
 use League\OAuth2\Server\Entities\Traits\ScopeTrait;
 
-class ScopeEntity extends BaseEntity implements ScopeEntityInterface
+class ScopeEntity implements ScopeEntityInterface
 {
-    // use ScopeTrait;
+    use ScopeTrait, EntityModelTrait;
+
     protected static $modelClass = OauthScopesModel::class;
 
     /**
@@ -20,8 +21,8 @@ class ScopeEntity extends BaseEntity implements ScopeEntityInterface
         return $this->scope;
     }
 
-    public function jsonSerialize()
-    {
-        return $this->getIdentifier();
-    }
+    // public function jsonSerialize()
+    // {
+    //     return $this->getIdentifier();
+    // }
 }
