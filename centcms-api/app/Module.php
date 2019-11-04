@@ -3,7 +3,7 @@ namespace LightCloud\CentCMS\Api;
 
 use PhalconPlus\Base\AbstractModule as PlusModule;
 use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
-use PhalconPlus\Logger\Processor\Uid as UidProcessor;
+use PhalconPlus\Logger\Processor\LogId as LogIdProcessor;
 
 class Module extends PlusModule
 {
@@ -138,15 +138,13 @@ class Module extends PlusModule
             return $view;
         });
 
-        $di->setShared("logger", function() use ($di, $config){
-            $logger = new \PhalconPlus\Logger\Adapter\FilePlus($config->application->logFilePath);
-            $logger->registerExtension(".de", [\Phalcon\Logger::DEBUG]);
-            
+        $di->setShared("logger", function() use ($config){
+            $logger = new \PhalconPlus\Logger\MultipleFile($config->logger->toArray());
+            $logger->addProcessor("logId", new LogIdProcessor(18));
+            $logger->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
             // 添加formatter
-            $formatter = new \PhalconPlus\Logger\Formatter\LinePlus("[%date%][%trace%][%uid%][%type%] %message%");
-            $formatter->addProcessor("logId", new UidProcessor(18));
-            $formatter->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
-            
+            $formatter = new \Phalcon\Logger\Formatter\Line("[%date%][{trace}][{logId}][%type%] %message%");
+            $formatter->setDateFormat("Y-m-d H:i:s");
             $logger->setFormatter($formatter);
             return $logger;
         });

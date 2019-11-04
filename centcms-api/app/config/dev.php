@@ -8,6 +8,16 @@ return array(
         "url" => "http//server.localhost.com/",
         "logFilePath" => "/tmp/centcms-api.log",
     ),
+    "logger" => array(
+        array(
+            "filePath" => "/tmp/centcms-api.log.de",
+            "level" => \Phalcon\Logger::DEBUG
+        ),
+        array(
+            "filePath" => "/tmp/centcms-api.log",
+            "level" => \Phalcon\Logger::SPECIAL
+        )
+    ),
     "view" => array(
         "compiledPath"      => "/tmp/compiled/",
         "compiledExtension" => ".compiled",

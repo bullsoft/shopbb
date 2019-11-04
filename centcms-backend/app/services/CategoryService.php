@@ -32,6 +32,7 @@ class CategoryService extends \PhalconPlus\Base\Service
 
     public function getCategoryDetail(Id $request) : array
     {
+        $this->logger->debug("bbbb");
         $categoryId = ($request->validate())->getId();
         $repo = new CategoryRepository();
         return $repo->getOne($categoryId);

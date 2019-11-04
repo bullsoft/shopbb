@@ -22,6 +22,7 @@ class UserController extends BaseController
      */
     public function loginAction()
     {
+        $this->logger->debug("fdsfasdfasdfasdfa");
         // error_log($this->request->getMethod());
         // error_log(json_encode($_GET));
         error_log(var_export($_COOKIE, true));

@@ -17,6 +17,16 @@ return array(
         "compiledPath"      => "/tmp/compiled/",
         "compiledExtension" => ".compiled",
     ),
+    "logger" => array(
+        array(
+            "filePath" => "/tmp/LightCloud_uc.log.de",
+            "level" => \Phalcon\Logger::DEBUG
+        ),
+        array(
+            "filePath" => "/tmp/LightCloud_uc.log",
+            "level" => \Phalcon\Logger::SPECIAL
+        )
+    ),
     'db' => array(
         "host" => "127.0.0.1",        
         "port" => 3306,

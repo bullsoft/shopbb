@@ -12,10 +12,8 @@ use LightCloud\Com\Protos\CentCMS\Schemas\{
     Id,
     Category as CategorySchema,
 };
-
 use LightCloud\Com\Protos\CentCMS\Enums\CategoryStatus;
-
-use GuzzleHttp\Client as HttpClient;
+use PhalconPlus\Curl\Curl as HttpClient;
 
 class CategoryController extends \Phalcon\Mvc\Controller
 {
@@ -123,6 +121,7 @@ class CategoryController extends \Phalcon\Mvc\Controller
         Assert::min($categoryId, 1);
         $request = new Id();
         $request->setId($categoryId);
+        $this->logger->debug("aaaaa");
         $response = $this->rpc->callByObject([
             'service' => 'LightCloud\CentCMS\Backend\Services\Category',
             'method'  => 'getCategoryDetail',
@@ -152,27 +151,31 @@ class CategoryController extends \Phalcon\Mvc\Controller
     }
 
     /**
-     * @OAuth("centcms.data")
+     * @OAuth("centcms.data centcms.category")
      * 
      * 获取某个分类下的所有数据带分页
      */
     public function getDataByCategoryPageableAction()
     {
-        $client = new HttpClient([
-            'base_uri' => 'http://127.0.0.1:8086',
-            'timeout'  => 2.0,
-        ]);
-        $response = $client->request('POST', '/oauth/access-token/validate', [
-            'form_params' => [
+        $client = new HttpClient();
+        $response = $client->post('http://127.0.0.1:8086/oauth/access-token/validate', 
+            [
                 'scope' => 'centcms.category',
                 'accessToken' => $this->request->getPost("accessToken"),
             ]
-        ]);
-        $json = json_decode($response->getBody()->getContents(), true);
-        Assert::eq($json['errorCode'], 0, $json['errorMsg']);
-        Assert::eq($json['data']['access'], true);
-           
-
+        );
+        $this->logger->debug("ffffffff");
+        try {
+            Assert::isInstanceOf($response, \PhalconPlus\Curl\Response::class);
+            Assert::eq($response->statusCode, 200);
+        
+            $json = json_decode($response->body, true);
+            Assert::eq($json['errorCode'], 0, $json['errorMsg']);
+            Assert::eq($json['data']['access'], true);
+        } catch(\PhalconPlus\Assert\InvalidArgumentException $e) {
+            throw new \PhalconPlus\Com\Protos\Exceptions\AuthFailedException();
+        }
+        
         $categoryIdentity = $this->request->get('categoryIdentity');
         $pageNo = (int) $this->request->get('pageNo', 'int', 1);
         $pageSize = (int) $this->request->get('pageSize', 'int', 30);
@@ -190,7 +193,8 @@ class CategoryController extends \Phalcon\Mvc\Controller
         $response = $this->rpc->callByObject([
             'service' => 'LightCloud\CentCMS\Backend\Services\Category',
             'method'  => 'getDataByCategoryPageable',
-            'args'    => $request
+            'args'    => $request,
+            'logId'   => $this->logger->getProcessorVar("logId"),
         ]);
         return $response;
      

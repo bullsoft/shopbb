@@ -8,6 +8,16 @@ return array(
         "url" => "http//server.localhost.com/",
         "logFilePath" => "/tmp/centcms-backend.log",
     ),
+    "logger" => array(
+        array(
+            "filePath" => "/tmp/centcms-backend.log.de",
+            "level" => \Phalcon\Logger::DEBUG
+        ),
+        array(
+            "filePath" => "/tmp/centcms-backend.log",
+            "level" => \Phalcon\Logger::SPECIAL
+        )
+    ),
     'dbCms' => array(
         "host" => "127.0.0.1",        
         "port" => 3306,
