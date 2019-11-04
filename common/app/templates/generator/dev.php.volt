@@ -7,6 +7,16 @@ return array(
         "url" => "http//server.localhost.com/",
         "logFilePath" => "/tmp/{{module}}.log",
     ),
+    "logger" => array(
+        array(
+            "filePath" => "/tmp/{{module}}.log.debug",
+            "level" => \Phalcon\Logger::DEBUG
+        ),
+        array(
+            "filePath" => "/tmp/{{module}}.log",
+            "level" => \Phalcon\Logger::SPECIAL
+        )
+    ),
 {% if mode == "Web" %}
     "view" => array(
         "compiledPath"      => "/tmp/compiled/",

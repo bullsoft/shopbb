@@ -5,7 +5,7 @@ namespace PhalconPlus\Com\Protos;
  */
 class ExceptionBase extends \PhalconPlus\Base\Exception
 {
-    public function __construct($info = "", int $code = 1, \Phalcon\Logger\Adapter $logger = null)
+    public function __construct($info = "", int $code = 1, object $logger = null)
     {
         if(is_null($logger)) {
             $logger = di()->get("logger");

@@ -1,6 +1,8 @@
 namespace {{rootNs}};
 
 use PhalconPlus\Base\AbstractModule as PlusModule;
+use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
+use PhalconPlus\Logger\Processor\LogId as LogIdProcessor;
 
 class Srv extends PlusModule
 {
@@ -11,14 +13,8 @@ class Srv extends PlusModule
             __NAMESPACE__.'\\Services' => __DIR__.'/services/',
             __NAMESPACE__.'\\Models'   => __DIR__.'/models/',
             __NAMESPACE__.'\\Tasks'    => __DIR__.'/tasks/tasks/',
-            "Common\\Protos"           => APP_ROOT_COMMON_DIR.'/protos/',
+            "App\\Com\\Protos"         => APP_ROOT_COMMON_DIR.'/protos/',
         ))->register();
-
-        // load composer library
-        $composer = APP_ROOT_DIR . "/vendor/autoload.php";
-        if(file_exists($composer)) {
-            require_once $composer;
-        }
     }
 
     public function registerServices()
@@ -66,5 +62,16 @@ class Srv extends PlusModule
                 return $dispatcher;
             });
         }
+
+        $di->setShared("logger", function() use ($config){
+            $logger = new \PhalconPlus\Logger\MultipleFile($config->logger->toArray());
+            $logger->addProcessor("logId", new LogIdProcessor(18));
+            $logger->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
+            // 添加formatter
+            $formatter = new \Phalcon\Logger\Formatter\Line("[%date%][{trace}][{logId}][%type%] %message%");
+            $formatter->setDateFormat("Y-m-d H:i:s");
+            $logger->setFormatter($formatter);
+            return $logger;
+        });
     }
 }
