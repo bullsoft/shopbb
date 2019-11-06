@@ -168,10 +168,10 @@ class CategoryController extends \Phalcon\Mvc\Controller
         try {
             Assert::isInstanceOf($response, \PhalconPlus\Curl\Response::class);
             Assert::eq($response->statusCode, 200);
-        
-            $json = json_decode($response->body, true);
-            Assert::eq($json['errorCode'], 0, $json['errorMsg']);
-            Assert::eq($json['data']['access'], true);
+            Assert::isJsonString($response->body);
+            $ret = json_decode($response->body, true);
+            Assert::eq($ret['errorCode'], 0, $ret['errorMsg']);
+            Assert::eq($ret['data']['access'], true);
         } catch(\PhalconPlus\Assert\InvalidArgumentException $e) {
             throw new \PhalconPlus\Com\Protos\Exceptions\AuthFailedException();
         }

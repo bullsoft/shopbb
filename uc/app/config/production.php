@@ -13,6 +13,16 @@ return array(
         "url" => "http://uc.bullsoft.org/",
         "logFilePath" => "/tmp/LightCloud_uc.log",
     ),
+    "logger" => array(
+        array(
+            "filePath" => "/tmp/LightCloud_uc.log.de",
+            "level" => \Phalcon\Logger::DEBUG
+        ),
+        array(
+            "filePath" => "/tmp/LightCloud_uc.log",
+            "level" => \Phalcon\Logger::SPECIAL
+        )
+    ),
     "view" => array(
         "compiledPath"      => "/tmp/compiled/",
         "compiledExtension" => ".compiled",

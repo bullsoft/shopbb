@@ -36,7 +36,7 @@
               </a>
               <div class="dropdown-menu">
                 {% for name, item in projects %}
-                  <a href="{{url('project/')}}?name={{name}}" class="dropdown-item">{{item.title}}</a>
+                  <a href="{{url('/project/')}}?name={{name}}" class="dropdown-item">{{item.title}}</a>
                 {% endfor %}
               </div>
             </li>
@@ -46,7 +46,7 @@
                   <span class="nav-link-inner--text">商业项目</span>
                 </a>
                 <div class="dropdown-menu">
-                  <a href="{{url('project/fintech')}}" class="dropdown-item">金融科技云</a>
+                  <a href="{{url('/project/fintech')}}" class="dropdown-item">金融科技云</a>
                 </div>
               </li>
             <li class="nav-item">

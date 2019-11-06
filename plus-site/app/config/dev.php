@@ -8,6 +8,16 @@ return array(
         "url" => "http://localhost:8082/",
         "logFilePath" => "/tmp/Plus_site.log",
     ),
+    "logger" => array(
+        array(
+            "filePath" => "/tmp/Plus_site.log.de",
+            "level" => \Phalcon\Logger::DEBUG
+        ),
+        array(
+            "filePath" => "/tmp/Plus_site.log",
+            "level" => \Phalcon\Logger::SPECIAL
+        )
+    ),
     "view" => array(
         "compiledPath"      => "/tmp/compiled/",
         "compiledExtension" => ".compiled",

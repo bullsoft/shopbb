@@ -10,6 +10,14 @@ echo "Buiding dir... ->" $BUILD_DIR;
 PRJ_DIR=$BUILD_DIR/$PRJ_NAME
 
 DATE=`date '+%Y%m%d_%H%M%S'`
+if [ -z ${GO_PIPELINE_COUNTER+x} ]; then 
+  if [ -f "artifact.html" ]; then
+    GO_PIPELINE_COUNTER=$(expr $(cat artifact.html | tail -1 | cut -d "_" -f 3) + 1)
+  else
+    GO_PIPELINE_COUNTER=1
+  fi
+fi
+
 BUILD_VER=${DATE}_${GO_PIPELINE_COUNTER}
 
 echo "Build Version: "$BUILD_VER
@@ -27,8 +35,8 @@ echo "Detecting PHP version..."
 echo "-------------------------"
 php -v
 
-echo $PRJ_NAME  > "$PIPE_DIR"/my-artifact.html
-echo $BUILD_VER >> "$PIPE_DIR"/my-artifact.html
+echo $PRJ_NAME  > "$PIPE_DIR"/artifact.html
+echo $BUILD_VER >> "$PIPE_DIR"/artifact.html
 
 cd $APP_DIR
 
@@ -54,6 +62,16 @@ if [ -f ${APP_DIR}/composer.json ]; then
 fi
 
 rm -rf .git
+
+if [ -d .vscode  ]; then
+  rm -rf .vscode
+fi
+if [ -d .zephir ]; then
+  rm -rf .zephir
+fi
+if [ -f build.tar.gz ]; then
+  rm -f build.tar.gz
+fi
 
 cd ..
 

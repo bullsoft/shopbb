@@ -6,3 +6,5 @@ composer.json.dev
 .env
 .ppm
 /.zephir
+build.tar.gz
+artifact.html

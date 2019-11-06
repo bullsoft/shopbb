@@ -9,7 +9,7 @@ class ScopeEntity implements ScopeEntityInterface
 {
     use ScopeTrait, EntityModelTrait;
 
-    protected static $modelClass = OauthScopesModel::class;
+    protected static $modelClass =  OauthScopesModel::class;
 
     /**
      * Get the scope's identifier.

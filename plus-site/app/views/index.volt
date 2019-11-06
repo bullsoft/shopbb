@@ -2,10 +2,6 @@
 
 {% include "layout/nav.volt" %}
 
-{% if dispatcher.getControllerName() == "index" %}
-    {% include "layout/ad.volt" %}
-{% endif %}
-
 <!-- Page Content -->
 <div class="container">
 
