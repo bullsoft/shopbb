@@ -4,5 +4,6 @@
         <div class="bullet"></div>
         <a href="https://www.bullsoft.org" target="_blank">BullSoft.org</a>
     </div>
+    Built with Phalcon+ {{phpversion("phalconplus")}}
     <div class="footer-right"></div>
 </footer>

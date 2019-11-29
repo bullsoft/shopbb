@@ -1,9 +1,13 @@
-<html>
-
-
-    <head>
-
-        <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="phalconplus API doc" name="description">
+    <title>
+                    phalconplus API Documentation
+            </title>
+    <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
 
 <script src="../../../asset/static/prettify.js"></script>
 <script src="../../../asset/api_definition.js"></script>
@@ -18,38 +22,23 @@
                                     <script src="../../../asset/api_definition.js"></script>
                     <script src="../../../asset/static/jquery.min.js"></script>
                     <script src="../../../asset/static/zephir-doc.js"></script>
-            
-        <script>var ZepCurrentPath = '../../../'</script>
-
-        
+                <script type="application/javascript">let ZepCurrentPath = '../../../'</script>
     </head>
-
-
-    <body onload="prettyPrint()">
+ <body onload="prettyPrint()">
         <div id="top-bar">
             <div id="top-left">
-                                    phalconplus Documentation <span class="version">v1.0.0-dev</span>
+                                    phalconplus Documentation <span class="version">v1.1.1</span>
                             </div>
             <div id="top-right">
-
             </div>
         </div>
-
         <div id="body">
-
             <div id="body-left">
-
                 <div class="header-search">
-
                     <input class="search-box" placeholder="Search for a class or namespace " type="text" />
-
                     <div id="menu-wrapper">
-
-
                     </div>
-
                 </div>
-
             </div>
             <div id="body-right">
                 <div class="content">
@@ -75,7 +64,6 @@
             </div>
     
     <div class="class-full-name">
-        
         <span class="class-type">Class</span>
         
                 <span class="namespace-piece">
@@ -84,13 +72,14 @@
                 <span class="namespace-piece">
             <a href="../../../namespace/PhalconPlus/Base.html">Base</a>
         </span>
-                <h1 class="class-name">ProtoOrderBy</h1>
+        
+        <h1 class="class-name">ProtoOrderBy</h1>
     </div>
     
 </div>
 
-
-<pre class="zephir-source-file prettyprint linenums">namespace PhalconPlus\Base;
+<pre class="zephir-source-file prettyprint linenums">
+    namespace PhalconPlus\Base;
 use PhalconPlus\Assert\Assertion as Assert;
 
 class ProtoOrderBy extends ProtoBuffer
@@ -98,12 +87,12 @@ class ProtoOrderBy extends ProtoBuffer
     /**
      * @required
      */
-    private property;
+    protected property;
 
     /**
      * @required
      */
-    private direction;
+    protected direction;
 
     /**
      * @optional
@@ -150,13 +139,9 @@ class ProtoOrderBy extends ProtoBuffer
         }
         return orderBy . this->property . " " . this->direction;
     }
-}</pre>                </div>
+}</pre>
+                </div>
             </div>
-
         </div>
-
     </body>
-
-
-
 </html>

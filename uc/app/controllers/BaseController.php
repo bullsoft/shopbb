@@ -3,12 +3,14 @@ namespace LightCloud\Uc\Controllers;
 
 use PhalconPlus\Base\SimpleRequest as SimpleRequest;
 use function LightCloud\Uc\getSiteConf;
+use LightCloud\Uc\Models\UserModel;
 
 class BaseController extends \Phalcon\Mvc\Controller
 {
     protected $controller;
     protected $action;
     protected $mailer;
+    public $loginUser = null;
 
     public function initialize()
     {
@@ -21,7 +23,6 @@ class BaseController extends \Phalcon\Mvc\Controller
         $title = getSiteConf()->titles->get($whichController) ?
                  getSiteConf()->titles->get($whichController)->get($whichAction, $whichTitle) : $whichTitle;
 
-
         $this->view->setVar("whichController", $whichController);
         $this->view->setVar("whichAction", $whichAction);
         $this->view->setVar("pageException", null);
@@ -31,6 +32,19 @@ class BaseController extends \Phalcon\Mvc\Controller
         $this->view->setVar("headKeywords", getSiteConf()->get("headKeywords", "网站关键词"));
         $this->view->setVar("tpl",          getSiteConf()->get("template", "default"));
         $this->view->setVar("ver", date("YmdHis").rand(100000, 999999));
+
+        if($this->session->has('identity')) {
+            $userId = intval($this->session->get('identity'));
+            $user = UserModel::findFirst($userId);
+            if($user == false) {
+                $this->session->remove('identity');
+                throw new NeedLoginException(["user need login to access this resource"]);
+            } else {
+                $response = $user->toProtoBuffer();
+                $this->loginUser = $response;
+                $this->view->setVar("user", $response);
+            }
+        }
     }
 
     protected function formValid(\Phalcon\Forms\Form $form, array $input)

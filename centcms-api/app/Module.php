@@ -4,6 +4,7 @@ namespace LightCloud\CentCMS\Api;
 use PhalconPlus\Base\AbstractModule as PlusModule;
 use PhalconPlus\Logger\Processor\Trace as TraceProcessor;
 use PhalconPlus\Logger\Processor\LogId as LogIdProcessor;
+use PhalconPlus\Logger\Processor\Msec as MsecProcessor;
 
 class Module extends PlusModule
 {
@@ -142,8 +143,9 @@ class Module extends PlusModule
             $logger = new \PhalconPlus\Logger\MultipleFile($config->logger->toArray());
             $logger->addProcessor("logId", new LogIdProcessor(18));
             $logger->addProcessor("trace", new TraceProcessor(TraceProcessor::T_CLASS));
+            $logger->addProcessor("msec", new MsecProcessor());
             // 添加formatter
-            $formatter = new \Phalcon\Logger\Formatter\Line("[%date%][{trace}][{logId}][%type%] %message%");
+            $formatter = new \Phalcon\Logger\Formatter\Line("[%date%.{msec}][{trace}][{logId}][%type%] %message%");
             $formatter->setDateFormat("Y-m-d H:i:s");
             $logger->setFormatter($formatter);
             return $logger;

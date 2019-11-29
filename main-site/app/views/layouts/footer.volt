@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="row align-item-center">
-        <span class="btn-round" style="margin: 0 auto;">developed with 
+        <span class="btn-round" style="margin: 0 auto;">Built with 
           <small>
             <a href="http://phalconplus.bullsoft.org/">PhalconPlus</a> 
             {{phpversion("phalconplus")}}

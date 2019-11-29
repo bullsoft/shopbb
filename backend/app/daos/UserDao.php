@@ -25,7 +25,7 @@ class UserDao
         $salt = random_bytes(32);
         $passwd = hash("sha256", $salt.$passwd);
         return [
-            'salt' => bin2hex($salt),
+            'salt'   => bin2hex($salt),
             'passwd' => $passwd,
         ];
     }
@@ -38,7 +38,7 @@ class UserDao
      */
     public static function passwdMatch($iptPasswd, $encPasswd, $salt)
     {
-        $hashPasswd = hash("sha256", hex2bin($salt).$inputPasswd);
+        $hashPasswd = hash("sha256", hex2bin($salt) . $iptPasswd);
         return $hashPasswd === $encPasswd;
     }
 }

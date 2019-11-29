@@ -1,9 +1,13 @@
-<html>
-
-
-    <head>
-
-        <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="phalconplus API doc" name="description">
+    <title>
+                    phalconplus API Documentation
+            </title>
+    <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
 
 <script src="../../../asset/static/prettify.js"></script>
 <script src="../../../asset/api_definition.js"></script>
@@ -18,38 +22,23 @@
                                     <script src="../../../asset/api_definition.js"></script>
                     <script src="../../../asset/static/jquery.min.js"></script>
                     <script src="../../../asset/static/zephir-doc.js"></script>
-            
-        <script>var ZepCurrentPath = '../../../'</script>
-
-        
+                <script type="application/javascript">let ZepCurrentPath = '../../../'</script>
     </head>
-
-
-    <body onload="prettyPrint()">
+ <body onload="prettyPrint()">
         <div id="top-bar">
             <div id="top-left">
-                                    phalconplus Documentation <span class="version">v1.0.0-dev</span>
+                                    phalconplus Documentation <span class="version">v1.1.1</span>
                             </div>
             <div id="top-right">
-
             </div>
         </div>
-
         <div id="body">
-
             <div id="body-left">
-
                 <div class="header-search">
-
                     <input class="search-box" placeholder="Search for a class or namespace " type="text" />
-
                     <div id="menu-wrapper">
-
-
                     </div>
-
                 </div>
-
             </div>
             <div id="body-right">
                 <div class="content">
@@ -75,7 +64,6 @@
             </div>
     
     <div class="class-full-name">
-        
         <span class="class-type">Class</span>
         
                 <span class="namespace-piece">
@@ -84,13 +72,14 @@
                 <span class="namespace-piece">
             <a href="../../../namespace/PhalconPlus/Base.html">Base</a>
         </span>
-                <h1 class="class-name">ProtoBuffer</h1>
+        
+        <h1 class="class-name">ProtoBuffer</h1>
     </div>
     
 </div>
 
-
-<pre class="zephir-source-file prettyprint linenums">namespace PhalconPlus\Base;
+<pre class="zephir-source-file prettyprint linenums">
+    namespace PhalconPlus\Base;
 
 class ProtoBuffer implements \JsonSerializable
 {
@@ -129,9 +118,12 @@ class ProtoBuffer implements \JsonSerializable
             }
             return this->{method}(val);
         }
-        
+
         // rule break: hard code
-        if is_scalar(val) {
+        if is_scalar(val) || is_null(val) || is_array(val) {
+            let this->{key} = val;
+            return this;
+        } elseif is_object(val) && val instanceof "\PhalconPlus\Base\ProtoBuffer" {
             let this->{key} = val;
             return this;
         } else {
@@ -159,7 +151,7 @@ class ProtoBuffer implements \JsonSerializable
         if property_exists(this, key) {
             return this->{key};
         }
-        
+
         return null;
     }
 
@@ -167,7 +159,7 @@ class ProtoBuffer implements \JsonSerializable
     {
         var objReflection = null;
         var vars = [], pros = [], pro = null;
-        
+
         let objReflection = new \ReflectionObject(this);
         let pros = objReflection->getProperties();
 
@@ -183,49 +175,44 @@ class ProtoBuffer implements \JsonSerializable
         return this->toArray();
     }
 
-    public function toArray(bool isArray = false, array data = [])
+    public function toArray(array data = [])
     {
         var pros = [], newPros = [];
-        
-        if isArray == false {
+
+        if empty data {
             let pros = this->getSelfVars();
         } else {
             let pros = data;
         }
 
         var key, val;
-        
         for key, val in pros {
-            if is_array(val) {
-                let newPros[key] = this->toArray(true, val);
+            if is_array(val) && !empty(val) {
+                let newPros[key] = this->toArray(val);
             } elseif is_object(val) && method_exists(val, "toArray") {
                 let newPros[key] = val->toArray();
             } elseif is_object(val) && method_exists(val, "__toString") {
                 let newPros[key] = val->__toString();
             } else {
-                let newPros[key] = val;                
+                let newPros[key] = val;
             }
         }
-        
+
         return newPros;
-            
+
         /* Zephir 暂时不支持 引用传递
         array_walk_recursive(pros, function(&property, key){
             if is_object(property) {
                 let property = property->toArray();
-            } 
+            }
         });
         return pros;
         */
     }
 }
-</pre>                </div>
+</pre>
+                </div>
             </div>
-
         </div>
-
     </body>
-
-
-
 </html>

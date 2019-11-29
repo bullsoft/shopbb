@@ -35,7 +35,7 @@ class UserController extends BaseController
             } else if($result instanceof ServerRequest) {
                 $attrs = $result->getAttributes();
                 $scopes = array_filter($attrs['oauth_scopes'], function($item) {
-                    if("user" == reset($item)) return true;
+                    if("user" == $item) return true;
                     return false;
                 });
                 if(empty($scopes)) throw new AuthFailedException(["no scope there in user scopes", "scope=user"]);

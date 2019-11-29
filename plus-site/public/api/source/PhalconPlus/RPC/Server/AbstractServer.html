@@ -1,9 +1,13 @@
-<html>
-
-
-    <head>
-
-        <link rel="stylesheet" type="text/css" href="../../../../asset/static/prettify.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="phalconplus API doc" name="description">
+    <title>
+                    phalconplus API Documentation
+            </title>
+    <link rel="stylesheet" type="text/css" href="../../../../asset/static/prettify.css" />
 
 <script src="../../../../asset/static/prettify.js"></script>
 <script src="../../../../asset/api_definition.js"></script>
@@ -18,38 +22,23 @@
                                     <script src="../../../../asset/api_definition.js"></script>
                     <script src="../../../../asset/static/jquery.min.js"></script>
                     <script src="../../../../asset/static/zephir-doc.js"></script>
-            
-        <script>var ZepCurrentPath = '../../../../'</script>
-
-        
+                <script type="application/javascript">let ZepCurrentPath = '../../../../'</script>
     </head>
-
-
-    <body onload="prettyPrint()">
+ <body onload="prettyPrint()">
         <div id="top-bar">
             <div id="top-left">
-                                    phalconplus Documentation <span class="version">v1.0.0-dev</span>
+                                    phalconplus Documentation <span class="version">v1.1.1</span>
                             </div>
             <div id="top-right">
-
             </div>
         </div>
-
         <div id="body">
-
             <div id="body-left">
-
                 <div class="header-search">
-
                     <input class="search-box" placeholder="Search for a class or namespace " type="text" />
-
                     <div id="menu-wrapper">
-
-
                     </div>
-
                 </div>
-
             </div>
             <div id="body-right">
                 <div class="content">
@@ -61,7 +50,7 @@
         <li><a href="../../../../index.html">Home</a></li>
         
                 <li><a href="../../../../classes.html">Classes</a></li>
-                <li><a href="../../../../class/PhalconPlus/RPC/Server/AbstractServer.html">PhalconPlus\RPC\Server\AbstractServer</a></li>
+                <li><a href="../../../../class/PhalconPlus/Rpc/Server/AbstractServer.html">PhalconPlus\Rpc\Server\AbstractServer</a></li>
                 <li><a >Source</a></li>
                 
     </ul>
@@ -70,37 +59,43 @@
 <div class="class-header source clearfix">
     
     <div class="access-buttons">
-        <a class="zep-button" href="../../../../class/PhalconPlus/RPC/Server/AbstractServer.html">Class</a>
+        <a class="zep-button" href="../../../../class/PhalconPlus/Rpc/Server/AbstractServer.html">Class</a>
 
             </div>
     
     <div class="class-full-name">
-        
         <span class="class-type">Class</span>
         
                 <span class="namespace-piece">
             <a href="../../../../namespace/PhalconPlus.html">PhalconPlus</a>
         </span>
                 <span class="namespace-piece">
-            <a href="../../../../namespace/PhalconPlus/RPC.html">RPC</a>
+            <a href="../../../../namespace/PhalconPlus/Rpc.html">Rpc</a>
         </span>
                 <span class="namespace-piece">
-            <a href="../../../../namespace/PhalconPlus/RPC/Server.html">Server</a>
+            <a href="../../../../namespace/PhalconPlus/Rpc/Server.html">Server</a>
         </span>
-                <h1 class="class-name">AbstractServer</h1>
+        
+        <h1 class="class-name">AbstractServer</h1>
     </div>
     
 </div>
 
-
-<pre class="zephir-source-file prettyprint linenums">namespace PhalconPlus\RPC\Server;
+<pre class="zephir-source-file prettyprint linenums">
+    namespace PhalconPlus\Rpc\Server;
 use PhalconPlus\Base\ProtoBuffer;
+use PhalconPlus\Logger\Processor\LogId;
 
 abstract class AbstractServer
 {
-    protected di = null;
-    protected config = null;
-    protected phpOnly = false;
+    protected di = null {
+        get
+    };
+
+    protected phpOnly = false {
+        get
+    };
+
     protected eventsManager = null;
 
     abstract public function __construct(<\Phalcon\DI> di);
@@ -121,12 +116,12 @@ abstract class AbstractServer
                 let request = new {paramClass}();
                 request->softClone(tmp);
             } else {
-                throw new \Exception("Service class:method definition is invalid. Detail: " . service . " : " . method . ". Request: " . json_encode(request));
+                throw new \PhalconPlus\Base\Exception("Service class:method definition is invalid. Detail: " . service . " : " . method . ". Request: " . json_encode(request));
             }
         } else {
-            throw new \Exception("Your input is not allowed. Request: " . json_encode(request));
+            throw new \PhalconPlus\Base\Exception("Your input is not allowed. Request: " . json_encode(request));
         }
-        
+
         var serviceObj, response, e;
         let serviceObj = new {serviceClass}(this->di);
 
@@ -138,16 +133,26 @@ abstract class AbstractServer
                 throw e;
             }
             this->eventsManager->fire("backend-server:afterExecute", $this, [service, method, request]);
-            return this->phpOnly == true ? response : response->toArray();
+            // We do not allow to return #Resource type. And if an object returned, we expected type <ProtoBuffer>
+            if is_object(response) && !(response instanceof ProtoBuffer) {
+                throw new \PhalconPlus\Base\Exception("Your output is not allowed. Response: " . get_class(response) . ". We expect scalar type or <ProtoBuffer>");
+            } elseif is_resource(response) {
+                throw new \PhalconPlus\Base\Exception("Your output is not allowed. Response: #Resource.");
+            }
+            // Distinguish object/scalar types when there are non-php clients
+            if this->phpOnly == false && is_object(response) {
+                return response->toArray();
+            }
+            return response;
         } else {
-            throw new \Exception("Service:method not found. Detail: " . service . " : " . method);
+            throw new \PhalconPlus\Base\Exception("Service:method not found. Detail: " . service . " : " . method);
         }
     }
 
     /**
      *
      * @param array rawData
-     * <code> 
+     * <code>
      *     rawData = ["service":"Demo", "method":"demo", "args": <ProtoBuffer>, "logId": "234fdfaf3334"]
      * </code>
      * @return <ProtoBuffer>
@@ -157,17 +162,17 @@ abstract class AbstractServer
     public function callByObject(array rawData)
     {
         var service, method, request, response, logId = "", message = "";
-        
+
         if !fetch service, rawData["service"] {
-            throw new \Exception("service " . service . " not exists");
+            throw new \PhalconPlus\Base\Exception("service " . service . " not exists");
         }
 
         if !fetch method, rawData["method"] {
-            throw new \Exception("method " . method . " not exists");
+            throw new \PhalconPlus\Base\Exception("method " . method . " not exists");
         }
 
         if !fetch request, rawData["args"] {
-            throw new \Exception("args not exists");
+            throw new \PhalconPlus\Base\Exception("args not exists");
         }
 
         this->eventsManager->fire("backend-server:requestCheck", $this, [service, method, rawData]);
@@ -176,13 +181,14 @@ abstract class AbstractServer
         let method = trim(method);
 
         if empty service || empty method {
-            throw new \Exception("service:method(args) must exists. All of them!!!");
+            throw new \PhalconPlus\Base\Exception("service:method(args) must exists. All of them!!!");
         }
 
         if fetch logId, rawData["logId"] {
-            // ...
+            // set logId, same as request api
+            LogId::setId(logId);
         }
-        
+
         if this->di->has("logger") {
             let message = "RPC Request - logId: " . logId . ", invoke: " . service . "::" . method . ", args: " . json_encode(request);           
             this->di->get("logger")->log(message);
@@ -200,13 +206,9 @@ abstract class AbstractServer
         return response;
     }
 }
-</pre>                </div>
+</pre>
+                </div>
             </div>
-
         </div>
-
     </body>
-
-
-
 </html>

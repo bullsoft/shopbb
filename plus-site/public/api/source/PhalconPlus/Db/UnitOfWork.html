@@ -1,9 +1,13 @@
-<html>
-
-
-    <head>
-
-        <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="phalconplus API doc" name="description">
+    <title>
+                    phalconplus API Documentation
+            </title>
+    <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
 
 <script src="../../../asset/static/prettify.js"></script>
 <script src="../../../asset/api_definition.js"></script>
@@ -18,38 +22,23 @@
                                     <script src="../../../asset/api_definition.js"></script>
                     <script src="../../../asset/static/jquery.min.js"></script>
                     <script src="../../../asset/static/zephir-doc.js"></script>
-            
-        <script>var ZepCurrentPath = '../../../'</script>
-
-        
+                <script type="application/javascript">let ZepCurrentPath = '../../../'</script>
     </head>
-
-
-    <body onload="prettyPrint()">
+ <body onload="prettyPrint()">
         <div id="top-bar">
             <div id="top-left">
-                                    phalconplus Documentation <span class="version">v1.0.0-dev</span>
+                                    phalconplus Documentation <span class="version">v1.1.1</span>
                             </div>
             <div id="top-right">
-
             </div>
         </div>
-
         <div id="body">
-
             <div id="body-left">
-
                 <div class="header-search">
-
                     <input class="search-box" placeholder="Search for a class or namespace " type="text" />
-
                     <div id="menu-wrapper">
-
-
                     </div>
-
                 </div>
-
             </div>
             <div id="body-right">
                 <div class="content">
@@ -75,7 +64,6 @@
             </div>
     
     <div class="class-full-name">
-        
         <span class="class-type">Class</span>
         
                 <span class="namespace-piece">
@@ -84,24 +72,25 @@
                 <span class="namespace-piece">
             <a href="../../../namespace/PhalconPlus/Db.html">Db</a>
         </span>
-                <h1 class="class-name">UnitOfWork</h1>
+        
+        <h1 class="class-name">UnitOfWork</h1>
     </div>
     
 </div>
 
-
-<pre class="zephir-source-file prettyprint linenums">//<?php
-namespace PhalconPlus\Db;
+<pre class="zephir-source-file prettyprint linenums">
+    namespace PhalconPlus\Db;
 
 use SplObjectStorage;
-use Exception;
+use PhalconPlus\Base\Exception;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use PhalconPlus\Db\UnitOfWork\AbstractValue;
+use Phalcon\Mvc\Model as Model;
+use Phalcon\Mvc\Model\Resultset as Resultset;
 
 class UnitOfWork
 {
-    protected modelLocator = [];
-
     protected dbServiceName;
 
     protected objects;
@@ -118,20 +107,27 @@ class UnitOfWork
 
     public function __construct(var dbServiceName)
     {
-        let this->objects = new SplObjectStorage();
+        let this->objects = new \SplObjectStorage();
+        let this->deleted = new \SplObjectStorage();
+        let this->inserted = new \SplObjectStorage();
+        let this->updated = new \SplObjectStorage();
+
         let this->dbServiceName = dbServiceName;
     }
 
     public function save(var name, <\PhalconPlus\Base\Model> model, array initial_data = [])
     {
+        if !empty initial_data {
+            model->assign(initial_data);
+        }
         if !model->exists() {
             this->insert(name, model, initial_data);
         } else {
             this->update(name, model, initial_data);
-        } 
+        }
     }
-    
-    public function insert(var name, <\Phalcon\Mvc\Model> model, array initial_data = [])
+
+    public function insert(var name, <\PhalconPlus\Base\Model> model, array initial_data = [])
     {
         this->detach(model);
         this->attach(model, [
@@ -141,23 +137,37 @@ class UnitOfWork
         ]);
     }
 
-    public function update(var name, <\Phalcon\Mvc\Model> model, array initial_data = [])
+    /**
+     * @param \Phalcon\Mvc\Model | \Phalcon\Mvc\Model\Resultset model
+     */
+    public function update(var name, var model, array initial_data = [])
     {
-        this->detach(model);
-        this->attach(model, [
-            "method" : "update",
-            "name" : name,
-            "initial_data" : initial_data
-        ]);
+        if (model instanceof Model) || (model instanceof Resultset) {
+            this->detach(model);
+            this->attach(model, [
+                "method" : "update",
+                "name" : name,
+                "initial_data" : initial_data
+            ]);
+        } else {
+            throw new Exception("UnitOfWork: Accept <Model> & <Resultset> only");
+        }
     }
 
-    public function delete(var name, <\Phalcon\Mvc\Model> model)
+    /**
+     * @param \Phalcon\Mvc\Model | \Phalcon\Mvc\Model\Resultset model
+     */
+    public function delete(var name, object model)
     {
-        this->detach(model);
-        this->attach(model, [
-            "method" : "delete",
-            "name" : name
-        ]);
+        if (model instanceof Model) || (model instanceof Resultset) {
+            this->detach(model);
+            this->attach(model, [
+                "method" : "delete",
+                "name" : name
+            ]);
+        } else {
+            throw new Exception("UnitOfWork: Accept <Model> & <Resultset> only");
+        }
     }
 
     protected function attach(var model, var info)
@@ -170,49 +180,52 @@ class UnitOfWork
         this->objects->detach(model);
     }
 
-    public function exec()
+    public function exec() -> boolean
     {
         let this->exception = null;
         let this->failed = null;
-        let this->deleted = new SplObjectStorage();
-        let this->inserted = new SplObjectStorage();
-        let this->updated = new SplObjectStorage();
 
         var txManager, transaction, e;
-        
         let txManager = new TxManager();
+
         txManager->setDbService(this->dbServiceName);
         let transaction = txManager->get();
-        
-        var obj, info;
-        this->objects->rewind();
+
+        var objects, obj, info, newMethod;
+        let objects = new \SplObjectStorage();
+        objects->addAll(this->objects);
+        objects->rewind();
         try {
-            while(this->objects->valid()) {
-                let obj = this->objects->current();
-                let info = this->objects->getInfo();
-                
-                var method, name;
-                let method = info["method"];
-                let name = info["name"];
+            while(objects->valid()) {
+                let obj = objects->current();
+                let info = objects->getInfo();
 
-                unset(info["method"]); unset(info["name"]);
+                var method = info["method"]; unset(info["method"]);
+                var name = info["name"]; unset(info["name"]);
 
-                obj->setTransaction(transaction);
-
-                var newMethod;
-                let newMethod = "exec".ucfirst(method);
-                if (this->{newMethod}(obj, info) == false) {
-                    transaction->rollback("Model exec failed: " . name . ":" . method);
+                if obj instanceof \Phalcon\Mvc\Model {
+                    obj->setTransaction(transaction);
+                } elseif obj instanceof \Phalcon\Mvc\Model\Resultset {
+                    iterator_apply(obj, function(<\Iterator> iterator, transaction) {
+                        iterator->current()->setTransaction(transaction);
+                    }, [obj, transaction]);
                 }
-                this->objects->next();
+                // echo "Key: " . objects->key() . " Name: " . name . " Obj: " . get_class(obj) . PHP_EOL;
+                let newMethod = "exec".ucfirst(method);
+                if this->{newMethod}(obj, info) == false {
+                    transaction->rollback("Model exec failed: " . name . ":" . newMethod .
+                                            ". Model Exception: " . json_encode(obj->getMessages()));
+                }
+                objects->next();
             }
             transaction->commit();
         } catch TxFailed, e {
             let this->failed = obj;
             let this->exception = e;
+            objects->removeAll(this->objects);
             return false;
         }
-
+        objects->removeAll(this->objects);
         return true;
     }
 
@@ -220,7 +233,18 @@ class UnitOfWork
     {
         var initial_data, result, last_insert_id;
         let initial_data = info["initial_data"];
+
         if !empty(initial_data) {
+            var col, val;
+            for col, val in initial_data {
+                if is_object(val) && val instanceof AbstractValue {
+                    if val instanceof \PhalconPlus\Db\UnitOfWork\LastInsertId {
+                        let initial_data[col] = val->getValue(this);
+                    } elseif val instanceof \PhalconPlus\Db\UnitOfWork\Field {
+                        let initial_data[col] = val->getField(this);
+                    }
+                }
+            }
             let result = model->create(initial_data);
         } else {
             let result = model->create();
@@ -234,25 +258,33 @@ class UnitOfWork
         return result;
     }
 
-    public function execUpdate(<\Phalcon\Mvc\Model> model, array info = [])
+    public function execUpdate(var model, array info = [])
     {
         var result, initial_data;
+
         let initial_data = info["initial_data"];
-        if(!empty(initial_data)) {
+        if !empty(initial_data) {
+            var col, val;
+            for col, val in initial_data {
+                if is_object(val) && val instanceof AbstractValue {
+                    let initial_data[col] = val->getValue(this);;
+                }
+            }
             let result = model->update(initial_data);
         } else {
             let result = model->update();
         }
         if result == true {
-            this->updated->attach(model);
+            this->updated->attach(model, [
+                "updated_data": initial_data
+            ]);
         }
         return result;
     }
 
-    public function execDelete(<\Phalcon\Mvc\Model> model, array info = [])
+    public function execDelete(var model, array info = [])
     {
-        var result;
-        let result = model->delete();
+        var result = model->delete();
         if result == true {
             this->deleted->attach(model);
         }
@@ -261,22 +293,22 @@ class UnitOfWork
 
     public function getObjects()
     {
-        return this->objects;
+        return clone this->objects;
     }
 
     public function getInserted()
     {
-        return this->inserted;
+        return clone this->inserted;
     }
 
     public function getUpdated()
     {
-        return this->updated;
+        return clone this->updated;
     }
 
     public function getDeleted()
     {
-        return this->deleted;
+        return clone this->deleted;
     }
 
     public function getException()
@@ -289,14 +321,9 @@ class UnitOfWork
         return this->failed;
     }
 }
-
-</pre>                </div>
+</pre>
+                </div>
             </div>
-
         </div>
-
     </body>
-
-
-
 </html>

@@ -40,9 +40,6 @@
                             <a href="http://bullsoft.org" target="_blank">布尔软件</a>
                         </li>
                         <li>
-                            <a href="http://www.firstp2p.com" target="_blank">网信理财</a>
-                        </li>
-                        <li>
                             <a href="http://shopbigbang.com" target="_blank">雪品应用</a>
                         </li>
                     </ul>

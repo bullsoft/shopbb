@@ -1,9 +1,13 @@
-<html>
-
-
-    <head>
-
-        <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="phalconplus API doc" name="description">
+    <title>
+                    phalconplus API Documentation
+            </title>
+    <link rel="stylesheet" type="text/css" href="../../../asset/static/prettify.css" />
 
 <script src="../../../asset/static/prettify.js"></script>
 <script src="../../../asset/api_definition.js"></script>
@@ -18,38 +22,23 @@
                                     <script src="../../../asset/api_definition.js"></script>
                     <script src="../../../asset/static/jquery.min.js"></script>
                     <script src="../../../asset/static/zephir-doc.js"></script>
-            
-        <script>var ZepCurrentPath = '../../../'</script>
-
-        
+                <script type="application/javascript">let ZepCurrentPath = '../../../'</script>
     </head>
-
-
-    <body onload="prettyPrint()">
+ <body onload="prettyPrint()">
         <div id="top-bar">
             <div id="top-left">
-                                    phalconplus Documentation <span class="version">v1.0.0-dev</span>
+                                    phalconplus Documentation <span class="version">v1.1.1</span>
                             </div>
             <div id="top-right">
-
             </div>
         </div>
-
         <div id="body">
-
             <div id="body-left">
-
                 <div class="header-search">
-
                     <input class="search-box" placeholder="Search for a class or namespace " type="text" />
-
                     <div id="menu-wrapper">
-
-
                     </div>
-
                 </div>
-
             </div>
             <div id="body-right">
                 <div class="content">
@@ -75,7 +64,6 @@
             </div>
     
     <div class="class-full-name">
-        
         <span class="class-type">Class</span>
         
                 <span class="namespace-piece">
@@ -84,29 +72,31 @@
                 <span class="namespace-piece">
             <a href="../../../namespace/PhalconPlus/Base.html">Base</a>
         </span>
-                <h1 class="class-name">Pagable</h1>
+        
+        <h1 class="class-name">Pagable</h1>
     </div>
     
 </div>
 
-
-<pre class="zephir-source-file prettyprint linenums">namespace PhalconPlus\Base;
+<pre class="zephir-source-file prettyprint linenums">
+    namespace PhalconPlus\Base;
+use PhalconPlus\Enum\OrderByDirection as OrderByDirection;
 
 class Pagable extends ProtoBuffer
 {
     const DEFAULT_PAGE_NO = 1;
     const DEFAULT_PAGE_SIZE = 15;
 
-    private pageNo;
-    private pageSize;
-    private orderBys = [];
+    protected pageNo = self::DEFAULT_PAGE_NO;
+    protected pageSize = self::DEFAULT_PAGE_SIZE;
+    protected orderBys = [];
 
-    public function getPageNo()
+    public function getPageNo() -> int
     {
         return this->pageNo;
     }
 
-    public function getPageSize()
+    public function getPageSize() -> int
     {
         return this->pageSize;
     }
@@ -115,11 +105,41 @@ class Pagable extends ProtoBuffer
     {
         return this->orderBys;
     }
-    
+
+    public function getOffset() -> int
+    {
+        return (this->pageNo - 1) * this->pageSize;
+    }
+
+    public function getLimit() -> int
+    {
+        return this->pageSize;
+    }
+
     public function setOrderBy(<\PhalconPlus\Base\ProtoOrderBy> orderBy)
     {
         array_push(this->orderBys, orderBy);
         return this;
+    }
+
+    public function setOrderBys(array orderBys)
+    {
+        var item;
+        for item in orderBys {
+            if isset(item["property"]) && isset(item["direction"]) {
+                var orderBy, direction;
+                let orderBy = new ProtoOrderBy();
+                orderBy->setProperty(item["property"]);
+                let direction = new OrderByDirection(item["direction"]);
+                orderBy->setDirection(direction);
+                this->setOrderBy(orderBy);
+            }
+        }
+    }
+
+    public function hasOrderBy()
+    {
+        return ! empty(this->orderBys);
     }
 
     public function setPageNo(var pageNo)
@@ -133,15 +153,11 @@ class Pagable extends ProtoBuffer
         let this->pageSize = pageSize;
         return this;
     }
-    
+
 }
-</pre>                </div>
+</pre>
+                </div>
             </div>
-
         </div>
-
     </body>
-
-
-
 </html>

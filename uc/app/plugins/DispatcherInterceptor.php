@@ -5,7 +5,6 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use PhalconPlus\Base\SimpleRequest;
 use LightCloud\Com\Protos\Uc\Exceptions\NeedLoginException;
-use LightCloud\Uc\Models\UserModel;
 
 class DispatcherInterceptor extends \Phalcon\Di\Injectable
 {
@@ -33,6 +32,7 @@ class DispatcherInterceptor extends \Phalcon\Di\Injectable
     public function beforeExecuteRoute(\Phalcon\Events\Event $event, \Phalcon\Mvc\Dispatcher $dispatcher)
     {
         $annotations = new \Phalcon\Annotations\Adapter\Memory();
+        $controller = $dispatcher->getActiveController();
         $method = $dispatcher->getActiveMethod();
         $anno = $annotations->getMethod(get_class($dispatcher->getActiveController()), $method);
 
@@ -63,19 +63,6 @@ class DispatcherInterceptor extends \Phalcon\Di\Injectable
                 } else {
                     throw new NeedLoginException(["user need login to access this resource"]);
                 }
-            }
-        }
-
-        if($this->session->has('identity')) {
-            $userId = intval($this->session->get('identity'));
-            $user = UserModel::findFirst($userId);
-            if($user == false) {
-                $this->session->remove('identity');
-                throw new NeedLoginException(["user need login to access this resource"]);
-                return false;
-            } else {
-                $response = $user->toProtoBuffer();
-                $dispatcher->setParam("loginUser", $response);
             }
         }
 

@@ -1,5 +1,8 @@
 #!/bin/bash
+echo "-------------------------"
 echo "Build start..."
+echo "-------------------------"
+
 PIPE_DIR=`pwd`
 echo "Pipeline Working dir... ->" $PIPE_DIR
 
@@ -40,6 +43,7 @@ echo $BUILD_VER >> "$PIPE_DIR"/artifact.html
 
 cd $APP_DIR
 
+echo "-------------------------"
 echo "Entering App Deploying Dir.. ->"$APP_DIR
 
 if [ -f ${APP_DIR}/composer.json ]; then
@@ -61,22 +65,69 @@ if [ -f ${APP_DIR}/composer.json ]; then
 
 fi
 
+echo "-------------------------"
+echo "Do some clearing..."
+echo "-------------------------"
+
+echo "Removing .git dir"
 rm -rf .git
 
+echo "Removing .vscode dir"
 if [ -d .vscode  ]; then
   rm -rf .vscode
 fi
+
+echo "Removing .zephir dir"
 if [ -d .zephir ]; then
   rm -rf .zephir
 fi
+
+echo "Removing older build.tar.gz file"
 if [ -f build.tar.gz ]; then
   rm -f build.tar.gz
 fi
 
+echo " ... Done."
+
 cd ..
 
-tar zcvf $BUILD_VER.tar.gz $BUILD_VER/
+tar zcf $BUILD_VER.tar.gz $BUILD_VER/
+
+echo "----------------------"
+echo "Copying tarbar to remote node-qd-00" 
+echo "----------------------"
+echo " KB             filename"
+du -k $BUILD_VER.tar.gz
+scp $BUILD_VER.tar.gz work@node-qd-00.bullsoft.org:/home/work/deployment/shopbb/releases/$BUILD_VER.tar.gz
+echo " ... Done."
+
+echo "----------------------"
+echo "Copying tarbar to remote node-qd-01" 
+echo "----------------------"
+echo " KB             filename"
+du -k $BUILD_VER.tar.gz
+scp $BUILD_VER.tar.gz work@node-qd-01.bullsoft.org:/home/work/deployment/shopbb/releases/$BUILD_VER.tar.gz
+echo " ... Done."
+
+echo "----------------------"
+echo "Deploying on node-qd-00"
+echo "----------------------"
+ssh work@node-qd-00.bullsoft.org BUILD_VER=$BUILD_VER 'bash -s' <<'BULLSOFT'
+/home/work/bin/appdep.sh shopbb $BUILD_VER
+BULLSOFT
+
+echo " ... Done. Complete 1/2 ... "
+
+echo "----------------------"
+echo "Deploying on node-qd-00"
+echo "----------------------"
+ssh work@node-qd-01.bullsoft.org BUILD_VER=$BUILD_VER 'bash -s' <<'BULLSOFT'
+/home/work/bin/appdep.sh shopbb $BUILD_VER
+BULLSOFT
+
+echo " ... Done. Complete 2/2 ... "
 
 mv $BUILD_VER.tar.gz "$PIPE_DIR"/build.tar.gz
 
+echo "----------------------"
 echo "Build finished."

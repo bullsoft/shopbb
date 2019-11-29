@@ -160,7 +160,7 @@ class Module extends PlusModule
         // check if this module is a primary one?
         if($this->isPrimary()) {
             // register a dispatcher
-            $di->set('dispatcher', function () use ($di, $version) {
+            $di->setShared('dispatcher', function () use ($di, $version) {
                 $evtManager = $di->getShared('eventsManager');
                 $evtManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) use ($version) {
                     if($dispatcher->hasParam("ApiException")) {
