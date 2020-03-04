@@ -1,4 +1,11 @@
 <?php
+// Visiable Variables
+// $rootPath       -- dir of the app
+// $di             -- global di container
+// $config         -- the Phalcon\Config object
+// $superapp       -- superapp object
+// $loader         -- Phalcon\Loader object
+
 return [
     'application' => [
         "name"  => "fp-devtool",
@@ -8,3 +15,5 @@ return [
     ],
     'version' => "1.0.8",
 ];
+
+/* config.php ends here */

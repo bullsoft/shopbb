@@ -2,7 +2,7 @@
 namespace PhalconPlus\DevTools\Tasks;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as LocalAdapter;
-
+use PhalconPlus\Enum\Sys;
 class ServerTask extends \Phalcon\CLI\Task
 {
     public function mainAction()
@@ -162,7 +162,7 @@ class ServerTask extends \Phalcon\CLI\Task
                 if(!$filesystem->has($configPath)) {
                     $configPath = "{$module}/app/config/config.php";
                 }
-                $config = new \Phalcon\Config($this->di->getBootstrap()->load(APP_ROOT_DIR . $configPath));
+                $config = new \Phalcon\Config(Sys::load(APP_ROOT_DIR . $configPath));
                 $newItem = [];
                 $newItem['name'] = "<light_green>".$config->application->name. "</light_green>";
                 $newItem['namespace'] = $config->application->ns;
