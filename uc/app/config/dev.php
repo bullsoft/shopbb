@@ -1,8 +1,14 @@
 <?php
+// Visiable Variables
+// $rootPath       -- dir of the app
+// $di             -- global di container
+// $config         -- the Phalcon\Config object
+// $superapp       -- superapp object
+// $loader         -- Phalcon\Loader object
 
- $oneMonthInterval = new \DateInterval('P1M');
- $oneHourInterval = new \DateInterval('PT1H');
- $tenMinutesInterval = new \DateInterval('PT10M');
+$oneMonthInterval   = new \DateInterval('P1M');
+$oneHourInterval    = new \DateInterval('PT1H');
+$tenMinutesInterval = new \DateInterval('PT10M');
 
 return array(
     'application' => array(
@@ -10,10 +16,20 @@ return array(
         "ns"    => "LightCloud\\Uc\\",
         "mode"  => "Web",
         "staticUri" => "/",
-        "url" => "http://127.0.0.1:8086/",
+        "url" => "http://127.0.0.1:8181",
         "logFilePath" => "/tmp/LightCloud_uc.log",
+        "session" => [
+            "cookie_name" => "identity"
+        ],
+        "roles" => [
+            "Guests"    => [],
+            "Customers" => ["Guests"],
+            "Admin" => ["Guests", "Customers"],
+            "Super" => ["Guests", "Customers", "Admin"],
+        ],
     ),
     "view" => array(
+        "dir" => dirname(__DIR__) . "/views_stisla/",
         "compiledPath"      => "/tmp/compiled/",
         "compiledExtension" => ".compiled",
     ),
@@ -43,13 +59,13 @@ return array(
     ),
     'debugRPC' => false,
     "oauth2" => [
-        "encryptionKey" => 'def000000f2a7b2d5146dc617e8e0cbcf9c5415f194c7a04c4eb4266c632e8484363bfd395117d54c8f7963d137eff918423f8830febea5fa2f7b3a75eb19f693cb8fa23',
+        "encryptionKey"  => 'def000000f2a7b2d5146dc617e8e0cbcf9c5415f194c7a04c4eb4266c632e8484363bfd395117d54c8f7963d137eff918423f8830febea5fa2f7b3a75eb19f693cb8fa23',
         "privateKeyPath" => APP_MODULE_DIR . "/app/config/private.key",
-        "publicKeyPath" => APP_MODULE_DIR . "/app/config/public.key",
+        "publicKeyPath"  => APP_MODULE_DIR . "/app/config/public.key",
         'alwaysIncludeClientScopes' => false,
         'refreshTokenLifespan' => $oneMonthInterval,
-        'accessTokenLifespan' => $oneHourInterval,
-        'authCodeLifespan' => $oneHourInterval,
+        'accessTokenLifespan'  => $oneHourInterval,
+        'authCodeLifespan'     => $oneHourInterval,
     ],
     "mail" => [
         "driver" => "postmark",
@@ -70,3 +86,5 @@ return array(
         "port" => 6379
     ],
 );
+
+/* config.php ends here */

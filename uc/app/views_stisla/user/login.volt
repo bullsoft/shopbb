@@ -4,8 +4,8 @@
         <div class="login-brand">
             轻量云用户中心
         </div>
-        {% if pageException %}
-            {{ error_messages(pageException.getMessage(), "warning") }}
+        {% if flashSession.has("error") %}
+            {{ error_messages(flashSession.getMessages("error") , "warning") }}
         {% endif %}
 
         <div class="card card-primary">

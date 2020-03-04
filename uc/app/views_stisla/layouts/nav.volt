@@ -10,7 +10,7 @@
             </li>
             {% else %}
             <li>
-                <a href="{{url()}}"  class="nav-link nav-link-lg">
+                <a href="{{url('/')}}"  class="nav-link nav-link-lg">
                     <i class="fa fa-cloud"></i>
                 </a>
             </li>
@@ -28,7 +28,7 @@
         </div>
     </form>
     <ul class="navbar-nav navbar-right">
-        {% if session.read('identity') > 0 %}
+        {% if !user.isGuest() > 0 %}
         <li class="dropdown dropdown-list-toggle">
             <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg beep">
                 <i class="ion ion-ios-bell-outline"></i>
@@ -57,10 +57,10 @@
                 <div class="d-sm-none d-lg-inline-block">Hi, {{user.nickname}}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{{url('user/reset-password')}}" class="dropdown-item has-icon">
+                <a href="{{url('/user/reset-password')}}" class="dropdown-item has-icon">
                     <i class="ion ion-toggle"></i> 重置密码
                 </a>
-                <a href="{{url('user/logout')}}" class="dropdown-item has-icon">
+                <a href="{{url('/user/logout')}}" class="dropdown-item has-icon">
                     <i class="ion ion-log-out"></i> 退出
                 </a>
             </div>

@@ -1,7 +1,5 @@
 <?php
-
 namespace LightCloud\Uc\Plugins;
-use PhalconPlus\Rpc\Server\AbstractServer as AbstractRpcServer;
 
 class HarService extends \PhalconPlus\Base\Service
 {

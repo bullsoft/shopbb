@@ -1,6 +1,7 @@
 <?php
 namespace LightCloud\Uc\Plugins;
 
+// Phalcon\Secutiry\Random::uuid()
 function getRandomCode()
 {
     $rand = str_replace(".", "-", uniqid("lightcloud-", true));

@@ -54,7 +54,7 @@
                                     <li class="list-group-item">状态：{{user.status}}</li>
                                     <li class="list-group-item">注册时间：{{user.regTime}}</li>
                                     <li class="list-group-item">验证邮箱：{{user.isEmailVerified}}</li>
-                                    <li class="list-group-item">更新时间：{{user.mtime}}</li>
+                                    <li class="list-group-item">更新时间：{{user.mtime.format("Ymd H:i:s")}}</li>
                                 </ul>
                             </div>
                         </div>

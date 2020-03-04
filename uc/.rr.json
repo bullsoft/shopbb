@@ -1,6 +1,6 @@
 {
   "http": {
-    "address": "0.0.0.0:8086",
+    "address": "0.0.0.0:8181",
     "workers": {
       "command": "/usr/local/opt/php@7.2/bin/php psr-worker.php",
       "relay": "unix://rr.sock",

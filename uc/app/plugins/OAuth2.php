@@ -1,14 +1,14 @@
 <?php
 namespace LightCloud\Uc\Plugins;
 
-use \Defuse\Crypto\Key;
-use \LightCloud\Uc\Repositories\ClientRepository;
-use \LightCloud\Uc\Repositories\UserRepository;
-use \LightCloud\Uc\Repositories\ScopeRepository;
-use \LightCloud\Uc\Repositories\RefreshTokenRepository;
-use \LightCloud\Uc\Repositories\AccessTokenRepository;
-use \LightCloud\Uc\Repositories\AuthCodeRepository;
-use \League\OAuth2\Server\Grant;
+use Defuse\Crypto\Key;
+use LightCloud\Uc\Repositories\ClientRepository;
+use LightCloud\Uc\Repositories\UserRepository;
+use LightCloud\Uc\Repositories\ScopeRepository;
+use LightCloud\Uc\Repositories\RefreshTokenRepository;
+use LightCloud\Uc\Repositories\AccessTokenRepository;
+use LightCloud\Uc\Repositories\AuthCodeRepository;
+use League\OAuth2\Server\Grant;
 
 class OAuth2 extends \Phalcon\Di\Injectable
 {

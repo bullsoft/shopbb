@@ -1,10 +1,6 @@
 <?php
-$di = new \Phalcon\DI\FactoryDefault();
-$bootstrap = new \PhalconPlus\Bootstrap(dirname(__DIR__));
-$app = new \PhalconPlus\Rpc\Yar($di, "json");
-
-$bootstrap->setDi($di);
-$response = $bootstrap->initConf()
-                      ->setApp($app, true)
-                      ->execSrv();
+$app = (new PhalconPlus\Bootstrap(dirname(__DIR__)))->app();
+$handler = new PhalconPlus\Rpc\Yar($di, "json");
+$driver = new PhalconPlus\App\Driver\Srv($app, $handler);
+$app->setDriver($driver);
 echo $response->getContent();

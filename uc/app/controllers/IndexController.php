@@ -16,12 +16,12 @@ class IndexController extends BaseController
     }
     /**
      * @disableGuest
-     * @api
+     *
      */
     public function indexAction()
     {
         var_dump($this->dispatcher->getParam("ApiException"));
-        var_dump($this->loginUser);
+        var_dump($this->user);
         return;
     }
 

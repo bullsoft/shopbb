@@ -8,6 +8,10 @@ use Hashids\Hashids;
 use function GuzzleHttp\json_encode;
 use function GuzzleHttp\json_decode;
 use \PhalconPlus\Assert\Assertion;
+use Ph\{
+    Response, Request, Di, App, Redis,
+    Log, FlashSession, Session, User,
+};
 
 class UserController extends BaseController
 {
@@ -22,52 +26,49 @@ class UserController extends BaseController
      */
     public function loginAction()
     {
-        $this->logger->debug("fdsfasdfasdfasdfa");
-        // error_log($this->request->getMethod());
-        // error_log(json_encode($_GET));
-        error_log(var_export($_COOKIE, true));
-        error_log(var_export($this->request->getPost(), true));
-        //error_log(var_export($_POST, true));
-        error_log(var_export($_GET, true));
-        error_log(var_export($_POST, true));
-        // error_log(var_export($this->request->getUploadedFiles(), true));
+        Log::debug("123456");
+        // error_log(Request::getMethod());
+        // error_log(var_export($_GET));
+        // error_log(var_export($_COOKIE, true));
+        // error_log(var_export(Request::getPost(), true));
+        // error_log(var_export($_POST, true));
+        // error_log(var_export($_GET, true));
+        // error_log(var_export(Request::getUploadedFiles(), true));
+        // error_log('phrase::' . Session::getId());
 
-        //error_log('phrase::' . $this->session->getId());
-        if ($this->request->isGet()) {
-            if ($this->session->read('identity') > 0) {
-                $response = new \Phalcon\Http\Response();
-                $redirectUrl = $this->request->getQuery("from", "string", "/");
-                $response->redirect(\Phalcon\Text::reduceSlashes($redirectUrl));
-                return $response;
+        if (Request::isGet()) {
+            if (!User::isGuest()) {
+                $redirectUrl = Request::getQuery("from", "string", "/");
+                Response::redirect(\Phalcon\Text::reduceSlashes($redirectUrl));
+                return ;
             }
         }
-        if ($this->request->isPost()) {
-            //error_log(var_export($this->request->getPost(), true));
+        if (Request::isPost()) {
+            // error_log(var_export(Request::getPost(), true));
             $captchaKey = 'phrase::' . session_id();
-            //error_log($captchaKey);
-            //error_log($this->redis->get($captchaKey));
+            // error_log($captchaKey);
+            // error_log(Redis::get($captchaKey));
 
             try {
-                $email = $this->request->getPost("email");
+                $email = Request::getPost("email");
                 Assertion::notEmpty("email", "请输入邮箱");
                 Assertion::eq(
-                    strtolower($this->redis->get($captchaKey)),
-                    strtolower($this->request->getPost("captcha")),
+                    strtolower(Redis::get($captchaKey)),
+                    strtolower(Request::getPost("captcha")),
                     "验证码错误"
                 );
-                $this->redis->delete($captchaKey);
+                Redis::delete($captchaKey);
                 $_POST['username'] = $email;
-                $regInfo = Schemas\RegInfo::newInstance((object)$this->request->getPost());
+                $regInfo = Schemas\RegInfo::newInstance((object) Request::getPost());
                 $user = UserEntity::passwdMatch($regInfo->getUsername(), $regInfo->getPasswd());
-                $this->session->set('identity', $user->id);
+                Session::set('identity', $user->id);
             } catch (\Exception $e) {
-                $this->view->setVar("pageException", $e);
+                FlashSession::error($e->getMessage());
                 return;
             }
-            $response = new \Phalcon\Http\Response();
-            $redirectUrl = $this->request->getQuery("from", "string", "/");
-            $response->redirect(\Phalcon\Text::reduceSlashes($redirectUrl));
-            return $response;
+            $redirectUrl = Request::getQuery("from", "string", "/");
+            Response::redirect(\Phalcon\Text::reduceSlashes($redirectUrl));
+            return ;
         }
     }
 
@@ -136,9 +137,9 @@ class UserController extends BaseController
     public function logoutAction()
     {
         $this->session->destroy();
-        $response = new \Phalcon\Http\Response();
-        $response->redirect('user/login');
-        return $response;
+        Response::redirect('/user/login');
+        // return Response::sharedInstance();
+        return Di::get('response');
     }
 
     public function forgotPasswordAction()

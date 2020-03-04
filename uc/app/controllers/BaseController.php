@@ -3,14 +3,17 @@ namespace LightCloud\Uc\Controllers;
 
 use PhalconPlus\Base\SimpleRequest as SimpleRequest;
 use function LightCloud\Uc\getSiteConf;
-use LightCloud\Uc\Models\UserModel;
+use LightCloud\Uc\Auth\User;
 
+use Ph\{
+    Acl,
+};
 class BaseController extends \Phalcon\Mvc\Controller
 {
     protected $controller;
     protected $action;
     protected $mailer;
-    public $loginUser = null;
+    public $user = null;
 
     public function initialize()
     {
@@ -27,24 +30,30 @@ class BaseController extends \Phalcon\Mvc\Controller
         $this->view->setVar("whichAction", $whichAction);
         $this->view->setVar("pageException", null);
         $this->view->setVar("showSider", true);
+        $this->view->setVar("user", $this->user);
         $this->view->setVar("title", $title);
         $this->view->setVar("headDesc",     getSiteConf()->get("headDesc", "网站描述"));
         $this->view->setVar("headKeywords", getSiteConf()->get("headKeywords", "网站关键词"));
         $this->view->setVar("tpl",          getSiteConf()->get("template", "default"));
         $this->view->setVar("ver", date("YmdHis").rand(100000, 999999));
 
-        if($this->session->has('identity')) {
-            $userId = intval($this->session->get('identity'));
-            $user = UserModel::findFirst($userId);
-            if($user == false) {
-                $this->session->remove('identity');
-                throw new NeedLoginException(["user need login to access this resource"]);
-            } else {
-                $response = $user->toProtoBuffer();
-                $this->loginUser = $response;
-                $this->view->setVar("user", $response);
-            }
-        }
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function authroize()
+    {
+        $controller = Dispatcher::getControllerClass();
+        $method = Dispatcher::getActiveMethod();
+        return Acl::isAllowed($this->user->getRole(), $controller, $method);
     }
 
     protected function formValid(\Phalcon\Forms\Form $form, array $input)
@@ -55,7 +64,7 @@ class BaseController extends \Phalcon\Mvc\Controller
                 $details[$val->getField()][] = $val->getMessage();
             }
             $msg = "{$this->controller}:{$this->action} form failed to validate";
-            throw new \Common\Protos\Exception\FormInputInvalid([$msg, json_encode($details, \JSON_UNESCAPED_UNICODE)], $this->logger);
+            throw new \PhalconPlus\Com\Protos\Exception\FormInputInvalid([$msg, json_encode($details, \JSON_UNESCAPED_UNICODE)], $this->logger);
         }
         return true;
     }
